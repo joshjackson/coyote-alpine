@@ -1,15 +1,13 @@
 <?
-// PRODUCT: VEL
-// OPTIONAL: FALSE
-// ENCODE: ANY
-//-----------------------------------------------------------------------------
 // File: 	webadmin.php
 // Purpose: 	Web Administrator Firmware Addon configuration routines
-// Product:	Vortech Embedded Linux
+// Product:	Coyote Linux
 // Date:	10/14/2005
 // Author:	Joshua Jackson <jjackson@vortech.net>
 //
-// Copyright (c)2005 Vortech Consulting, LLC
+// Copyright (c)2005, 2024 Vortech Consulting, LLC
+//
+// 10/9/2024 - Modifications for Coyote Linux 3.1
 
 	require_once("fwaddon.php");
 
@@ -76,7 +74,7 @@
 				if ($apply_acls) {
 					$this->ApplyAcls($Config);
 				}
-				do_exec("sudo /usr/sbin/httpd -f /etc/httpd.conf 1> /dev/null 2> /dev/null");
+				do_exec("sudo /usr/sbin/httpd -f /opt/coyote/config/httpd.conf 1> /dev/null 2> /dev/null");
 				return true;
 			}
 
@@ -130,9 +128,9 @@
 
 			$hostname = $Config->hostname;
 			// Make sure the server host certificates have been generated
-			if (! file_exists("/etc/ssl.d/".$hostname."_cert.pem")) {
+			if (! file_exists("/opt/coyote/config/ssl.d/".$hostname."_cert.pem")) {
 				// Generate a new set of certificates
-				do_exec("sudo /usr/config/gencerts new");
+				do_exec("sudo /opt/coyote/sysconf/gencerts new");
 			}
 
 			if (file_exists("/var/state/httpd/server.pem")) {
@@ -141,8 +139,8 @@
 				chmod("/var/state/httpd/server.pem", 0600);
 			}
 
-			do_exec("cat /etc/ssl.d/".$hostname."_priv.pem >> /var/state/httpd/server.pem");
-			do_exec("cat /etc/ssl.d/".$hostname."_cert.pem >> /var/state/httpd/server.pem");
+			do_exec("cat /opt/coyote/config/ssl.d/".$hostname."_priv.pem >> /var/state/httpd/server.pem");
+			do_exec("cat /opt/coyote/config/ssl.d/".$hostname."_cert.pem >> /var/state/httpd/server.pem");
 
 			copy_template("httpd.conf", "/etc/httpd.conf");
 

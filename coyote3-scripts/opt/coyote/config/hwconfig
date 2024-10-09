@@ -1,16 +1,18 @@
 # hwconfig
 #
 # This file should contain variables that are configured when the target
-# hardware is spec'd for the installation of Vortech Embedded Linux.  These
+# hardware is spec'd for the installation of Coyote Linux on Alpine.  These
 # variables should not be altered as they will not survive an upgrade.
 #
 # 11/12/2001 - Added some basic functions to this file to enable a custom
 #              set of utilities that should be used to mount/unmount the parent
 #              filesystem
+#
+# 10/9/2024 - Modifications for Coyote Linux 3.1 based on Alpine Linux
 
 # System identification - used for update retrieval - DO NOT CHANGE
 VEL_SYSTEM_ID=coyote
-VEL_SYSTEM_VERSION=3.00
+VEL_SYSTEM_VERSION=3.10
 
 # This is a link set by the system installer
 BOOT_DEV=/dev/root
@@ -26,11 +28,15 @@ WATCHDOG=softdog
 
 mount_flash_ro() {
 	sync
-	mount $BOOT_DEV /mnt -o remount -r -t $BOOT_FS
+	# Coyote 3.1 is based on Alpine Linux, this is not used
+	#mount $BOOT_DEV /mnt -o remount -r -t $BOOT_FS
+	return 0
 }
 
 mount_flash_rw() {
-	mount $BOOT_DEV /mnt -o remount -w -t $BOOT_FS
+	# Coyote 3.1 is based on Alpine Linux, this is not used
+	#mount $BOOT_DEV /mnt -o remount -w -t $BOOT_FS
+	return 0
 }
 
 read_build() {

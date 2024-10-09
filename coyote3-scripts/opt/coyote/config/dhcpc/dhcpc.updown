@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Wolverine DHCP client up-down script
+# Coyote Linux DHCP client up-down script
 #
 # Called by udhcpc to bring dhcp assigned interfaces up and down
 #

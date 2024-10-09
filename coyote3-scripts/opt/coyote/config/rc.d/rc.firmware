@@ -148,9 +148,9 @@ cat /etc/config/templates/issue >> /etc/issue
 crond -L /dev/null
 
 # Start the LCD Control Daemon (FW-5xx units only)
-if [ -x /sbin/lrd ]; then
-    /sbin/lrd
-fi
+#if [ -x /sbin/lrd ]; then
+#    /sbin/lrd
+#fi
 
 echo "System initialized."
 
