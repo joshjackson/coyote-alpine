@@ -146,9 +146,9 @@
 
 			copy_template("httpd.conf", "/etc/httpd.conf");
 
-			write_config("/etc/httpd.conf", "Listen ".$this->http["port"]);
-			write_config("/etc/httpd.conf", "ServerAdmin admin@".$hostname);
-			write_config("/etc/httpd.conf", "ServerName ".$hostname);
+			write_config("/opt/coyote/config/httpd.conf", "Listen ".$this->http["port"]);
+			write_config("/opt/coyote/config/httpd.conf", "ServerAdmin admin@".$hostname);
+			write_config("/opt/coyote/config/httpd.conf", "ServerName ".$hostname);
 			return true;
 		}
 

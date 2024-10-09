@@ -16,7 +16,7 @@ function GetNicModuleNames() {
 	if ($IN_DEVELOPMENT) {
 		$modfile = fopen("niclist", 'r');
 	} else {
-		$modfile = fopen("/etc/sysconf/niclist", 'r');
+		$modfile = fopen("/opt/coyote/sysconf/niclist", 'r');
 	}
 	
 	if (!$modfile) {
