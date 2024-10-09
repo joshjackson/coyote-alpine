@@ -1,0 +1,19 @@
+#!/usr/bin/php -q
+
+<?
+
+	require_once("functions.php");
+	require_once("configfile.php");
+	require_once("stats.php");
+
+	$config = new FirewallConfig;
+
+	if (!$config->LoadConfigFile("/etc/config/sysconfig")) {
+		print("Error loading config file.\n");
+		die;
+	}
+
+	UpdateStats($config);
+
+
+?>
