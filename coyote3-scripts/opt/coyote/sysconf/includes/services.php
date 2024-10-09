@@ -56,24 +56,24 @@ function StartUPNPService ($Config) {
 		return 0;
 	}
 
-	do_exec("ip route add 239.0.0.0/8 dev $intnic");
-    do_exec("iptables -A igd-input -i $intnic -d 239.0.0.0/8 -j accept-packet-local");
-    do_exec("iptables -A igd-input -i $intnic -p udp --dport 1900 -j accept-packet-local");
-    do_exec("iptables -A igd-input -i $intnic -p tcp --dport 2869 -j accept-packet-local");
+	do_exec("sudo ip route add 239.0.0.0/8 dev $intnic");
+    do_exec("sudo iptables -A igd-input -i $intnic -d 239.0.0.0/8 -j accept-packet-local");
+    do_exec("sudo iptables -A igd-input -i $intnic -p udp --dport 1900 -j accept-packet-local");
+    do_exec("sudo iptables -A igd-input -i $intnic -p tcp --dport 2869 -j accept-packet-local");
     # Yuck... upnpd opens a dynamic port range starting at 49152.
-    do_exec("iptables -A igd-input -i $intnic -p tcp --dport 49152:65535 -j accept-packet-local");
-    do_exec("/usr/sbin/upnpd $extnic $intnic 1> /dev/null 2> /dev/null");
+    do_exec("sudo iptables -A igd-input -i $intnic -p tcp --dport 49152:65535 -j accept-packet-local");
+    do_exec("sudo /usr/sbin/upnpd $extnic $intnic 1> /dev/null 2> /dev/null");
 
 	return 0;
 }
 
 function StopUPNPService () {
 
-	do_exec("killall -9 upnpd 1> /dev/null 2> /dev/null");
-    do_exec("ip route del 239.0.0.0/8 1> /dev/null 2> /dev/null");
-    do_exec("iptables -F igd-forward 1> /dev/null 2> /dev/null");
-    do_exec("iptables -F igd-input 1> /dev/null 2> /dev/null");
-    do_exec("iptables -t nat -F igd-preroute 1> /dev/null 2> /dev/null");
+	do_exec("sudo killall -9 upnpd 1> /dev/null 2> /dev/null");
+    do_exec("sudo ip route del 239.0.0.0/8 1> /dev/null 2> /dev/null");
+    do_exec("sudo iptables -F igd-forward 1> /dev/null 2> /dev/null");
+    do_exec("sudo iptables -F igd-input 1> /dev/null 2> /dev/null");
+    do_exec("sudo iptables -t nat -F igd-preroute 1> /dev/null 2> /dev/null");
 
 	return 0;
 }
@@ -81,7 +81,8 @@ function StopUPNPService () {
 function StartDNSMasqService ($Config) {
 
 	# Start the server
-	do_exec("/usr/sbin/dnsmasq 1> /dev/null 2> /dev/null");
+	# FIXME: Use openinitrd script service
+	do_exec("sudo /usr/sbin/dnsmasq 1> /dev/null 2> /dev/null");
 }
 
 function StopDNSMasqService () {
@@ -95,9 +96,8 @@ function StopDNSMasqService () {
 }
 
 function StopSNMPService() {
-
-	do_exec("killall snmpd 1> /dev/null 2> /dev/null");
-
+	// FIXME: Use openinitrd service scripts
+	do_exec("sudo killall snmpd 1> /dev/null 2> /dev/null");
 }
 
 function ShutdownFirewallServices($Config, $SkipWeb = false, $SkipSSH = false) {

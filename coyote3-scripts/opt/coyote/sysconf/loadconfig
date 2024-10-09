@@ -13,7 +13,7 @@ require_once("stats.php");
 
 $config = new FirewallConfig;
 
-if (!$config->LoadConfigFile("/etc/config/sysconfig")) {
+if (!$config->LoadConfigFile("/opt/coyote/config/sysconfig")) {
 	print("Error loading config file.\n");
 	die;
 }

@@ -56,14 +56,14 @@
 		function ApplyAcls($Config = "", $do_flush=false) {
 
 			if ($do_flush) {
-				do_exec("iptables -F http hosts 1> /dev/null 2> /dev/null");
+				do_exec("sudo iptables -F http hosts 1> /dev/null 2> /dev/null");
 			}
 
-			do_exec("iptables -N http-hosts");
-			do_exec("iptables -A wolv-local-acls -p tcp --syn --dport ".$this->http["port"]." -j http-hosts");
+			do_exec("sudo iptables -N http-hosts");
+			do_exec("sudo iptables -A coyote-local-acls -p tcp --syn --dport ".$this->http["port"]." -j http-hosts");
 			# Apply HTTP access ACLs
 			for($t=0; $t < count($this->http["hosts"]); $t++)
-				do_exec("iptables -A http-hosts -s ".$this->http["hosts"][$t]." -j accept-packet-local");
+				do_exec("sudo iptables -A http-hosts -s ".$this->http["hosts"][$t]." -j accept-packet-local");
 		}
 
 		function StartService($Config = "", $apply_acls=true) {
@@ -76,7 +76,7 @@
 				if ($apply_acls) {
 					$this->ApplyAcls($Config);
 				}
-				do_exec("/usr/local/sbin/httpd -f /etc/httpd.conf 1> /dev/null 2> /dev/null");
+				do_exec("sudo /usr/sbin/httpd -f /etc/httpd.conf 1> /dev/null 2> /dev/null");
 				return true;
 			}
 
@@ -96,9 +96,9 @@
 			}
 
 			// Remove the traffic ACL
-			do_exec("iptables -F http-hosts");
-			do_exec("iptables -D wolv-local-acls -j http-hosts");
-			do_exec("iptables -X http-hosts");
+			do_exec("sudo iptables -F http-hosts");
+			do_exec("sudo iptables -D coyote-local-acls -j http-hosts");
+			do_exec("sudo iptables -X http-hosts");
 
 			return true;
 		}
@@ -109,10 +109,10 @@
 				$this->StopService();
 			}
 
-			@unlink("/var/www/.htpasswd");
-			touch("/var/www/.htpasswd");
-			chmod("/var/www/.htpasswd", 0600);
-			@unlink("/etc/httpd.conf");
+			@unlink("/opt/coyote/www/.htpasswd");
+			touch("/opt/coyote/www/.htpasswd");
+			chmod("/opt/coyote/www/.htpasswd", 0600);
+			@unlink("/opt/coyote/config/httpd/httpd.conf");
 			@unlink("/var/state/httpd/server.pem");
 		}
 
@@ -132,7 +132,7 @@
 			// Make sure the server host certificates have been generated
 			if (! file_exists("/etc/ssl.d/".$hostname."_cert.pem")) {
 				// Generate a new set of certificates
-				do_exec("/usr/config/gencerts new");
+				do_exec("sudo /usr/config/gencerts new");
 			}
 
 			if (file_exists("/var/state/httpd/server.pem")) {

@@ -199,40 +199,17 @@ function RenderMenus($MenuDef, $MenuType) {
 }
 
 function GetPageIcon($MenuDef, $MenuType) {
-	
 	foreach($MenuDef as $MenuItem) {
 		if ($MenuItem["MenuType"] == $MenuType)
 			return $MenuItem["PageIcon"];
 	}
 	return "stats.jpg";
-
 }
 
 function GetSiteTheme() {
-
-	if (!defined("PRODUCT_ID")) {
-		print("<html><head></head><body><b>Fatal Error: Product ID is not set.</b></body></html>\n");
-		die;
-	}
-
-	switch(PRODUCT_ID) {
-		case PRODUCT_WOLVERINE:
-			$theme = "wolverine";
-			break;
-		case PRODUCT_COYOTE:
-			$theme = "coyote";
-			break;
-		case PRODUCT_VIPER:
-			$theme = "viper";
-			break;
-		case PRODUCT_FURY:
-			$theme = "fury";
-			break;
-		default:
-			print("<html><head></head><body><b>Fatal Error: Product ID is invalid.</b></body></html>\n");
-			die;
-	}
-	return $theme;
+	// This webadmin app will never be used for anything other then Coyote
+	// going forward. 
+	return "coyote";
 }
 
 ?>

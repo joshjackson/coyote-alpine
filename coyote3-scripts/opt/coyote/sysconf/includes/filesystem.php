@@ -41,7 +41,7 @@ function write_proc_value($procentry, $value) {
 }
 
 function copy_template($template, $location) {
-	return copy("/etc/config/templates/$template", $location);
+	return copy("/opt/coyote/config/templates/$template", $location);
 }
 
 // FIXME - These functions need to call a helper app which has the proper

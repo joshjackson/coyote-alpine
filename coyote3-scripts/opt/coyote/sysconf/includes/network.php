@@ -67,7 +67,7 @@ function get_interface_ip($Config, $intf = 0) {
 	}
 
 	// JJ: FIXME - Get rid of this crap - should be moved to an extension
-	exec("/bin/getifaddr ".$ifname, $outstr, $errcode);
+	exec("sudo /bin/getifaddr ".$ifname, $outstr, $errcode);
 
 	if (!$errcode) {
 		return $outstr[0];

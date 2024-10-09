@@ -2,8 +2,9 @@
 #
 # gencerts - Generates a the X.509 certificate 
 #
+# 10/9/2024 - Updates for Coyote Linux 3.1 running on Alpine Linux
 
-. /etc/config/hwconfig
+. /opt/coyote/config/hwconfig
 
 SERVER_NAME=`hostname`
 
@@ -94,15 +95,15 @@ get_priv() {
 part_to_dir() {
 
 	chmod 600 ${SERVER_NAME}_priv.pem
-	cp ${SERVER_NAME}_priv.pem /mnt/config/ssl.d/
+	cp ${SERVER_NAME}_priv.pem /opt/coyote/config/ssl.d/
 
 }
 
 all_to_dir() {
 
 	chmod 600 ${SERVER_NAME}_priv.pem
-	cp ${SERVER_NAME}_priv.pem /etc/ssl.d/
-	cp ${SERVER_NAME}_cert.pem /etc/ssl.d/
+	cp ${SERVER_NAME}_priv.pem /opt/coyote/config/ssl.d/
+	cp ${SERVER_NAME}_cert.pem /opt/coyote/config/ssl.d/
 }
 
 new() {

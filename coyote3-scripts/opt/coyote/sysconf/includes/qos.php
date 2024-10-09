@@ -52,10 +52,10 @@ define("QOS_PRIO_LOW", 30);
 
 	function qos_clear_settings($Config) {
 		do_exec("iptables -F -t mangle");
-		do_exec("iptables -F wolv-tc-up -t mangle 1> /dev/null 2> /dev/null");
-		do_exec("iptables -F wolv-tc-down -t mangle 1> /dev/null 2> /dev/null");
-		do_exec("iptables -X wolv-tc-up -t mangle 1> /dev/null 2> /dev/null");
-		do_exec("iptables -X wolv-tc-down -t mangle 1> /dev/null 2> /dev/null");
+		do_exec("iptables -F coyote-tc-up -t mangle 1> /dev/null 2> /dev/null");
+		do_exec("iptables -F coyote-tc-down -t mangle 1> /dev/null 2> /dev/null");
+		do_exec("iptables -X coyote-tc-up -t mangle 1> /dev/null 2> /dev/null");
+		do_exec("iptables -X coyote-tc-down -t mangle 1> /dev/null 2> /dev/null");
 		do_exec("tc qdisc del root dev ".$Config->public_interface. "1> /dev/null 2> /dev/null");
 		do_exec("tc qdisc del root dev eth1 1> /dev/null 2> /dev/null");
 	}
@@ -73,14 +73,14 @@ define("QOS_PRIO_LOW", 30);
 	function StartQoS($Config) {
 		// Determine if we should be using a PPP adapter for public interface
 		$pi = $Config->public_interface;
-		do_exec("iptables -t mangle -N wolv-tc-up 1> /dev/null 2> /dev/null");
-		do_exec("iptables -t mangle -N wolv-tc-down 1> /dev/null 2> /dev/null");
+		do_exec("iptables -t mangle -N coyote-tc-up 1> /dev/null 2> /dev/null");
+		do_exec("iptables -t mangle -N coyote-tc-down 1> /dev/null 2> /dev/null");
 		// Do not subject LAN to LAN traffic to QoS
 		do_exec("iptables -A FORWARD -t mangle ! -i $pi ! -o $pi -j MARK --set-mark ".QOS_PRIO_LAN." 1> /dev/null 2> /dev/null");
 
 
-		do_exec("iptables -A FORWARD -t mangle -i $pi -j wolv-tc-down 1> /dev/null 2> /dev/null");
-		do_exec("iptables -A FORWARD -t mangle -o $pi -j wolv-tc-up 1> /dev/null 2> /dev/null");
+		do_exec("iptables -A FORWARD -t mangle -i $pi -j coyote-tc-down 1> /dev/null 2> /dev/null");
+		do_exec("iptables -A FORWARD -t mangle -o $pi -j coyote-tc-up 1> /dev/null 2> /dev/null");
 
 		// Calculate our thresholds
 		$up_max = ceil($Config->qos["upstream"] * .98)."kbit";
@@ -129,9 +129,9 @@ define("QOS_PRIO_LOW", 30);
 		// Install filters
 		foreach ($Config->qos["filters"] as $qf) {
 		  if ($qf["interface"] == $pi) {
-				$fc = "wolv-tc-up";
+				$fc = "coyote-tc-up";
 			} else {
-				$fc = "wolv-tc-down";
+				$fc = "coyote-tc-down";
 			}
 			$cmd = "iptables -t mangle -A $fc";
 			if ($qf["proto"] != "all") {

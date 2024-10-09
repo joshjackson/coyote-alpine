@@ -3,7 +3,7 @@
 	if ($action == "reboot") {
 		print("<html><head><meta http-equiv=\"refresh\" content=\"60;url=/index.php\"><title>Rebooting...</title></head></html>\n");
 		print("<body>Please wait, rebooting the firewall. The web admin will reload in 60 seconds.</body></html>");
-		exec("/sbin/reboot");
+		exec("sudo /sbin/reboot");
 		die;
 	}
 

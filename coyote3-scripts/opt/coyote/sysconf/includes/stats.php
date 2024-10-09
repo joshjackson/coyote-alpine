@@ -25,17 +25,17 @@ function InitStatsDB($Config) {
 	global $rrd;
 
 	// Initialize CPU statistics datafile
-	if (!file_exists("/var/statsdb/cpu.rrd")) {
-		do_exec("$rrd create /var/statsdb/cpu.rrd --step 60 ".
+	if (!file_exists("/opt/coyote/statsdb/cpu.rrd")) {
+		do_exec("$rrd create /opt/coyote/statsdb/cpu.rrd --step 60 ".
 			"DS:cpu:GAUGE:120:0:100 ".
 			"RRA:AVERAGE:0.5:1:1440"
 		);
 		if ($fh = fopen("/proc/stat", "r")) {
 			$cpuline = fgets($fh, 1024);
-			file_put_contents("/var/statsdb/cpu.last", $cpuline);
+			file_put_contents("/opt/coyote/statsdb/cpu.last", $cpuline);
 			fclose($fh);
 		}
-		touch("/var/statsdb/cpu.last");
+		touch("/opt/coyote/statsdb/cpu.last");
 	}
 
 	// Initialize interface statistics datafiles
@@ -43,7 +43,7 @@ function InitStatsDB($Config) {
 		if ($ifentry["down"]) {
 			continue;
 		}
-		$statdb="/var/statsdb/".$ifentry["device"].".rrd";
+		$statdb="/opt/coyote/statsdb/".$ifentry["device"].".rrd";
 		if (!file_exists("$statdb")) {
 			do_exec("$rrd create $statdb --step 60 ".
 				"DS:in:COUNTER:120:0:U ".
@@ -91,17 +91,12 @@ function GetMemoryUtilization() {
 }
 
 function GetFirmwareAllocation() {
-
 	$ret = number_format((disk_total_space("/") - disk_free_space("/")) / (1024 * 1024), 2);
-
 	return $ret;
-
 }
 
 function GetBootFSAllocation() {
-
 	$ret = number_format((disk_total_space("/mnt") - disk_free_space("/mnt")) / (1024 * 1024), 2);
-
 }
 
 function GetBootFSUtilization() {
@@ -117,7 +112,7 @@ function GetCPUUtilization ($do_update=true) {
 
 	$utilization = 0;
 
-	if ($fh = @fopen("/var/statsdb/cpu.last", "r")) {
+	if ($fh = @fopen("/opt/coyote/statsdb/cpu.last", "r")) {
 		if (KernelIs26()) {
 			$lcpuinfo = split(" ", fgets($fh, 1024), 8);
 		} else {
@@ -149,10 +144,10 @@ function GetCPUUtilization ($do_update=true) {
 			fclose($fh);
 
 			if ($do_update) {
-				if (file_exists("/var/statsdb/cpu.last")) {
-					unlink("/var/statsdb/cpu.last");
+				if (file_exists("/opt/coyote/statsdb/cpu.last")) {
+					unlink("/opt/coyote/statsdb/cpu.last");
 				}
-				file_put_contents("/var/statsdb/cpu.last", $cpuline);
+				file_put_contents("/opt/coyote/statsdb/cpu.last", $cpuline);
 			}
 		}
 	}
@@ -183,10 +178,10 @@ function UpdateStats($Config) {
 	global $rrd;
 
 	// Update the CPU statistics
-	if (file_exists("/var/statsdb/cpu.rrd")) {
+	if (file_exists("/opt/coyote/statsdb/cpu.rrd")) {
 		// Update the database
 		$utilization = GetCPUUtilization();
-		do_exec("$rrd update /var/statsdb/cpu.rrd N:$utilization");
+		do_exec("$rrd update /opt/coyote/statsdb/cpu.rrd N:$utilization");
 	}
 
 	// Update the Interface statistics
@@ -198,7 +193,7 @@ function UpdateStats($Config) {
 		if ($ifentry["down"]) {
 			continue;
 		}
-		$statdb="/var/statsdb/".$ifentry["device"].".rrd";
+		$statdb="/opt/coyote/statsdb/".$ifentry["device"].".rrd";
 		if (file_exists("$statdb")) {
 			if (array_key_exists($ifentry["device"], $ifstats)) {
 				$inb = $ifstats[$ifentry["device"]][0];
@@ -215,11 +210,11 @@ function UpdateGraphics($Config) {
 	global $rrd;
 
 	// Update the CPU graph
-	if (file_exists("/var/statsdb/cpu.rrd")) {
+	if (file_exists("/opt/coyote/statsdb/cpu.rrd")) {
 		$cmd = "$rrd graph /var/www/stat-graphs/cpu.png ".
 			"--title \"CPU Utilization\" --lazy --imgformat PNG --lower-limit 0 ".
 			"--upper-limit 100 --width=500 --height=100 --vertical-label \"CPU %\" --rigid ".
-			"DEF:cpu=/var/statsdb/cpu.rrd:cpu:AVERAGE ".
+			"DEF:cpu=/opt/coyote/statsdb/cpu.rrd:cpu:AVERAGE ".
 			"CDEF:usage=cpu ".
 			"AREA:usage#FF0000:\"CPU Utilization\" ".
 			'GPRINT:usage:MAX:"Max\: %6.2lf%% " '.
@@ -233,7 +228,7 @@ function UpdateGraphics($Config) {
 		if ($ifentry["down"]) {
 			continue;
 		}
-		$statdb="/var/statsdb/".$ifentry["device"].".rrd";
+		$statdb="/opt/coyote/statsdb/".$ifentry["device"].".rrd";
 		if (file_exists("$statdb")) {
 			$cmd = "$rrd graph /var/www/stat-graphs/".$ifentry["device"].".png ".
 				"--title \"".$ifentry["name"]." Traffic\" --lazy --imgformat PNG --lower-limit 0 ".

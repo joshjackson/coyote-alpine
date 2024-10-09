@@ -7,7 +7,7 @@
 	define("VERSION_MASK", 0x00FFFFFF);
 
 	// Set the information about the current product
-	define("PRODUCT_VERSION", "3.00");
+	define("PRODUCT_VERSION", "3.10");
 	define("PRODUCT_ID", PRODUCT_COYOTE);
 	define("PRODUCT_REG_VERSION", 0x30000);
 
