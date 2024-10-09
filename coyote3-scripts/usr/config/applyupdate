@@ -1,0 +1,11 @@
+#!/bin/sh
+
+. /etc/config/hwconfig
+. /usr/config/functions
+
+if ! [ -r "$1" ]; then
+	exit
+fi
+
+apply_firmware_update $1
+
