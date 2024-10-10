@@ -1,12 +1,6 @@
 <?
     include("includes/loadconfig.php");
-	VregCheck();
-
-	//dhcpreservations
-	//
 	//configure dchp reservations (add, edit, delete)
-
-
 	$MenuTitle="DHCP Reservations";
 	$MenuType="GENERAL";
 

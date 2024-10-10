@@ -152,7 +152,7 @@ function InitModulesConfig() {
 		@unlink("/etc/modprobe.conf");
 	}
 
-	copy_template("modprobe.conf", "/etc/modprobe.conf");
+	copy_template("modprobe.conf", "/etc/modprobe.conf", true);
 }
 
 
@@ -165,7 +165,6 @@ function EmergencyShutdown() {
 	disable_ip_forwarding();
 
 	FlushTables();
-
 }
 
 function ApplyICMPAcls($Config, $do_flush = false) {
@@ -402,17 +401,16 @@ function ConfigureBridge($Config) {
 }
 
 function SyncClock($Config) {
-
-	##FIXME##
-
 	if ($Config->timeserver) {
-		//print("Setting system time from timeserver ".$Config->timeserver.": ");
-		sudo_exec("/usr/sbin/rdate -s ".$Config->timeserver." 1> /dev/null 2> /dev/null&");
-		if (!$retcode) {
-			//print("done.\n");
+		debug_print("Setting system time from timeserver ".$Config->timeserver.": ");
+		// Fetch the remote time
+		$ret = sudo_exec("/usr/sbin/rdate -s ".$Config->timeserver." 1> /dev/null 2> /dev/null&");
+		if (!$ret) {
+			debug_print("done.\n");
+			// Attempt to set the hardware clock
 			sudo_exec("/sbin/hwclock --systohc 1> /dev/null 2> /dev/null");
 		} else {
-			//print("failed.\n");
+			debug_print("failed.\n");
 		}
 	}
 }
@@ -437,8 +435,8 @@ function ConfigureDHCPD($Config) {
 	if (!$ifname)
 		return;
 
-	if (file_exists("/etc/dnsmasq.conf")) {
-		@unlink("/etc/dnsmasq.conf");
+	if (file_exists(COYOTE_CONFIG_DIR."dnsmasq.conf")) {
+		@unlink(COYOTE_CONFIG_DIR."dnsmasq.conf");
 	}
 
 	//do_print("DHCP Server Enabled for Interface ($ifname)\n");
@@ -446,8 +444,8 @@ function ConfigureDHCPD($Config) {
 	# If a leases file exists on the flash device and not in the /var/lib directory,
 	# copy it into place
 	if (! file_exists("/var/lib/dnsmasq.leases")) {
-		if (file_exists("/mnt/config/dhcpd/dnsmasq.leases")) {
-			copy("/mnt/config/dhcpd/dnsmasq.leases", "/var/lib/dnsmasq.leases");
+		if (file_exists(COYOTE_CONFIG_DIR."dhcpd/dnsmasq.leases")) {
+			copy(COYOTE_CONFIG_DIR."dhcpd/dnsmasq.leases", "/var/lib/dnsmasq.leases");
 		} else {
 			touch("/var/lib/dnsmasq.leases");
 		}
@@ -457,44 +455,44 @@ function ConfigureDHCPD($Config) {
 		//do_print("A starting and ending address must be specified for the DHCP server.");
 		return;
 	}
-	write_config("/etc/dnsmasq.conf", "dhcp-leasefile=/var/lib/dnsmasq.leases");
-	write_config("/etc/dnsmasq.conf", "interface=$ifname");
+	write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-leasefile=/var/lib/dnsmasq.leases");
+	write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "interface=$ifname");
 	if (!$Config->dhcpd["lease"]) {
 		$Config->dhcpd["lease"] = 21600;
 	}
-	write_config("/etc/dnsmasq.conf", "dhcp-range=".$Config->dhcpd["start"].",".$Config->dhcpd["end"].",".
+	write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-range=".$Config->dhcpd["start"].",".$Config->dhcpd["end"].",".
 		$Config->dhcpd["lease"]);
 
 	if (count($Config->dhcpd["dns"])) {
-		write_config("/etc/dnsmasq.conf", "dhcp-option=6,".implode(",", $Config->dhcpd["dns"]));
+		write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-option=6,".implode(",", $Config->dhcpd["dns"]));
 	}
 
-	//write_config("/etc/dnsmasq.conf", "option lease ".$Config->dhcpd["lease"]);
+	//write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "option lease ".$Config->dhcpd["lease"]);
 
 	if (count($Config->dhcpd["wins"])) {
-		write_config("/etc/dnsmasq.conf", "dhcp-option=46,8");
-		write_config("/etc/dnsmasq.conf", "dhcp-option=44,".implode(",", $Config->dhcpd["wins"]));
+		write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-option=46,8");
+		write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-option=44,".implode(",", $Config->dhcpd["wins"]));
 	}
 
 	if ($Config->dhcpd["router"])
-		write_config("/etc/dnsmasq.conf", "dhcp-option=3,".$Config->dhcpd["router"]);
+		write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-option=3,".$Config->dhcpd["router"]);
 
 	if ($Config->dhcpd["subnet"])
-		write_config("/etc/dnsmasq.conf", "dhcp-option=1,".$Config->dhcpd["subnet"]);
+		write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-option=1,".$Config->dhcpd["subnet"]);
 
 	if ($Config->dhcpd["domain"])
-		write_config("/etc/dnsmasq.conf", "dhcp-option=15,".$Config->dhcpd["domain"]);
+		write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "dhcp-option=15,".$Config->dhcpd["domain"]);
 
 	// Set up DHCP reservations
-	if (file_exists("/etc/ethers")) {
-		unlink("/etc/ethers");
-		touch("/etc/ethers");
+	if (file_exists(COYOTE_CONFIG_DIR."ethers")) {
+		unlink(COYOTE_CONFIG_DIR."ethers");
+		touch(COYOTE_CONFIG_DIR."ethers");
 	}
 
 	if (count($Config->dhcpd["reservations"])) {
-		write_config("/etc/dnsmasq.conf", "read-ethers");
+		write_config(COYOTE_CONFIG_DIR."dnsmasq.conf", "read-ethers");
 		foreach($Config->dhcpd["reservations"] as $reserve) {
-			write_config("/etc/ethers", $reserve["mac"]."\t".$reserve["address"]);
+			write_config(COYOTE_CONFIG_DIR."ethers", $reserve["mac"]."\t".$reserve["address"]);
 		}
 	}
 
@@ -504,22 +502,22 @@ function ConfigureDHCPD($Config) {
 function ConfigureDynDNS($Config) {
 
 	if ($Config->dyndns["enable"]) {
-		if (file_exists("/etc/ez-ipupdate.conf")) {
-			@unlink("/etc/ez-ipupdate.conf");
+		if (file_exists(COYOTE_CONFIG_DIR."ez-ipupdate.conf")) {
+			@unlink(COYOTE_CONFIG_DIR."ez-ipupdate.conf");
 		}
-		write_config("/etc/ez-ipupdate.conf", "#!/usr/bin/ez-ipupdate -c");
-		write_config("/etc/ez-ipupdate.conf", "daemon");
-		write_config("/etc/ez-ipupdate.conf", "quiet");
-		write_config("/etc/ez-ipupdate.conf", "cache-file=/tmp/ez-ipupdate.cache");
-		write_config("/etc/ez-ipupdate.conf", "run-as-user=nobody");
-		write_config("/etc/ez-ipupdate.conf", "interface=".$Config->dyndns["interface"]);
-		write_config("/etc/ez-ipupdate.conf", "service-type=".$Config->dyndns["service"]);
-		write_config("/etc/ez-ipupdate.conf", "user=".$Config->dyndns["username"].":".$Config->dyndns["password"]);
-		write_config("/etc/ez-ipupdate.conf", "host=".$Config->dyndns["hostname"]);
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "#!/usr/bin/ez-ipupdate -c");
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "daemon");
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "quiet");
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "cache-file=/tmp/ez-ipupdate.cache");
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "run-as-user=nobody");
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "interface=".$Config->dyndns["interface"]);
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "service-type=".$Config->dyndns["service"]);
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "user=".$Config->dyndns["username"].":".$Config->dyndns["password"]);
+		write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "host=".$Config->dyndns["hostname"]);
 		if ($Config->dyndns["max-interval"]) {
-			write_config("/etc/ez-ipupdate.conf", "max-interval=".$Config->dyndns["max-interval"]);
+			write_config(COYOTE_CONFIG_DIR."ez-ipupdate.conf", "max-interval=".$Config->dyndns["max-interval"]);
 		}
-		chmod("/etc/ez-ipupdate.conf", 0755);
+		chmod(COYOTE_CONFIG_DIR."ez-ipupdate.conf", 0755);
 
 		StartDynDNSService($Config);
 	}
@@ -572,7 +570,7 @@ function ConfigureInterfaces($Config) {
 					sudo_exec("iptables -A dhcp-server -i ".$if["device"]." -p udp --dport 67 -j ACCEPT");
 					sudo_exec("iptables -A dhcp-server -i ".$if["device"]." -p udp --dport 68 -j ACCEPT");
 					do_print("Configuring ".$if["device"]." using DHCP: ");
-					if (sudo_exec("udhcpc -i ".$if["device"]." -b -s /etc/dhcpc/dhcpc.updown")) {
+					if (sudo_exec("udhcpc -i ".$if["device"]." -b -s ".COYOTE_CONFIG_DIR."dhcpc/dhcpc.updown")) {
 						do_print("failed.\n");
 					} else {
 						do_print("done.\n");
@@ -587,17 +585,17 @@ function ConfigureInterfaces($Config) {
 						continue;
 					}
 
-					copy_template("pppoe.options", "/etc/ppp/pppoe.options");
+					copy_template("pppoe.options", COYOTE_CONFIG_DIR."ppp/pppoe.options");
 
 					// Output the pppoe username and password
-					write_config("/etc/ppp/pap-secrets",$Config->pppoe["username"]."	*	".
+					write_config(COYOTE_CONFIG_DIR."ppp/pap-secrets",$Config->pppoe["username"]."	*	".
 						$Config->pppoe["password"]."	*");
 
 					# Enable dynamic addressing extentions
 					//enable_dynaddr();
 					# Attempt to configure the specified interface using PPPoE
-					write_config("/etc/ppp/pppoe.options", "user ".$Config->pppoe["username"]);
-					write_config("/etc/ppp/pppoe.options", "pty 'pppoe -I ".$if["device"]." -m 1412'");
+					write_config(COYOTE_CONFIG_DIR."ppp/pppoe.options", "user ".$Config->pppoe["username"]);
+					write_config(COYOTE_CONFIG_DIR."ppp/pppoe.options", "pty 'pppoe -I ".$if["device"]." -m 1412'");
 					sudo_exec("/usr/sbin/pppoe-launch 1> /dev/null 2> /dev/null &");
 					# PPPoE can take some time to negotiate, wait for the interface to come up
 					do_print("Waiting for PPPoE negotiation.");
@@ -629,7 +627,7 @@ function ConfigureInterfaces($Config) {
 
 function GetCertificateSubject($certfile) {
 
-	$certtext = file_get_contents("/etc/ssl.d/$certfile");
+	$certtext = file_get_contents(COYOTE_CONFIG_DIR."ssl.d/$certfile");
 	$certdata = openssl_x509_parse($certtext);
 	$certid = trim(str_replace("/", " ", $certdata["name"]));
 	
@@ -773,10 +771,10 @@ function ConfigureSNMP($Config) {
 	if (!($Config->snmp["contact"] && $Config->snmp["location"]))
 		return;
 
-	copy_template("snmpd.conf", "/etc/snmp/snmpd.conf");
-	write_config("/etc/snmp/snmpd.conf", "syscontact	".$Config->snmp["contact"]);
-	write_config("/etc/snmp/snmpd.conf", "syslocation	".$Config->snmp["location"]);
-	sudo_exec("snmpd -c /etc/snmp/snmpd.conf -s 1> /dev/null 2> /dev/null");
+	copy_template("snmpd.conf", COYOTE_CONFIG_DIR."snmp/snmpd.conf");
+	write_config(COYOTE_CONFIG_DIR."snmp/snmpd.conf", "syscontact	".$Config->snmp["contact"]);
+	write_config(COYOTE_CONFIG_DIR."snmp/snmpd.conf", "syslocation	".$Config->snmp["location"]);
+	sudo_exec("snmpd -c ".COYOTE_CONFIG_DIR."snmp/snmpd.conf -s 1> /dev/null 2> /dev/null");
 
 }
 
@@ -883,13 +881,18 @@ function ConfigureUsers($Config) {
 		}
 	}
 
-	copy("/tmp/shadow.tmp", "/etc/shadow");
-	$pwtemplate = file_get_contents("/etc/config/templates/shadow");
-	file_put_contents("/etc/shadow", $pwtemplate, FILE_APPEND);
-	chmod("/etc/shadow", 0600);
+	// These commands were replaced to allow non-root execution of this script
+	# copy("/tmp/shadow.tmp", "/etc/shadow");
+	# $pwtemplate = file_get_contents("/etc/coyote/sysconf/templates/shadow");
+	# file_put_contents("/etc/shadow", $pwtemplate, FILE_APPEND);
+	# chmod("/etc/shadow", 0600);
+
+	sudo_exec("cp /tmp/shadow.tmp /etc/shadow")
+	sudo_exec("cat /etc/coyote/sysconf >> /etc/shadow")
+	sudo_exec("chmod 600 /etc/shadow");
+
 	unlink("/tmp/shadow.tmp");
 	copy("/tmp/htpasswd", "/var/www/htpasswd");
-
 }
 
 function LoadFixups($Config) {
@@ -900,14 +903,13 @@ function LoadFixups($Config) {
 }
 
 function ExecutePostBoot($Config) {
-	if (file_exists("/mnt/config/rc.d/post-boot-script")) {
+	if (file_exists(COYOTE_CONFIG_DIR."rc.d/post-boot-script")) {
 		print("Executing post-boot script.\n");
-		sudo_exec("/bin/sh -c /mnt/config/rc.d/post-boot-script");
+		sudo_exec("/bin/sh -c ".COYOTE_CONFIG_DIR."rc.d/post-boot-script");
 	}
 }
 
 function FinalizeACLConfig($Config) {
-
 	// These should always be the final rules in the INPUT and FORWARD chains.
 	// While they are redundant due to the DROP policy, they are needed for
 	// proper logging
@@ -917,23 +919,23 @@ function FinalizeACLConfig($Config) {
 
 function SetResolverInfo($Config) {
 
-	sudo_exec("rm /etc/resolv.static");
+	sudo_exec("rm ".COYOTE_CONFIG_DIR."resolv.static");
 
 	if ($Config->hostname)
 		sudo_exec("hostname ".$Config->hostname);
 
 	if ($Config->domainname) {
-		write_config("/etc/resolv.static", "search ". $Config->domainname);
+		write_config(COYOTE_CONFIG_DIR."resolv.static", "search ". $Config->domainname);
 	}
 
 	for($t=0; $t < count($Config->nameservers); $t++)
-		write_config("/etc/resolv.static", "nameserver ".$Config->nameservers[$t]);
+		write_config(COYOTE_CONFIG_DIR."resolv.static", "nameserver ".$Config->nameservers[$t]);
 
-	sudo_exec("cp -f /etc/resolv.static /etc/resolv.conf");
+	sudo_exec("cp -f ".COYOTE_CONFIG_DIR."resolv.static /etc/resolv.conf");
 
 }
 
-
+// Configures the running system per the Coyote configuration file
 function ProcessFullConfig($Config, $InWebReload = false) {
 
 	ShutdownFirewallServices($Config, $InWebReload);

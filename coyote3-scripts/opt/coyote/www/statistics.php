@@ -1,8 +1,5 @@
 <?
-include("includes/loadconfig.php");
-	VregCheck();
-
-
+require_once("includes/loadconfig.php");
 require_once("includes/webfunctions.php");
 require_once("stats.php");
 

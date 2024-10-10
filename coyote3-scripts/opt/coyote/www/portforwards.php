@@ -1,6 +1,5 @@
 <?
 	include("includes/loadconfig.php");
-	VregCheck();
 
 	/*
 	[portforwards] => Array

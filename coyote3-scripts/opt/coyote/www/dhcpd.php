@@ -1,7 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
-
 	//dhcpd.php
 	//
 	//configure dchp service

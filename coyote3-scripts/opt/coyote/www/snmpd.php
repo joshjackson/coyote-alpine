@@ -1,7 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
-
     //snmpd.php
     //
     // config settings and hostlist for snmpd

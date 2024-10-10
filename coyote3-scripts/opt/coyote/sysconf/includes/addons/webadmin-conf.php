@@ -74,7 +74,7 @@
 				if ($apply_acls) {
 					$this->ApplyAcls($Config);
 				}
-				sudo_exec("/usr/sbin/httpd -f /opt/coyote/config/httpd.conf 1> /dev/null 2> /dev/null");
+				sudo_exec("/usr/sbin/httpd -f ".COYOTE_CONFIG_DIR."httpd.conf 1> /dev/null 2> /dev/null");
 				return true;
 			}
 
@@ -110,7 +110,7 @@
 			@unlink("/opt/coyote/www/.htpasswd");
 			touch("/opt/coyote/www/.htpasswd");
 			chmod("/opt/coyote/www/.htpasswd", 0600);
-			@unlink("/opt/coyote/config/httpd/httpd.conf");
+			@unlink(COYOTE_CONFIG_DIR."httpd/httpd.conf");
 			@unlink("/var/state/httpd/server.pem");
 		}
 
@@ -128,7 +128,7 @@
 
 			$hostname = $Config->hostname;
 			// Make sure the server host certificates have been generated
-			if (! file_exists("/opt/coyote/config/ssl.d/".$hostname."_cert.pem")) {
+			if (! file_exists(COYOTE_CONFIG_DIR."ssl.d/".$hostname."_cert.pem")) {
 				// Generate a new set of certificates
 				sudo_exec("/opt/coyote/sysconf/gencerts new");
 			}
@@ -139,14 +139,14 @@
 				chmod("/var/state/httpd/server.pem", 0600);
 			}
 
-			do_exec("cat /opt/coyote/config/ssl.d/".$hostname."_priv.pem >> /var/state/httpd/server.pem");
-			do_exec("cat /opt/coyote/config/ssl.d/".$hostname."_cert.pem >> /var/state/httpd/server.pem");
+			do_exec("cat ".COYOTE_CONFIG_DIR."ssl.d/".$hostname."_priv.pem >> /var/state/httpd/server.pem");
+			do_exec("cat ".COYOTE_CONFIG_DIR."ssl.d/".$hostname."_cert.pem >> /var/state/httpd/server.pem");
 
-			copy_template("httpd.conf", "/opt/coyote/config/httpd.conf");
+			copy_template("httpd.conf", COYOTE_CONFIG_DIR."httpd.conf");
 
-			write_config("/opt/coyote/config/httpd.conf", "Listen ".$this->http["port"]);
-			write_config("/opt/coyote/config/httpd.conf", "ServerAdmin admin@".$hostname);
-			write_config("/opt/coyote/config/httpd.conf", "ServerName ".$hostname);
+			write_config(COYOTE_CONFIG_DIR."httpd.conf", "Listen ".$this->http["port"]);
+			write_config(COYOTE_CONFIG_DIR."httpd.conf", "ServerAdmin admin@".$hostname);
+			write_config(COYOTE_CONFIG_DIR."httpd.conf", "ServerName ".$hostname);
 			return true;
 		}
 

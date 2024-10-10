@@ -1,6 +1,5 @@
 <?
 	include("includes/loadconfig.php");
-	VregCheck();
 
 	$MenuTitle="ICMP Control";
 	$MenuType="RULES";

@@ -1,8 +1,6 @@
 <?
 	require_once("includes/loadconfig.php");
 
-	VregCheck();
-
 	$MenuTitle="System Settings";
 	$MenuType="SYSTEM";
 	include("includes/header.php");

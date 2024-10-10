@@ -1,7 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
-
 	//did we freshly load this page or are we loading on result of a post
 	if(strlen($_FILES['userfile']['name'])) {
 		$uploaddir = '/mnt/tmp/';

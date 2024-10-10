@@ -1,7 +1,5 @@
 <?
 	include("includes/loadconfig.php");
-	VregCheck();
-
 	$action = $_REQUEST['action'];
 	
 	if ($action == "posted") {

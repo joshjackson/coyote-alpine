@@ -1,8 +1,6 @@
 <?
 	include("includes/loadconfig.php");
 
-	VregCheck();
-
 	$MenuTitle="Firewall Rules";
 	$MenuType="RULES";
 

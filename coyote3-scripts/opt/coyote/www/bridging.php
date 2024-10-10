@@ -1,7 +1,5 @@
 <?
 	include("includes/loadconfig.php");
-	VregCheck();
-
 	/*
 	//TODO: implement these two
 

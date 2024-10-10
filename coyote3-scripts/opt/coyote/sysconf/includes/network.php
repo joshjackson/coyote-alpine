@@ -45,8 +45,6 @@ function disable_ip_forwarding() {
 // Get default WAN address
 function get_interface_ip($Config, $intf = 0) {
 
-	global $DEBUG_MODE;
-
 	if (!is_array($Config->interfaces[$intf]))
 		return false;
 
@@ -59,10 +57,8 @@ function get_interface_ip($Config, $intf = 0) {
 		$ifname = $iface["device"];
 	}
 
-	if ($DEBUG_MODE) {
-		do_print("Executing /bin/getifaddr for $ifname (idx $intf passed to function)\n");
-		print_r($iface);
-	}
+	debug_print("Executing /bin/getifaddr for $ifname (idx $intf passed to function)\n");
+	debug_print($iface, true);
 
 	// JJ: FIXME - Get rid of this crap - should be moved to an extension
 	sudo_exec("/bin/getifaddr ".$ifname, $outstr, $errcode);

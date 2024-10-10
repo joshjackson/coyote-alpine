@@ -1,8 +1,6 @@
 <?
 	include("includes/loadconfig.php");
 
-	VregCheck();
-
 	$MenuTitle="Interface Settings";
 	$MenuType="INTERFACES";
 	include("includes/header.php");

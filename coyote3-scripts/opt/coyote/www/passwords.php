@@ -1,6 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
 
 	$MenuTitle="System Passwords";
 	$PageIcon = "settings.jpg";

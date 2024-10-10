@@ -1,8 +1,6 @@
 <?
 	require_once("includes/loadconfig.php");
 
-	VregCheck();
-
 	$MenuTitle="Add ICMP Rule";
 	$MenuType="RULES";
 

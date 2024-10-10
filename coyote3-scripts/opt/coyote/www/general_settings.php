@@ -1,8 +1,6 @@
 <?
 	require_once("includes/loadconfig.php");
 
-	VregCheck();
-
 	//general_settings.php
 	//
 	//purpose:	1. offer form interface to edit firewall's general settings

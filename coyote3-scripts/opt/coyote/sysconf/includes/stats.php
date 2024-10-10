@@ -186,9 +186,9 @@ function UpdateStats($Config) {
 
 	// Update the Interface statistics
 	$ifstats = GetInterfaceStats();
-	if ($DEBUG_MODE) {
-		print_r($ifstats);
-	}
+
+	debug_print($ifstate, true);
+
 	foreach($Config->interfaces as $ifentry) {
 		if ($ifentry["down"]) {
 			continue;

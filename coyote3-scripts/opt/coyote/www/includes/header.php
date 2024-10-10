@@ -1,7 +1,5 @@
 <?
 	require_once($SitePath.'includes/webfunctions.php');
-	require_once('product.php');
-	
 	$SiteTheme = GetSiteTheme();
 ?>
 	

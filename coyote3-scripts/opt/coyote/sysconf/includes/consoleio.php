@@ -9,10 +9,23 @@
 
 function write_error($errstr) {
 	print($errstr."\n");
-
 }
 
-function do_print($str) {
-	print($str);
+function do_print($str, $human_readable = false) {
+	if ($human_readable) {
+		print_r($str);
+	} else {
+		print($str);
+	}
+}
+
+function debug_print($str, $human_readable = false) {
+	
+	global $DEBUG_MODE;
+
+	if ($DEBUG_MODE && DEBUG_PRINT) {
+		do_print($str, $human_readable);
+	}
+
 }
 ?>

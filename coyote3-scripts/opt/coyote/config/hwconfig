@@ -20,8 +20,8 @@ BOOT_DEV=/dev/root
 # Change this value if not storing config in /config
 BOOT_DIR=/config
 
-# Change this value if source partition is not ext2 based
-BOOT_FS=ext2
+# Change this value if source partition is not ext4 based
+BOOT_FS=ext4
 
 # Watchdog device type for this system
 WATCHDOG=softdog
@@ -29,6 +29,8 @@ WATCHDOG=softdog
 mount_flash_ro() {
 	sync
 	# Coyote 3.1 is based on Alpine Linux, this is not used
+	# Eventually an immutable install design will be perferred for Coyote Linux 4.0+
+	# and this process will need to be reviewed
 	#mount $BOOT_DEV /mnt -o remount -r -t $BOOT_FS
 	return 0
 }
@@ -46,7 +48,7 @@ read_build() {
 }
 
 set_build_str() {	
-	cp /etc/config/image_version /tmp/image_version
+	cp /opt/coyote/config/image_version /tmp/image_version
 	echo "unknown" >> /tmp/image_version
 	echo "unknown" >> /tmp/image_version
 	export BUILD_STR=`read_build < /tmp/image_version`

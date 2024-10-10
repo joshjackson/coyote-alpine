@@ -1,6 +1,5 @@
 <?
 	include("includes/loadconfig.php");
-	VregCheck();
 
 	/*
 		[0] => Array (
@@ -9,8 +8,6 @@
 	    [address] => 24.106.242.83
     )
   */
-
-
 	$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
 	$buttoninfo[1] = array("label" => "reset form", "dest" => $_SERVER['PHP_SELF']);
 

@@ -1,7 +1,5 @@
 <?
 	include("includes/loadconfig.php");
-	VregCheck();
-
 	/*
 
 	[0] => Array (
@@ -9,11 +7,9 @@
 	  [gw] => 192.168.5.254
 	  [dev] =>		//optional (intf name, "default" by default)
 	  [metric] =>	//optional (integer, 1..1000)
-  )
+  	)
 
 	*/
-
-
 	$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
 	$buttoninfo[1] = array("label" => "reset form", "dest" => $_SERVER['PHP_SELF']);
 

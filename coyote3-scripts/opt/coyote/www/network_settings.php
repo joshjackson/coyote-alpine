@@ -1,8 +1,6 @@
 <?
 	require_once("includes/loadconfig.php");
 
-	VregCheck();
-
 	$MenuTitle="Network Settings";
 	$MenuType="NETWORK";
 	include("includes/header.php");

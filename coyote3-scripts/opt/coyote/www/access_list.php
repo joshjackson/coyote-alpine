@@ -1,8 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-
-	VregCheck();
-	
 	require_once("runconfig.php");
 
 	$AccessListName = $_GET["aclidx"];

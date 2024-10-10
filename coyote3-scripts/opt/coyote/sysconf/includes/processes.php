@@ -7,27 +7,20 @@
 //
 // 10/9/2024 - Add sudo command to exec functions.
 
+require_once("defines.php");
+
 function do_exec($cmd) {
 
 	global $DEBUG_MODE;
 
 	$errcode = 0;
 
-	switch ($DEBUG_MODE) {
-		case 1:
-			print($cmd."\n");
-			exec($cmd, $outstr, $errcode);
-			break;
-		;;
-		case 2:
-			print($cmd."\n");
-			break;
-		;;
-		case 0:
-			exec($cmd, $outstr, $errcode);
-			break;
-		;;
+	debug_print($cmd."\n");
+
+	if (!($DEBUG_MODE && DEBUG_NOEXEC)) {
+		exec($cmd, $outstr, $errcode);
 	}
+
 	return $errcode;
 }
 
@@ -36,7 +29,6 @@ function sudo_exec($cmd) {
 	if (posix_geteuid() == 0) {
 		do_exec($cmd);
 	} else {
-		
 		do_exec("sudo ". $cmd);
 	}
 }
@@ -57,15 +49,11 @@ function load_module($modname) {
 
 function GetServicePID($pidfile) {
 
-	global $DEBUG_MODE;
-
 	$pidhandle = fopen($pidfile, "r");
 	$pidbuf = intval(trim(fgets($pidhandle, 128)));
 	fclose($pidhandle);
 
-	if ($DEBUG_MODE) {
-		print("Read PID $pidbuf from $pidfile\n");
-	}
+	debug_print("Read PID $pidbuf from $pidfile\n");
 
 	return $pidbuf;
 }

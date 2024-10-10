@@ -1,7 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
-
 	/*
 		[interface] => eth1
 		[bypass] => 0

@@ -1,7 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
-
 	$MenuTitle="Edit Interface ";
 	$MenuType="INTERFACES";
 

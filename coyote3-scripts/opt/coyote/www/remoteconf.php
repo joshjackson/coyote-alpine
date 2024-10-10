@@ -1,9 +1,7 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
 
 	$httpconf =& $configfile->get_addon('WebAdminService');
-
 
 		$MenuTitle="Remote Administration";
 		$MenuType="GENERAL";

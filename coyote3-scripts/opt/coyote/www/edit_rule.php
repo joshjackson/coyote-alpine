@@ -1,6 +1,5 @@
 <?
 	require_once("includes/loadconfig.php");
-	VregCheck();
 
 	$action = $_POST["action"];
 

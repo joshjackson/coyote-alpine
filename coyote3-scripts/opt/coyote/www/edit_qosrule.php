@@ -1,7 +1,6 @@
 <?
 	include("includes/loadconfig.php");
-	VregCheck();
-
+	
 	$action = $_REQUEST["action"];
 	$ruleidx = $_REQUEST["ruleidx"];
 	if ($ruleidx == "") {
