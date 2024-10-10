@@ -207,7 +207,7 @@ function GetPageIcon($MenuDef, $MenuType) {
 }
 
 function GetSiteTheme() {
-	// This webadmin app will never be used for anything other then Coyote
+	// This webadmin app will never be used for anything other than Coyote
 	// going forward. 
 	return "coyote";
 }

@@ -5,7 +5,7 @@
 // Author: Joshua Jackson <jjackson@vortech.net>
 // Date: 01/12/2004
 //
-// 10/9/2024 - Add sudo command into exec functions.
+// 10/9/2024 - Add sudo command to exec functions.
 
 function do_exec($cmd) {
 
@@ -32,11 +32,17 @@ function do_exec($cmd) {
 }
 
 function sudo_exec($cmd) {
-	do_exec("sudo ". $cmd)
+	// If we are already running as root, skip using sudo
+	if (posix_geteuid() == 0) {
+		do_exec($cmd);
+	} else {
+		
+		do_exec("sudo ". $cmd);
+	}
 }
 
 function check_depmod() {
-	exec("sudo depmod -a -q 1> /dev/null 2> /dev/null");
+	sudo_exec("depmod -a -q 1> /dev/null 2> /dev/null");
 }
 
 function load_module($modname) {
@@ -46,7 +52,7 @@ function load_module($modname) {
 	} else {
 		$modstr = $modname;
 	}
-	exec("sudo modprobe -qs $modstr 1> /dev/null 2> /dev/null");
+	sudo_exec("modprobe -qs $modstr 1> /dev/null 2> /dev/null");
 }
 
 function GetServicePID($pidfile) {

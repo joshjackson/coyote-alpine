@@ -41,7 +41,7 @@ function write_proc_value($procentry, $value) {
 }
 
 function copy_template($template, $location) {
-	return copy("/opt/coyote/config/templates/$template", $location);
+	return copy("/opt/coyote/sysconf/templates/$template", $location);
 }
 
 // FIXME - These functions need to call a helper app which has the proper
@@ -51,7 +51,7 @@ function mount_flash_rw() {
 	global $IN_DEVELOPMENT;
 
 	if (!$IN_DEVELOPMENT) {
-		do_exec("/bin/mount /mnt -o remount,rw");
+		sudo_exec("/bin/mount /mnt -o remount,rw");
 	}
 
 }
@@ -61,7 +61,7 @@ function mount_flash_ro() {
 	global $IN_DEVELOPMENT;
 
 	if (!$IN_DEVELOPMENT) {
-		do_exec("/bin/mount /mnt -o remount,ro");
+		sudo_exec("/bin/mount /mnt -o remount,ro");
 	}
 
 }

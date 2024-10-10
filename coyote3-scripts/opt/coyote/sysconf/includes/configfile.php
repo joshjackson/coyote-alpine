@@ -168,7 +168,7 @@ class FirewallConfig {
 		$this->addons = array();
 
 		// Load and init any addon configuration extensions
-		$ObjFiles = glob('/etc/sysconf/addons/*-conf.php');
+		$ObjFiles = glob('/opt/coyote/sysconf/addons/*-conf.php');
 		if (is_array($ObjFiles)) {
 			foreach($ObjFiles as $Obj) {
 				unset($NewAddon);
@@ -1065,10 +1065,12 @@ class FirewallConfig {
 		}
 	}
 
+	// Firewall configuration version
 	function output_config() {
 		$this->line_output("config version ".PRODUCT_VERSION);
 	}
 
+	// Various firewall behaviour "options"
 	function output_options() {
 		if (!$this->options["acl-auto-apply"])
 			$this->line_output("option acl-auto-apply disable");
@@ -1083,6 +1085,7 @@ class FirewallConfig {
 		}
 	}
 
+	// IP Kernel tweaking parameters
 	function output_tuning() {
 		$tuneopts = array_keys($this->tuning_options);
 		for($t=0; $t < count($tuneopts); $t++) {
@@ -1111,13 +1114,15 @@ class FirewallConfig {
 		}
 	}
 
+	// NIC auto-detection
+	// FIXME: New versions of Coyote (3.1+) will always auto-detect NICs
 	function output_hardware() {
 		if ($this->hardware_detection) {
 			$this->line_output("hardware autodetect");
 		}
 	}
 
-
+	// Network time sync options
 	function output_clock() {
 		if ($this->timezone)
 			$this->line_output("clock timezone ".$this->timezone);
@@ -1125,6 +1130,7 @@ class FirewallConfig {
 			$this->line_output("clock server ".$this->timeserver);
 	}
 
+	// Firewall user configuration (permitted logins)
 	function output_users() {
 		for($t=0; $t < count($this->users); $t++) {
 			if (!$this->users[$t]["encrypted"]) {
@@ -1137,22 +1143,26 @@ class FirewallConfig {
 		}
 	}
 
+	// Masquerading protocol helpers
 	function output_fixup() {
 		for ($t=0; $t < count($this->fixups); $t++) {
 			$this->line_output("fixup ".$this->fixups[$t]);
 		}
 	}
 
+	// Firewall Hostname
 	function output_hostname() {
 		if ($this->hostname)
 			$this->line_output("hostname ". $this->hostname);
 	}
 
+	// Firewall Domain name
 	function output_domain() {
 		if ($this->domainname)
 			$this->line_output("domain-name ". $this->domainname);
 	}
 
+	// Dynamic DNS client config
 	function output_dyndns() {
 		if ($this->dyndns["enable"]) {
 			$this->line_output("dyndns enable ".$this->dyndns["interface"]);
@@ -1165,6 +1175,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Network Interface name aliases
 	function output_nameif() {
 		for ($t=0; $t<count($this->interfaces); $t++) {
 			if ($this->interfaces[$t]["name"] != $this->interfaces[$t]["device"]) {
@@ -1173,12 +1184,14 @@ class FirewallConfig {
 		}
 	}
 
+	// Nameservers
 	function output_nameservers() {
 		foreach($this->nameservers as $nsrec) {
 			$this->line_output("name-server ".$nsrec);
 		}
 	}
 
+	// PPPoE WAN configuration
 	function output_pppoe() {
 		if ($this->pppoe["username"])
 			$this->line_output("pppoe user ".$this->pppoe["username"]." ".
@@ -1187,6 +1200,7 @@ class FirewallConfig {
 			$this->line_output("pppoe demand ".$this->pppoe["demand"]);
 	}
 
+	// Firewall Network Interface configuration
 	function output_interfaces() {
 		// If we are not doing hardware auto detection, output the interface module
 		// definitions
@@ -1230,6 +1244,7 @@ class FirewallConfig {
 
 	}
 
+	// Network interface bridging
 	function output_bridge() {
 		$bropts = array_keys($this->bridge);
 		for ($t=0; $t < count($bropts); $t++) {
@@ -1251,6 +1266,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Network Routing
 	function output_routes() {
 		foreach($this->routes as $route) {
 			$routestmt = "route ".$route["dest"]." ".$route["gw"];
@@ -1262,6 +1278,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Manual IP forwarding
 	function output_portfw() {
 		for($t=0; $t < count($this->portforwards); $t++) {
 			$outstr = "port-forward " .$this->portforwards[$t]["source"]." ".
@@ -1276,6 +1293,7 @@ class FirewallConfig {
 		}
 	}
 
+	// ProxyARP 
 	function output_proxyarp() {
 		for($t=0; $t < count($this->proxyarp); $t++) {
 			$this->line_output("proxyarp ".$this->proxyarp[$t]["ext_if"]." host ".
@@ -1284,6 +1302,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Firewall ICMP controls
 	function output_icmp() {
 		foreach($this->icmp["rules"] as $icmprule) {
 			$this->line_output("icmp permit ".$icmprule["source"]." ".
@@ -1295,6 +1314,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Network ACLs
 	function output_acls() {
 		$aclnames = array_keys($this->acls);
 		for($t=0; $t < count($aclnames); $t++) {
@@ -1311,6 +1331,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Statements for binding network ACLs to interfaces
 	function output_apply() {
 		for($t=0; $t < count($this->apply); $t++) {
 			$outstr = "apply ".$this->apply[$t]["acl"]." in ".
@@ -1321,6 +1342,7 @@ class FirewallConfig {
 		}
 	}
 
+	// IP (TCP/UDP) port auto-forwarding
 	function output_autofw() {
 		for($t=0; $t < count($this->autoforwards); $t++) {
 			$this->line_output("auto-forward ".$this->autoforwards[$t]["interface"]." ".
@@ -1330,6 +1352,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Network Address Translation
 	function output_nat() {
 		for($t=0; $t<count($this->nat); $t++) {
 			$outstr = "nat ";
@@ -1345,7 +1368,7 @@ class FirewallConfig {
 		}
 	}
 
-
+	// DHCP Server Config
 	function output_dhcpd() {
 		if ($this->dhcpd["interface"]) {
 
@@ -1368,14 +1391,13 @@ class FirewallConfig {
 
 			$this->line_output("dhcpd enable ".$this->dhcpd["interface"]);
 		}
-
-
+		
 		foreach($this->dhcpd["reservations"] as $resent) {
 			$this->line_output("dhcpd reserve ".$resent["address"]." ".$resent["mac"]);
 		}
 	}
 
-
+	// SNMPd
 	function output_snmp() {
 		if ($this->snmp["location"])
 			$this->line_output("snmp location ".$this->snmp["location"]);
@@ -1386,6 +1408,7 @@ class FirewallConfig {
 		}
 	}
 
+	// SSH Server
 	function output_ssh() {
 		if ($this->ssh["enable"]) {
 			$outstr = "ssh server enable";
@@ -1398,6 +1421,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Quality of Service (QoS)
 	function output_qos() {
 		if ($this->qos["enable"]) {
 			$this->line_output("qos enable");
@@ -1418,6 +1442,7 @@ class FirewallConfig {
 		}
 	}
 
+	// System (syslogd) Logging
 	function output_logging() {
 		foreach($this->logging as $logkey => $logdata) {
 			if ($logkey == "host") {
@@ -1430,6 +1455,7 @@ class FirewallConfig {
 		}
 	}
 
+	// Dumps a formatted Coyote Linux configuration file to stdout
 	function WriteConfigFile($filename) {
 		if (!$filename) {
 			$filename = "php://stdout";

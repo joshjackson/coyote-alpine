@@ -1,19 +1,19 @@
 #!/usr/bin/php -q
+<?php
 
-<?
-
+	// This script calls the routines to update the system stat graphs for the 
+	// web admin interface.
+	
 	require_once("functions.php");
 	require_once("configfile.php");
 	require_once("stats.php");
 
 	$config = new FirewallConfig;
 
-	if (!$config->LoadConfigFile("/etc/config/sysconfig")) {
+	if (!$config->LoadConfigFile("/opt/coyote/config/sysconfig")) {
 		print("Error loading config file.\n");
 		die;
 	}
 
 	UpdateStats($config);
-
-
 ?>

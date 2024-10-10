@@ -4,13 +4,13 @@
 #              to flash
 
 # Source the hardware config
-. /etc/config/hwconfig
+. /opt/coyote/config/hwconfig
 
 
 if [ -r /var/lib/dnsmasq.leases ]; then 
 
 	mount_flash_rw
-	cp /var/lib/dnsmasq.leases /mnt/config/dhcpd/dnsmasq.leases
+	cp /var/lib/dnsmasq.leases /opt/coyote/config/dhcpd/dnsmasq.leases
 	mount_flash_ro
 	sync
 

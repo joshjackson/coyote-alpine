@@ -16,11 +16,11 @@ restore_backup() {
 	fi
 
 	# Clear out some existing configuration data
-	rm /etc/ssl.d/*.pem 1> /dev/null 2> /dev/null
-	rm /etc/ssl.d/cacerts/* 1> /dev/null 2> /dev/null
-	rm /etc/ssl.d/crl/* 1> /dev/null 2> /dev/null
+	rm /opt/coyote/config/ssl.d/*.pem 1> /dev/null 2> /dev/null
+	rm /opt/coyote/config/ssl.d/cacerts/* 1> /dev/null 2> /dev/null
+	rm /opt/coyote/config/ssl.d/crl/* 1> /dev/null 2> /dev/null
 
-	cd /mnt/config
+	cd /opt/coyote/config
 	tar -xf $1
 	if [ ! $? = 0 ]; then
 		echo "Failed to restore system configuration."
@@ -60,34 +60,43 @@ restore_firmware() {
 
 apply_firmware_update() {
 
-	mount_flash_rw
-	if ! [ -r "$1" ]; then
-		return 1
-	fi
-
-	# Set a firmware restore point
-        if [ ! -d /mnt/boot/flashback ]; then
-                mkdir /mnt/boot/flashback
-        else
-                rm -f /mnt/boot/flashback/* 1> /dev/null 2> /dev/null
-        fi
+	# This routine is not used for Coyote Linux 3.1+
+	# Package management and system updates will be handled using 
+	# Alpine's APK package manager
+	# 
 	
-        mv /mnt/boot/rootfs.img /mnt/boot/flashback/
-        mv /mnt/boot/initrd.img /mnt/boot/flashback/
-	cp /mnt/boot/*.img /mnt/boot/flashback/
-        mv /mnt/boot/linux /mnt/boot/flashback/
-        mv /mnt/boot/checksum /mnt/boot/flashback/
-        cp /etc/config/image_version /mnt/boot/flashback/
+	# We will assume that the APKs have been applied. Simply reboot
+	sudo /sbin/reboot
+	return 0
+		
+	# mount_flash_rw
+	# if ! [ -r "$1" ]; then
+	# 	return 1
+	# fi
+
+	# # Set a firmware restore point
+    #     if [ ! -d /mnt/boot/flashback ]; then
+    #             mkdir /mnt/boot/flashback
+    #     else
+    #             rm -f /mnt/boot/flashback/* 1> /dev/null 2> /dev/null
+    #     fi
+	
+    #     mv /mnt/boot/rootfs.img /mnt/boot/flashback/
+    #     mv /mnt/boot/initrd.img /mnt/boot/flashback/
+	# 	cp /mnt/boot/*.img /mnt/boot/flashback/
+    #     mv /mnt/boot/linux /mnt/boot/flashback/
+    #     mv /mnt/boot/checksum /mnt/boot/flashback/
+    #     cp /etc/config/image_version /mnt/boot/flashback/
 
 
-        # Copy the new files into place
-        cd /mnt
-        tar -xf $1
-        rm -f $1
-        # Update the LILO boot loader info
-        lilo -r /mnt 1> /dev/null 2> /dev/null
-	mount_flash_ro
-        sync
-        reboot
+    #     # Copy the new files into place
+    #     cd /mnt
+    #     tar -xf $1
+    #     rm -f $1
+    #     # Update the LILO boot loader info
+    #     lilo -r /mnt 1> /dev/null 2> /dev/null
+	# 	mount_flash_ro
+    #     sync
+    #     reboot
  
 }

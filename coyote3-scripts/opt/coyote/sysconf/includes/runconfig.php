@@ -9,8 +9,8 @@ require_once("functions.php");
 require_once("services.php");
 
 function ShutdownBridge($Config) {
-	do_exec("ip link set br0 down 1> /dev/null 2>/dev/null");
-	do_exec("brctl delbr br0 1> /dev/null 2> /dev/null");
+	sudo_exec("ip link set br0 down 1> /dev/null 2>/dev/null");
+	sudo_exec("brctl delbr br0 1> /dev/null 2> /dev/null");
 }
 
 function ShutdownInterfaces($Config) {
@@ -20,8 +20,8 @@ function ShutdownInterfaces($Config) {
 		$vlans=file_get_contents("/var/run/vlans");
 		foreach($vlans as $vlanid) {
 			$vlanid = trim($vlanid);
-			do_exec("ip link set dev $vlanid down 1> /dev/null 2> /dev/null");
-			do_exec("vconfig rem $vlanid 1> /dev/null 2> /dev/null");
+			sudo_exec("ip link set dev $vlanid down 1> /dev/null 2> /dev/null");
+			sudo_exec("vconfig rem $vlanid 1> /dev/null 2> /dev/null");
 		}
 		unlink("/var/run/vlans");
 	}
@@ -47,14 +47,14 @@ function ShutdownInterfaces($Config) {
 	}
 
 	// Stop any running dhcp client processes
-	do_exec("killall udhcpc 1> /dev/null 2> /dev/null");
+	sudo_exec("killall udhcpc 1> /dev/null 2> /dev/null");
 }
 
 function FlushTables() {
-	do_exec("iptables -F 1> /dev/null 2> /dev/null");
-	do_exec("iptables -t nat -F 1> /dev/null 2> /dev/null");
-	do_exec("iptables -X 1> /dev/null 2> /dev/null");
-	do_exec("iptables -t nat -X 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -F 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -t nat -F 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -X 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -t nat -X 1> /dev/null 2> /dev/null");
 }
 
 
@@ -64,83 +64,83 @@ function InitInterfaces($Config) {
 	ShutdownInterfaces($Config);
 
 	// Flush any remaining address information
-	do_exec("ip addr flush up 1> /dev/null 2> /dev/null");
+	sudo_exec("ip addr flush up 1> /dev/null 2> /dev/null");
 
 }
 
 function InitFirewallRules($Config) {
 
-	do_exec("iptables -P INPUT DROP");
-	do_exec("iptables -P FORWARD DROP");
-	do_exec("iptables -P OUTPUT ACCEPT");
+	sudo_exec("iptables -P INPUT DROP");
+	sudo_exec("iptables -P FORWARD DROP");
+	sudo_exec("iptables -P OUTPUT ACCEPT");
 
 	FlushTables();
 
 	# Configure the standard loopback interface
-	do_exec("ip addr flush dev lo 1> /dev/null 2> /dev/null");
-	do_exec("ip addr add 127.0.0.1/8 dev lo");
-	do_exec("ip link set lo up");
+	sudo_exec("ip addr flush dev lo 1> /dev/null 2> /dev/null");
+	sudo_exec("ip addr add 127.0.0.1/8 dev lo");
+	sudo_exec("ip link set lo up");
 
 	// Create the default firewall chains
-	do_exec("iptables -N accept-packet");
-	do_exec("iptables -A accept-packet -j ACCEPT");
-	do_exec("iptables -N accept-packet-local");
-	do_exec("iptables -A accept-packet-local -j ACCEPT");
+	sudo_exec("iptables -N accept-packet");
+	sudo_exec("iptables -A accept-packet -j ACCEPT");
+	sudo_exec("iptables -N accept-packet-local");
+	sudo_exec("iptables -A accept-packet-local -j ACCEPT");
 
-	do_exec("iptables -N drop-packet");
-	do_exec("iptables -A drop-packet -j DROP");
-	do_exec("iptables -N drop-packet-local");
-	do_exec("iptables -A drop-packet-local -j DROP");
+	sudo_exec("iptables -N drop-packet");
+	sudo_exec("iptables -A drop-packet -j DROP");
+	sudo_exec("iptables -N drop-packet-local");
+	sudo_exec("iptables -A drop-packet-local -j DROP");
 
-	do_exec("iptables -A FORWARD -m state --state INVALID -j drop-packet");
-	do_exec("iptables -A INPUT -m state --state INVALID -j drop-packet-local");
-	do_exec("iptables -I FORWARD -m state --state established,related -j ACCEPT");
-	do_exec("iptables -I INPUT -m state --state established,related -j ACCEPT");
+	sudo_exec("iptables -A FORWARD -m state --state INVALID -j drop-packet");
+	sudo_exec("iptables -A INPUT -m state --state INVALID -j drop-packet-local");
+	sudo_exec("iptables -I FORWARD -m state --state established,related -j ACCEPT");
+	sudo_exec("iptables -I INPUT -m state --state established,related -j ACCEPT");
 
 	# Always accept traffic from the loopback interface
-	do_exec("iptables -A INPUT -i lo -j ACCEPT");
+	sudo_exec("iptables -A INPUT -i lo -j ACCEPT");
 
 	# UPnP chains
-	do_exec('iptables -N igd-forward');
-	do_exec('iptables -A FORWARD -j igd-forward');
-	do_exec('iptables -t nat -N igd-preroute');
-	do_exec('iptables -t nat -A PREROUTING -j igd-preroute');
-	do_exec('iptables -N igd-input');
-	do_exec('iptables -A INPUT -j igd-input');
+	sudo_exec('iptables -N igd-forward');
+	sudo_exec('iptables -A FORWARD -j igd-forward');
+	sudo_exec('iptables -t nat -N igd-preroute');
+	sudo_exec('iptables -t nat -A PREROUTING -j igd-preroute');
+	sudo_exec('iptables -N igd-input');
+	sudo_exec('iptables -A INPUT -j igd-input');
 
-	do_exec("iptables -N wolv-user-acls");
-	do_exec("iptables -A FORWARD -j wolv-user-acls");
+	sudo_exec("iptables -N wolv-user-acls");
+	sudo_exec("iptables -A FORWARD -j wolv-user-acls");
 
-	do_exec("iptables -N wolv-local-acls");
-	do_exec("iptables -A INPUT -j wolv-local-acls");
+	sudo_exec("iptables -N wolv-local-acls");
+	sudo_exec("iptables -A INPUT -j wolv-local-acls");
 
-	do_exec("iptables -N snmp-hosts");
-	do_exec("iptables -A wolv-local-acls -p udp --dport 161 -j snmp-hosts");
+	sudo_exec("iptables -N snmp-hosts");
+	sudo_exec("iptables -A wolv-local-acls -p udp --dport 161 -j snmp-hosts");
 
-	do_exec("iptables -N icmp-rules");
-	do_exec("iptables -N icmp-limit");
-	do_exec("iptables -A wolv-local-acls -p icmp -j icmp-rules");
+	sudo_exec("iptables -N icmp-rules");
+	sudo_exec("iptables -N icmp-limit");
+	sudo_exec("iptables -A wolv-local-acls -p icmp -j icmp-rules");
 
-	do_exec("iptables -N ssh-hosts");
+	sudo_exec("iptables -N ssh-hosts");
   if ( $Config->ssh["enable"] ) {
 		if (!$Config->ssh["port"]) {
    		$sshprt = 22;
     } else {
     	$sshprt = $Config->ssh["port"];
     }
-		do_exec("iptables -A wolv-local-acls -p tcp --dport $sshprt --syn -j ssh-hosts");
+		sudo_exec("iptables -A wolv-local-acls -p tcp --dport $sshprt --syn -j ssh-hosts");
 	}
 
-	do_exec("iptables -N dhcp-server");
-	do_exec("iptables -A wolv-local-acls -p udp -j dhcp-server");
+	sudo_exec("iptables -N dhcp-server");
+	sudo_exec("iptables -A wolv-local-acls -p udp -j dhcp-server");
 
 	# Create forwarding chain to handle autofw/portfw access control
-	do_exec("iptables -N auto-forward-acl");
-	do_exec("iptables -A FORWARD -j auto-forward-acl");
-	do_exec("iptables -t nat -N auto-forward");
-	do_exec("iptables -t nat -A PREROUTING -j auto-forward");
-	do_exec("iptables -t nat -N port-forward");
-	do_exec("iptables -t nat -A PREROUTING -j port-forward");
+	sudo_exec("iptables -N auto-forward-acl");
+	sudo_exec("iptables -A FORWARD -j auto-forward-acl");
+	sudo_exec("iptables -t nat -N auto-forward");
+	sudo_exec("iptables -t nat -A PREROUTING -j auto-forward");
+	sudo_exec("iptables -t nat -N port-forward");
+	sudo_exec("iptables -t nat -A PREROUTING -j port-forward");
 
 
 	enable_ip_forwarding();
@@ -158,9 +158,9 @@ function InitModulesConfig() {
 
 function EmergencyShutdown() {
 
-	do_exec("iptables -P INPUT DROP");
-	do_exec("iptables -P FORWARD DROP");
-	do_exec("iptables -P OUTPUT DROP");
+	sudo_exec("iptables -P INPUT DROP");
+	sudo_exec("iptables -P FORWARD DROP");
+	sudo_exec("iptables -P OUTPUT DROP");
 
 	disable_ip_forwarding();
 
@@ -172,14 +172,14 @@ function ApplyICMPAcls($Config, $do_flush = false) {
 
 	// ICMP rate limiter
 	if ($do_flush) {
-		do_exec("iptables -F icmp-rules");
-		do_exec("iptables -F icmp-limit");
+		sudo_exec("iptables -F icmp-rules");
+		sudo_exec("iptables -F icmp-limit");
 	}
 	if ($Config->icmp["limit"]) {
-		do_exec("iptables -I icmp-limit -p icmp --icmp-type echo-request -m limit --limit 1/second ".
+		sudo_exec("iptables -I icmp-limit -p icmp --icmp-type echo-request -m limit --limit 1/second ".
 			"--limit-burst ".$Config->icmp["limit"]." -j RETURN");
-		do_exec("iptables -A icmp-limit -p icmp --icmp-type echo-request -j drop-packet");
-		do_exec("iptables -I wolv-user-acls -p icmp -j icmp-limit");
+		sudo_exec("iptables -A icmp-limit -p icmp --icmp-type echo-request -j drop-packet");
+		sudo_exec("iptables -I wolv-user-acls -p icmp -j icmp-limit");
 	}
 
 	# Apply ICMP ACLs
@@ -189,7 +189,7 @@ function ApplyICMPAcls($Config, $do_flush = false) {
 			continue;
 		$icmpsrc = ($icmprule["source"] == "any") ? "" : "-s ".$icmprule["source"];
 		$icmptype = ($icmprule["type"] == "all") ? "" : "--icmp-type ".$icmprule["type"];
-		do_exec("iptables -A icmp-rules -i $ifname $icmpsrc -p icmp $icmptype -j accept-packet");
+		sudo_exec("iptables -A icmp-rules -i $ifname $icmpsrc -p icmp $icmptype -j accept-packet");
 	}
 }
 
@@ -204,11 +204,11 @@ function ApplyDHCPDAcls($Config, $do_flush = false) {
 		return 0;
 
 	if ($do_flush) {
-		do_exec("iptables -F dhcp-server");
+		sudo_exec("iptables -F dhcp-server");
 	}
 
-	do_exec("iptables -A dhcp-server -i $ifname -p udp --dport 67 -j ACCEPT");
-	do_exec("iptables -A dhcp-server -i $ifname -p udp --dport 68 -j ACCEPT");
+	sudo_exec("iptables -A dhcp-server -i $ifname -p udp --dport 67 -j ACCEPT");
+	sudo_exec("iptables -A dhcp-server -i $ifname -p udp --dport 68 -j ACCEPT");
 
 }
 
@@ -219,7 +219,7 @@ function ApplyUserAcl($Config, $aclname, $do_flush = false) {
 	}
 
 	if ($do_flush) {
-		do_exec("iptables -F $aclname 1> /dev/null 2> /dev/null");
+		sudo_exec("iptables -F $aclname 1> /dev/null 2> /dev/null");
 	}
 	$acl = $Config->acls["$aclname"];
 	foreach ($acl as $aclent) {
@@ -229,37 +229,37 @@ function ApplyUserAcl($Config, $aclname, $do_flush = false) {
 		$cmd .= ($aclent["dest"] == "any") ? "" : " -d ".$aclent["dest"];
 		$cmd .= (!$aclent["ports"]) ? "" : " --dport ".$aclent["ports"];
 		$cmd .= ($aclent["permit"]) ? " -j accept-packet" : " -j drop-packet";
-		do_exec($cmd);
+		sudo_exec($cmd);
 	}
 }
 
 function ApplySNMPAcls($Config, $do_flush = false) {
 	# Apply SNMP access ACLs
 	if ($do_flush) {
-		do_exec("iptables -F snmp-hosts");
+		sudo_exec("iptables -F snmp-hosts");
 	}
 	for($t=0; $t < count($Config->snmp["hosts"]); $t++)
-		do_exec("iptables -A snmp-hosts -s ".$Config->snmp["hosts"][$t]." -j accept-packet-local");
+		sudo_exec("iptables -A snmp-hosts -s ".$Config->snmp["hosts"][$t]." -j accept-packet-local");
 }
 
 function ApplyRemoteAdminAcls($Config, $do_flush=false) {
 
 	if ($do_flush) {
-		do_exec("iptables -F ssh-hosts");
+		sudo_exec("iptables -F ssh-hosts");
 	}
 
 	if ($Config->options["vortech-support"]) {
 		$vsupport_acl = file_get_contents();
 		for ($t=0; $t < count($vsupport_acl); $t++) {
-			do_exec("iptables -A ssh-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
-			do_exec("iptables -A http-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
+			sudo_exec("iptables -A ssh-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
+			sudo_exec("iptables -A http-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
 		}
 	}
 
 	if ($Config->ssh["enable"]) {
 		# Apply SSH access ACLs
 		for($t=0; $t < count($Config->ssh["hosts"]); $t++)
-			do_exec("iptables -A ssh-hosts -s ".$Config->ssh["hosts"][$t]." -j accept-packet-local");
+			sudo_exec("iptables -A ssh-hosts -s ".$Config->ssh["hosts"][$t]." -j accept-packet-local");
 	}
 
 
@@ -269,10 +269,10 @@ function ApplyAcls($Config, $do_flush = false, $do_addons = false) {
 	// Create the chains
 	$acllist=array_keys($Config->acls);
 	foreach($acllist as $aclname) {
-		if (!do_exec("iptables -N ".$aclname)) {
+		if (!sudo_exec("iptables -N ".$aclname)) {
 			if ($Config->options["acl-auto-apply"]) {
 				// If specified, automatically insert the firewall chain
-				if (do_exec("iptables -A wolv-user-acls -j ".$aclname))
+				if (sudo_exec("iptables -A wolv-user-acls -j ".$aclname))
 					continue;
 			}
 			ApplyUserAcl($Config, $aclname, $do_flush);
@@ -313,7 +313,7 @@ function BindAcls($Config) {
 		$cmd .= ($out_if) ? " --physdev-out $out_if" : "";
 		$cmd .= " -j ".$Config->apply[$t]["acl"];
 
-		do_exec($cmd);
+		sudo_exec($cmd);
 	}
 }
 
@@ -322,9 +322,9 @@ function ConfigureAutoForwards($Config) {
 	foreach ($Config->autoforwards as $af) {
 		$ifname=$Config->resolve_ifname($af["interface"]);
 		# Add a new rule to the auto-forward chain to allow the specified port forwards
-		do_exec("iptables -A auto-forward-acl -i $ifname -p ".$af["protocol"]." --dport ".$af["port"]." -j accept-packet");
+		sudo_exec("iptables -A auto-forward-acl -i $ifname -p ".$af["protocol"]." --dport ".$af["port"]." -j accept-packet");
 		# Add the DNAT entry to forward the port
-		do_exec("iptables -t nat -A auto-forward -i $ifname -p ".$af["protocol"]." --dport ".$af["port"]." -j DNAT ".
+		sudo_exec("iptables -t nat -A auto-forward -i $ifname -p ".$af["protocol"]." --dport ".$af["port"]." -j DNAT ".
 			"--to ".$af["dest"]);
 	}
 }
@@ -336,10 +336,10 @@ function ConfigureBridge($Config) {
 	for ($t=0; $t < count($Config->interfaces); $t++) {
 		if ($Config->interfaces[$t]["bridge"]) {
 			if (!$bcnt) {
-				do_exec("brctl addbr br0");
-				do_exec("ip link set br0 up");
+				sudo_exec("brctl addbr br0");
+				sudo_exec("ip link set br0 up");
 			}
-			do_exec("brctl addif br0 ".$Config->interfaces[$t]["device"]);
+			sudo_exec("brctl addif br0 ".$Config->interfaces[$t]["device"]);
 			$bdevs[$bcnt] = $Config->interfaces[$t]["device"];
 			$bcnt++;
 		}
@@ -362,41 +362,41 @@ function ConfigureBridge($Config) {
 			$braddr = $testaddr;
 			$brbcast = $ipc["BROADCAST"];
 		}
-		do_exec("ip address add $braddr broadcast $brbcast dev br0");
+		sudo_exec("ip address add $braddr broadcast $brbcast dev br0");
 	}
 
 	if ($Config->bridge["spanning-tree"]) {
-		do_exec("brctl stp br0 enable");
+		sudo_exec("brctl stp br0 enable");
 	} else {
-		do_exec("brctl stp br0 disable");
+		sudo_exec("brctl stp br0 disable");
 	}
 
 	if ($Config->bridge["aging"])
-		do_exec("brctl ageing br0 ".$Config->bridge["aging"]);
+		sudo_exec("brctl ageing br0 ".$Config->bridge["aging"]);
 
 	if ($Config->bridge["priority"])
-		do_exec("brctl setbridgeprio br0 ".$Config->bridge["priority"]);
+		sudo_exec("brctl setbridgeprio br0 ".$Config->bridge["priority"]);
 
 	if ($Config->bridge["hello-interval"])
-		do_exec("brctl sethello br0 ".$Config->bridge["hello-interval"]);
+		sudo_exec("brctl sethello br0 ".$Config->bridge["hello-interval"]);
 
 	if ($Config->bridge["garbage-collection"])
-		do_exec("brctl setgcint br0 ".$Config->bridge["garbage-collection"]);
+		sudo_exec("brctl setgcint br0 ".$Config->bridge["garbage-collection"]);
 
 	if ($Config->bridge["maximum-age"])
-		do_exec("brctl setmaxage br0 ".$Config->bridge["maximum-age"]);
+		sudo_exec("brctl setmaxage br0 ".$Config->bridge["maximum-age"]);
 
 	for ($t=0; $t < count($Config->bridge["path-cost"]); $t++) {
 		if (in_array($Config->bridge["path-cost"]["interface"], $bdevs))
-			do_exec("brctl setpathcost br0 ".$Config->bridge["path-cost"]["interface"]." ".$Config->bridge["path-cost"]["value"]);
+			sudo_exec("brctl setpathcost br0 ".$Config->bridge["path-cost"]["interface"]." ".$Config->bridge["path-cost"]["value"]);
 	}
 
 	if ($Config->bridge["forward-delay"])
-		do_exec("brctl setfd br0 ".$Config->bridge["forward-delay"]);
+		sudo_exec("brctl setfd br0 ".$Config->bridge["forward-delay"]);
 
 	for ($t=0; $t < count($Config->bridge["port-priority"]); $t++) {
 		if (in_array($Config->bridge["path-cost"]["interface"], $bdevs))
-			do_exec("brctl setpathcost br0 ".$Config->bridge["port-priority"]["interface"]." ".
+			sudo_exec("brctl setpathcost br0 ".$Config->bridge["port-priority"]["interface"]." ".
 				$Config->bridge["port-priority"]["value"]);
 	}
 }
@@ -407,10 +407,10 @@ function SyncClock($Config) {
 
 	if ($Config->timeserver) {
 		//print("Setting system time from timeserver ".$Config->timeserver.": ");
-		do_exec("/usr/sbin/rdate -s ".$Config->timeserver." 1> /dev/null 2> /dev/null&");
+		sudo_exec("/usr/sbin/rdate -s ".$Config->timeserver." 1> /dev/null 2> /dev/null&");
 		if (!$retcode) {
 			//print("done.\n");
-			do_exec("/sbin/hwclock --systohc 1> /dev/null 2> /dev/null");
+			sudo_exec("/sbin/hwclock --systohc 1> /dev/null 2> /dev/null");
 		} else {
 			//print("failed.\n");
 		}
@@ -536,7 +536,7 @@ function ConfigureInterfaces($Config) {
 		// Set the module
 		write_config("/etc/modprobe.conf", "alias ". $if["device"]." ".$if["module"]);
 		// Attempt to bring the interface online
-		if (do_exec("ip link set ".$if["device"]." up")) {
+		if (sudo_exec("ip link set ".$if["device"]." up")) {
 			write_error("Failed to bring device ".$if["device"]." online.");
 			continue;
 		}
@@ -544,20 +544,20 @@ function ConfigureInterfaces($Config) {
 
 		if ($if["mac"]) {
 			// Take the interface back offline for hardware address configuration
-			do_exec("ip link set dev ".$if["device"]." down");
-			do_exec("ip link set address ".$if["mac"]." dev ".$if["device"]);
-			do_exec("ip link set dev ".$if["device"]." up");
+			sudo_exec("ip link set dev ".$if["device"]." down");
+			sudo_exec("ip link set address ".$if["mac"]." dev ".$if["device"]);
+			sudo_exec("ip link set dev ".$if["device"]." up");
 		}
 
 		if ($if["mtu"]) {
-			do_exec("ip link set dev ".$if["device"]." mtu ".$if["mtu"]);
+			sudo_exec("ip link set dev ".$if["device"]." mtu ".$if["mtu"]);
 		}
 
 		// If there are any VLAN interfaces attached to this interface, attempt to create them
 		if (is_array($if["vlans"])) {
 			foreach ($if["vlans"] as $vid => $vent) {
 				//do_print("Creating VLAN device ".$if["device"].".$vid\n");
-				if (do_exec("vconfig add ".$if["device"]." ".$vid)) {
+				if (sudo_exec("vconfig add ".$if["device"]." ".$vid)) {
 					write_error("Failed to create VLAN device for VLAN ID: $vid");
 				} else {
 					write_config("/var/run/vlans", $if["device"].".".$vid);
@@ -569,10 +569,10 @@ function ConfigureInterfaces($Config) {
 			switch($if["addresses"]) {
 				case "dhcp":
 					// Allow DHCP packets
-					do_exec("iptables -A dhcp-server -i ".$if["device"]." -p udp --dport 67 -j ACCEPT");
-					do_exec("iptables -A dhcp-server -i ".$if["device"]." -p udp --dport 68 -j ACCEPT");
+					sudo_exec("iptables -A dhcp-server -i ".$if["device"]." -p udp --dport 67 -j ACCEPT");
+					sudo_exec("iptables -A dhcp-server -i ".$if["device"]." -p udp --dport 68 -j ACCEPT");
 					do_print("Configuring ".$if["device"]." using DHCP: ");
-					if (do_exec("udhcpc -i ".$if["device"]." -b -s /etc/dhcpc/dhcpc.updown")) {
+					if (sudo_exec("udhcpc -i ".$if["device"]." -b -s /etc/dhcpc/dhcpc.updown")) {
 						do_print("failed.\n");
 					} else {
 						do_print("done.\n");
@@ -583,7 +583,7 @@ function ConfigureInterfaces($Config) {
 					// Make sure the pppoe options have been set
 					if ((!$Config->pppoe["username"]) || (!$Config->pppoe["password"])) {
 						write_error("PPPoE options have not been set, disabling interface $confstmt[1]");
-						do_exec("ip link set ".$if["device"]." down");
+						sudo_exec("ip link set ".$if["device"]." down");
 						continue;
 					}
 
@@ -598,7 +598,7 @@ function ConfigureInterfaces($Config) {
 					# Attempt to configure the specified interface using PPPoE
 					write_config("/etc/ppp/pppoe.options", "user ".$Config->pppoe["username"]);
 					write_config("/etc/ppp/pppoe.options", "pty 'pppoe -I ".$if["device"]." -m 1412'");
-					do_exec("/usr/sbin/pppoe-launch 1> /dev/null 2> /dev/null &");
+					sudo_exec("/usr/sbin/pppoe-launch 1> /dev/null 2> /dev/null &");
 					# PPPoE can take some time to negotiate, wait for the interface to come up
 					do_print("Waiting for PPPoE negotiation.");
 					$PPPOE_UP = 0;
@@ -620,7 +620,7 @@ function ConfigureInterfaces($Config) {
 		} else {
 			// Static IP address configurations
 			for($x=0; $x < count($if["addresses"]); $x++) {
-				do_exec("ip addr add ".$if["addresses"][$x]["ip"]." broadcast ".$if["addresses"][$x]["broadcast"].
+				sudo_exec("ip addr add ".$if["addresses"][$x]["ip"]." broadcast ".$if["addresses"][$x]["broadcast"].
 					" dev ".$if["device"]);
 			}
 		}
@@ -638,22 +638,22 @@ function GetCertificateSubject($certfile) {
 
 function ApplyLoggingRules($Config) {
 	
-	do_exec("iptables -D accept-packet-local -j LOG 1> /dev/null 2> /dev/null");
-	do_exec("iptables -D drop-packet-local -j LOG 1> /dev/null 2> /dev/null");
-	do_exec("iptables -D accept-packet -j LOG 1> /dev/null 2> /dev/null");
-	do_exec("iptables -D drop-packet -j LOG 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -D accept-packet-local -j LOG 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -D drop-packet-local -j LOG 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -D accept-packet -j LOG 1> /dev/null 2> /dev/null");
+	sudo_exec("iptables -D drop-packet -j LOG 1> /dev/null 2> /dev/null");
 		
 	if ($Config->logging["local-accept"]) {
-		do_exec("iptables -I accept-packet-local -j LOG --log-level info 1> /dev/null 2> /dev/null");
+		sudo_exec("iptables -I accept-packet-local -j LOG --log-level info 1> /dev/null 2> /dev/null");
 	}
 	if ($Config->logging["local-deny"]) {
-		do_exec("iptables -I drop-packet-local -j LOG --log-level info 1> /dev/null 2> /dev/null");
+		sudo_exec("iptables -I drop-packet-local -j LOG --log-level info 1> /dev/null 2> /dev/null");
 	}
 	if ($Config->logging["forward-accept"]) {
-		do_exec("iptables -I accept-packet -j LOG --log-level info 1> /dev/null 2> /dev/null");
+		sudo_exec("iptables -I accept-packet -j LOG --log-level info 1> /dev/null 2> /dev/null");
 	}
 	if ($Config->logging["forward-deny"]) {
-		do_exec("iptables -I drop-packet -j LOG --log-level info 1> /dev/null 2> /dev/null");
+		sudo_exec("iptables -I drop-packet -j LOG --log-level info 1> /dev/null 2> /dev/null");
 	}
 }
 
@@ -663,12 +663,12 @@ function ConfigureLogging($Config) {
 
 	$syslog_opts .= ($Config->logging["host"]) ? " -L -R ".$Config->logging["host"] : "";
 
-	do_exec("/usr/bin/killall syslogd 1> /dev/null 2> /dev/null");
-	do_exec("/usr/bin/killall klogd -c 1 1> /dev/null 2> /dev/null");
+	sudo_exec("/usr/bin/killall syslogd 1> /dev/null 2> /dev/null");
+	sudo_exec("/usr/bin/killall klogd -c 1 1> /dev/null 2> /dev/null");
 	sleep(1);
 	do_print("Initializing system logging service...\n");
-	do_exec("syslogd $syslog_opts 1> /dev/null 2> /dev/null");
-	do_exec("klogd -c 1 1> /dev/null 2> /dev/null");
+	sudo_exec("syslogd $syslog_opts 1> /dev/null 2> /dev/null");
+	sudo_exec("klogd -c 1 1> /dev/null 2> /dev/null");
 
 	ApplyLoggingRules($Config);
 
@@ -681,8 +681,8 @@ function ConfigureNAT($Config) {
 			# Adds NAT bypass to allow for exceptions to any added NAT rules
 			# NOTE: These rules always get "inserted" rather than added to make sure that they go into
 			# affect before any added NAT rules.
-			do_exec("iptables -t nat -I POSTROUTING -s $confstmt[2] -d $confstmt[3] -j accept-packet");
-			do_exec("iptables -t nat -I PREROUTING -s $confstmt[2] -d $confstmt[3] -j accept-packet");
+			sudo_exec("iptables -t nat -I POSTROUTING -s $confstmt[2] -d $confstmt[3] -j accept-packet");
+			sudo_exec("iptables -t nat -I PREROUTING -s $confstmt[2] -d $confstmt[3] -j accept-packet");
 		} else {
 			$ifname=$Config->resolve_ifname($Config->nat[$t]["interface"]);
 			if (!$ifname)
@@ -690,7 +690,7 @@ function ConfigureNAT($Config) {
 			$cmd="iptables -t nat -A POSTROUTING -s ".$Config->nat[$t]["source"]." -o $ifname";
 			$cmd .= ($Config->nat[$t]["dest"]) ? " -d ".$Config->nat[$t]["dest"] : "";
 			$cmd .= " -j MASQUERADE";
-			do_exec($cmd);
+			sudo_exec($cmd);
 		}
 	}
 }
@@ -700,9 +700,9 @@ function ConfigureOptions($Config) {
 
 	if ($Config->options["clamp-mss"]) {
 		if ($Config->options["clamp-mss"] == "pmtu") {
-			do_exec("iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu");
+			sudo_exec("iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu");
 		} else {
-			do_exec("iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss ".$Config->options["clamp-mss"]);
+			sudo_exec("iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss ".$Config->options["clamp-mss"]);
 		}
 	}
 
@@ -719,7 +719,7 @@ function ConfigurePortForwards($Config) {
 		$cmd .= " -j DNAT --to ".$pf["dest"];
 		$cmd .= ($pf["to-port"]) ? ":".$pf["to-port"] : "";
 
-		do_exec($cmd);
+		sudo_exec($cmd);
 
 	}
 }
@@ -733,7 +733,7 @@ function ConfigureUPNPD($Config) {
 
 function ConfigureProxyarp($Config) {
 
-	do_exec("ip neigh flush all 1> /dev/null 2> /dev/null");
+	sudo_exec("ip neigh flush all 1> /dev/null 2> /dev/null");
 
 	for ($t=0; $t < count($Config->proxyarp); $t++) {
 
@@ -747,8 +747,8 @@ function ConfigureProxyarp($Config) {
 			touch("/var/run/proxyarp");
 		}
 
-		do_exec("ip route add ".$Config->proxyarp[$t]["address"]." dev $intif");
-		do_exec("ip neigh add proxy ".$Config->proxyarp[$t]["address"]." dev $extif");
+		sudo_exec("ip route add ".$Config->proxyarp[$t]["address"]." dev $intif");
+		sudo_exec("ip neigh add proxy ".$Config->proxyarp[$t]["address"]." dev $extif");
 		write_proc_value("sys/net/ipv4/conf/$intif/proxy_arp", 1);
 	}
 }
@@ -763,7 +763,7 @@ function ConfigureRoutes($Config) {
 		$rtcmd .= ($Config->routes[$t]["dev"]) ? " dev ".$Config->routes[$t]["dev"] : "";
 		$rtcmd .= ($Config->routes[$t]["metric"]) ? " metric ".$Config->routes[$t]["metric"] : "";
 
-		do_exec($rtcmd);
+		sudo_exec($rtcmd);
 
 	}
 }
@@ -776,7 +776,7 @@ function ConfigureSNMP($Config) {
 	copy_template("snmpd.conf", "/etc/snmp/snmpd.conf");
 	write_config("/etc/snmp/snmpd.conf", "syscontact	".$Config->snmp["contact"]);
 	write_config("/etc/snmp/snmpd.conf", "syslocation	".$Config->snmp["location"]);
-	do_exec("snmpd -c /etc/snmp/snmpd.conf -s 1> /dev/null 2> /dev/null");
+	sudo_exec("snmpd -c /etc/snmp/snmpd.conf -s 1> /dev/null 2> /dev/null");
 
 }
 
@@ -902,7 +902,7 @@ function LoadFixups($Config) {
 function ExecutePostBoot($Config) {
 	if (file_exists("/mnt/config/rc.d/post-boot-script")) {
 		print("Executing post-boot script.\n");
-		do_exec("/bin/sh -c /mnt/config/rc.d/post-boot-script");
+		sudo_exec("/bin/sh -c /mnt/config/rc.d/post-boot-script");
 	}
 }
 
@@ -911,16 +911,16 @@ function FinalizeACLConfig($Config) {
 	// These should always be the final rules in the INPUT and FORWARD chains.
 	// While they are redundant due to the DROP policy, they are needed for
 	// proper logging
-	do_exec("iptables -A INPUT -j drop-packet-local");
-	do_exec("iptables -A FORWARD -j drop-packet");
+	sudo_exec("iptables -A INPUT -j drop-packet-local");
+	sudo_exec("iptables -A FORWARD -j drop-packet");
 }
 
 function SetResolverInfo($Config) {
 
-	@unlink("/etc/resolv.static");
+	sudo_exec("rm /etc/resolv.static");
 
 	if ($Config->hostname)
-		do_exec("hostname ".$Config->hostname);
+		sudo_exec("hostname ".$Config->hostname);
 
 	if ($Config->domainname) {
 		write_config("/etc/resolv.static", "search ". $Config->domainname);
@@ -929,7 +929,7 @@ function SetResolverInfo($Config) {
 	for($t=0; $t < count($Config->nameservers); $t++)
 		write_config("/etc/resolv.static", "nameserver ".$Config->nameservers[$t]);
 
-	do_exec("cp -f /etc/resolv.static /etc/resolv.conf");
+	sudo_exec("cp -f /etc/resolv.static /etc/resolv.conf");
 
 }
 

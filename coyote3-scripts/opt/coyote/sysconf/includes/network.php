@@ -1,8 +1,6 @@
 <?
-
 // JJ: FIXME - Get rid of this crap - either an extension or internal calcs
 function run_ipcalc($params) {
-
 
 	$ipc=array(
 		"BROADCAST" => "",
@@ -12,7 +10,7 @@ function run_ipcalc($params) {
 		"retcode" =>0
 	);
 
-	exec("ipcalc $params", $outstr, $errcode);
+	do_exec("ipcalc $params", $outstr, $errcode);
 
 	for ($t=0; $t < count($outstr); $t++) {
 		$tmpary = explode("=", $outstr[$t]);
@@ -67,7 +65,7 @@ function get_interface_ip($Config, $intf = 0) {
 	}
 
 	// JJ: FIXME - Get rid of this crap - should be moved to an extension
-	exec("sudo /bin/getifaddr ".$ifname, $outstr, $errcode);
+	sudo_exec("/bin/getifaddr ".$ifname, $outstr, $errcode);
 
 	if (!$errcode) {
 		return $outstr[0];

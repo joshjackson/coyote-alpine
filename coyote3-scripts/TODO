@@ -1,0 +1,23 @@
+Filesystem Linkages needed:
+
+/etc/dhcpc/ -> /opt/coyote/config/dhcpc/
+/etc/resolve.static -> /opt/coyote/config/resolv.static
+/etc/resolve.conf -> /opt/coyote/config/resolv.conf
+/etc/httpd.conf -> /opt/coyote/config/httpd.conf
+/etc/ez-ipupdate.conf -> /opt/coyote/config/ez-ipupdate.conf
+/etc/ssl.d/ -> /opt/coyote/config/ssl.d/
+
+Other fixes:
+
+Move system configuration templates out of /opt/coyote/config/templates/ and into /opt/coyote/sysconf/templates/
+
+Add user coyote.coyote to base system, place in wheel group, add to sudoers with no PW requirement
+	- coyote user needs to be used for all firewall services as well as web server
+
+Need to implement a new IPSEC subsystem. Strongswan?
+Need to implement a new web server for webadmin. Needs to eventually support .Net Core web applications
+
+Review /opt/coyote/config/dhcpc/dhcpc.updown interface file build process
+/opt/coyote/config/dhcpc/dhcpc.updown:90, 142 -> Fix for new ipsec system needed
+/opt/coyote/sysconf/includes/addons/webadmin-conf.php -> Fix for new http daemon
+

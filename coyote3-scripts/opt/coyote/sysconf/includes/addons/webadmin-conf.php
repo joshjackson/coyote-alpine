@@ -54,14 +54,14 @@
 		function ApplyAcls($Config = "", $do_flush=false) {
 
 			if ($do_flush) {
-				do_exec("sudo iptables -F http hosts 1> /dev/null 2> /dev/null");
+				sudo_exec("iptables -F http hosts 1> /dev/null 2> /dev/null");
 			}
 
-			do_exec("sudo iptables -N http-hosts");
-			do_exec("sudo iptables -A coyote-local-acls -p tcp --syn --dport ".$this->http["port"]." -j http-hosts");
+			sudo_exec("iptables -N http-hosts");
+			sudo_exec("iptables -A coyote-local-acls -p tcp --syn --dport ".$this->http["port"]." -j http-hosts");
 			# Apply HTTP access ACLs
 			for($t=0; $t < count($this->http["hosts"]); $t++)
-				do_exec("sudo iptables -A http-hosts -s ".$this->http["hosts"][$t]." -j accept-packet-local");
+				sudo_exec("iptables -A http-hosts -s ".$this->http["hosts"][$t]." -j accept-packet-local");
 		}
 
 		function StartService($Config = "", $apply_acls=true) {
@@ -74,7 +74,7 @@
 				if ($apply_acls) {
 					$this->ApplyAcls($Config);
 				}
-				do_exec("sudo /usr/sbin/httpd -f /opt/coyote/config/httpd.conf 1> /dev/null 2> /dev/null");
+				sudo_exec("/usr/sbin/httpd -f /opt/coyote/config/httpd.conf 1> /dev/null 2> /dev/null");
 				return true;
 			}
 
@@ -94,9 +94,9 @@
 			}
 
 			// Remove the traffic ACL
-			do_exec("sudo iptables -F http-hosts");
-			do_exec("sudo iptables -D coyote-local-acls -j http-hosts");
-			do_exec("sudo iptables -X http-hosts");
+			sudo_exec("iptables -F http-hosts");
+			sudo_exec("iptables -D coyote-local-acls -j http-hosts");
+			sudo_exec("iptables -X http-hosts");
 
 			return true;
 		}
@@ -130,7 +130,7 @@
 			// Make sure the server host certificates have been generated
 			if (! file_exists("/opt/coyote/config/ssl.d/".$hostname."_cert.pem")) {
 				// Generate a new set of certificates
-				do_exec("sudo /opt/coyote/sysconf/gencerts new");
+				sudo_exec("/opt/coyote/sysconf/gencerts new");
 			}
 
 			if (file_exists("/var/state/httpd/server.pem")) {
@@ -142,7 +142,7 @@
 			do_exec("cat /opt/coyote/config/ssl.d/".$hostname."_priv.pem >> /var/state/httpd/server.pem");
 			do_exec("cat /opt/coyote/config/ssl.d/".$hostname."_cert.pem >> /var/state/httpd/server.pem");
 
-			copy_template("httpd.conf", "/etc/httpd.conf");
+			copy_template("httpd.conf", "/opt/coyote/config/httpd.conf");
 
 			write_config("/opt/coyote/config/httpd.conf", "Listen ".$this->http["port"]);
 			write_config("/opt/coyote/config/httpd.conf", "ServerAdmin admin@".$hostname);

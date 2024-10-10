@@ -16,7 +16,7 @@ function StartSSHService ($Config) {
 
 	$ssh_opts = "-p ".$Config->ssh["port"];
 
-	do_exec("/usr/sbin/sshd $ssh_opts 1> /dev/null 2> /dev/null");
+	sudo_exec("/usr/sbin/sshd $ssh_opts 1> /dev/null 2> /dev/null");
 }
 
 
@@ -38,12 +38,12 @@ function StopSSHService () {
 
 function StartDynDNSService($Config) {
 	if ($Config->dyndns["enable"]) {
-		do_exec("/etc/ez-ipupdate.conf 1> /dev/null 2> /dev/null");
+		sudo_exec("/etc/ez-ipupdate.conf 1> /dev/null 2> /dev/null");
 	}
 }
 
 function StopDynDNSService() {
-	do_exec("killall -HUP ez-ipupdate");
+	sudo_exec("killall -HUP ez-ipupdate");
 }
 
 
@@ -56,24 +56,24 @@ function StartUPNPService ($Config) {
 		return 0;
 	}
 
-	do_exec("sudo ip route add 239.0.0.0/8 dev $intnic");
-    do_exec("sudo iptables -A igd-input -i $intnic -d 239.0.0.0/8 -j accept-packet-local");
-    do_exec("sudo iptables -A igd-input -i $intnic -p udp --dport 1900 -j accept-packet-local");
-    do_exec("sudo iptables -A igd-input -i $intnic -p tcp --dport 2869 -j accept-packet-local");
+	sudo_exec("ip route add 239.0.0.0/8 dev $intnic");
+    sudo_exec("iptables -A igd-input -i $intnic -d 239.0.0.0/8 -j accept-packet-local");
+    sudo_exec("iptables -A igd-input -i $intnic -p udp --dport 1900 -j accept-packet-local");
+    sudo_exec("iptables -A igd-input -i $intnic -p tcp --dport 2869 -j accept-packet-local");
     # Yuck... upnpd opens a dynamic port range starting at 49152.
-    do_exec("sudo iptables -A igd-input -i $intnic -p tcp --dport 49152:65535 -j accept-packet-local");
-    do_exec("sudo /usr/sbin/upnpd $extnic $intnic 1> /dev/null 2> /dev/null");
+    sudo_exec("iptables -A igd-input -i $intnic -p tcp --dport 49152:65535 -j accept-packet-local");
+    sudo_exec("/usr/sbin/upnpd $extnic $intnic 1> /dev/null 2> /dev/null");
 
 	return 0;
 }
 
 function StopUPNPService () {
 
-	do_exec("sudo killall -9 upnpd 1> /dev/null 2> /dev/null");
-    do_exec("sudo ip route del 239.0.0.0/8 1> /dev/null 2> /dev/null");
-    do_exec("sudo iptables -F igd-forward 1> /dev/null 2> /dev/null");
-    do_exec("sudo iptables -F igd-input 1> /dev/null 2> /dev/null");
-    do_exec("sudo iptables -t nat -F igd-preroute 1> /dev/null 2> /dev/null");
+	sudo_exec("killall -9 upnpd 1> /dev/null 2> /dev/null");
+    sudo_exec("ip route del 239.0.0.0/8 1> /dev/null 2> /dev/null");
+    sudo_exec("iptables -F igd-forward 1> /dev/null 2> /dev/null");
+    sudo_exec("iptables -F igd-input 1> /dev/null 2> /dev/null");
+    sudo_exec("iptables -t nat -F igd-preroute 1> /dev/null 2> /dev/null");
 
 	return 0;
 }
@@ -82,7 +82,7 @@ function StartDNSMasqService ($Config) {
 
 	# Start the server
 	# FIXME: Use openinitrd script service
-	do_exec("sudo /usr/sbin/dnsmasq 1> /dev/null 2> /dev/null");
+	sudo_exec("/usr/sbin/dnsmasq 1> /dev/null 2> /dev/null");
 }
 
 function StopDNSMasqService () {
@@ -92,12 +92,12 @@ function StopDNSMasqService () {
 	}
 
 	$pid = GetServicePID("/var/run/dnsmasq.pid");
-	posix_kill($pid, 15);
+	//posix_kill($pid, 15);
+	sudo_exec("kill ".$pid)
 }
 
 function StopSNMPService() {
-	// FIXME: Use openinitrd service scripts
-	do_exec("sudo killall snmpd 1> /dev/null 2> /dev/null");
+	sudo_exec("killall snmpd 1> /dev/null 2> /dev/null");
 }
 
 function ShutdownFirewallServices($Config, $SkipWeb = false, $SkipSSH = false) {

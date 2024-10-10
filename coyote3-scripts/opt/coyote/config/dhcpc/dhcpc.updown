@@ -31,7 +31,7 @@ deconfig_if () {
 	# Put the interface in an unconfigured state
 	ip addr flush dev $interface 1> /dev/null 2> /dev/null
 	ip link set $interface up
-	if [ -r /etc/dhcpc/${interface}.info ]; then
+	if [ -r /opt/coyote/config/dhcpc/${interface}.info ]; then
 		rm -f /etc/dhcpc/${interface}.info
 	fi
 }
@@ -39,20 +39,22 @@ deconfig_if () {
 build_resolv () {
 
 	if [ ! -z "${dns}" ]; then
-	    rm -f /etc/dhcpc/resolv.conf
-	    touch /etc/dhcpc/resolv.conf
-	    for DNSSRV in "${dns}"; do
-		echo "nameserver $DNSSRV" >> /etc/dhcpc/resolv.conf
+	    
+		rm -f /opt/coyote/config/dhcpc/resolv.conf
+	    touch /opt/coyote/config/dhcpc/resolv.conf
+	    
+		for DNSSRV in "${dns}"; do
+			echo "nameserver $DNSSRV" >> /opt/coyote/config/dhcpc/resolv.conf
 	    done
 	
-	    rm -f /etc/resolv.conf
+	    rm -f /opt/coyote/config/resolv.conf
 	    touch /etc/resolv.conf
 	    
 	    if [ -r /etc/resolv.static ]; then
-		cat /etc/resolv.static >> /etc/resolv.conf
+			cat /opt/coyote/config/resolv.static >> /etc/resolv.conf
 	    fi
 	    
-	    cat /etc/dhcpc/resolv.conf >> /etc/resolv.conf
+	    cat /opt/coyote/config/dhcpc/resolv.conf >> /etc/resolv.conf
 	fi
 
 }
@@ -83,6 +85,8 @@ bind_if () {
 	
 	dump_info > /etc/dhcpc/${interface}.info
 
+
+	# FIXME: 
 	[ -x /usr/sbin/ipsecctl ] && /usr/sbin/ipsecctl ifup $interface 1> /dev/null 2> /dev/null&
 
 }
@@ -138,7 +142,7 @@ renew_if () {
 		[ -x /usr/sbin/ipsecctl ] && /usr/sbin/ipsecctl ifchg $interface 1> /dev/null 2> /dev/null&
 	fi
 	
-	dump_info > /etc/dhcpc/${interface}.info
+	dump_info > /opt/coyote/config/dhcpc/${interface}.info
 		
 }
 
