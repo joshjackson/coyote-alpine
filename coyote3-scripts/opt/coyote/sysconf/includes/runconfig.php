@@ -4,6 +4,8 @@
 //
 // Author: Joshua Jackson <jjackson@vortech.net>
 // Date: 01/12/2004
+//
+// 10/10/2024 Changes for Coyote Linux 3.1, based on Alpine Linux
 
 require_once("functions.php");
 require_once("services.php");
@@ -108,18 +110,18 @@ function InitFirewallRules($Config) {
 	sudo_exec('iptables -N igd-input');
 	sudo_exec('iptables -A INPUT -j igd-input');
 
-	sudo_exec("iptables -N wolv-user-acls");
-	sudo_exec("iptables -A FORWARD -j wolv-user-acls");
+	sudo_exec("iptables -N coyote-user-acls");
+	sudo_exec("iptables -A FORWARD -j coyote-user-acls");
 
-	sudo_exec("iptables -N wolv-local-acls");
-	sudo_exec("iptables -A INPUT -j wolv-local-acls");
+	sudo_exec("iptables -N coyote-local-acls");
+	sudo_exec("iptables -A INPUT -j coyote-local-acls");
 
 	sudo_exec("iptables -N snmp-hosts");
-	sudo_exec("iptables -A wolv-local-acls -p udp --dport 161 -j snmp-hosts");
+	sudo_exec("iptables -A coyote-local-acls -p udp --dport 161 -j snmp-hosts");
 
 	sudo_exec("iptables -N icmp-rules");
 	sudo_exec("iptables -N icmp-limit");
-	sudo_exec("iptables -A wolv-local-acls -p icmp -j icmp-rules");
+	sudo_exec("iptables -A coyote-local-acls -p icmp -j icmp-rules");
 
 	sudo_exec("iptables -N ssh-hosts");
   if ( $Config->ssh["enable"] ) {
@@ -128,11 +130,11 @@ function InitFirewallRules($Config) {
     } else {
     	$sshprt = $Config->ssh["port"];
     }
-		sudo_exec("iptables -A wolv-local-acls -p tcp --dport $sshprt --syn -j ssh-hosts");
+		sudo_exec("iptables -A coyote-local-acls -p tcp --dport $sshprt --syn -j ssh-hosts");
 	}
 
 	sudo_exec("iptables -N dhcp-server");
-	sudo_exec("iptables -A wolv-local-acls -p udp -j dhcp-server");
+	sudo_exec("iptables -A coyote-local-acls -p udp -j dhcp-server");
 
 	# Create forwarding chain to handle autofw/portfw access control
 	sudo_exec("iptables -N auto-forward-acl");
@@ -178,7 +180,7 @@ function ApplyICMPAcls($Config, $do_flush = false) {
 		sudo_exec("iptables -I icmp-limit -p icmp --icmp-type echo-request -m limit --limit 1/second ".
 			"--limit-burst ".$Config->icmp["limit"]." -j RETURN");
 		sudo_exec("iptables -A icmp-limit -p icmp --icmp-type echo-request -j drop-packet");
-		sudo_exec("iptables -I wolv-user-acls -p icmp -j icmp-limit");
+		sudo_exec("iptables -I coyote-user-acls -p icmp -j icmp-limit");
 	}
 
 	# Apply ICMP ACLs
@@ -271,7 +273,7 @@ function ApplyAcls($Config, $do_flush = false, $do_addons = false) {
 		if (!sudo_exec("iptables -N ".$aclname)) {
 			if ($Config->options["acl-auto-apply"]) {
 				// If specified, automatically insert the firewall chain
-				if (sudo_exec("iptables -A wolv-user-acls -j ".$aclname))
+				if (sudo_exec("iptables -A coyote-user-acls -j ".$aclname))
 					continue;
 			}
 			ApplyUserAcl($Config, $aclname, $do_flush);
@@ -308,7 +310,7 @@ function BindAcls($Config) {
 		$in_if=$Config->resolve_ifname($Config->apply[$t]["in_if"]);
 		$out_if=$Config->resolve_ifname($Config->apply[$t]["out_if"]);
 
-		$cmd = "iptables -A wolv-user-acls -m physdev --physdev-in ".$in_if;
+		$cmd = "iptables -A coyote-user-acls -m physdev --physdev-in ".$in_if;
 		$cmd .= ($out_if) ? " --physdev-out $out_if" : "";
 		$cmd .= " -j ".$Config->apply[$t]["acl"];
 
@@ -741,7 +743,7 @@ function ConfigureProxyarp($Config) {
 		if (!($extif && $intif))
 			continue;
 
-		if (! file_exists("/var/run/proxyarp")) {
+		if (!file_exists("/var/run/proxyarp")) {
 			touch("/var/run/proxyarp");
 		}
 

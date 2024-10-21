@@ -29,7 +29,7 @@ function write_proc_value($procentry, $value) {
 	debug_print("write_proc_value: Writing value: $value to $procfile");
 	// If we are not running as root, chances are we will not be
 	// able to write to a proc entry, sudo it
-	if (!posix_getuid()) {
+	if (posix_getuid() > 0) {
 		return sudo_exec("echo $value > $procfile");
 	} else {
 		if (!($DEBUG_MODE && DEBUG_NOEXEC)) {

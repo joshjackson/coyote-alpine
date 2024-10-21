@@ -6,7 +6,6 @@
 // Date: 01/12/2004
 //
 // 10/9/2024 - Add sudo command to exec functions.
-
 require_once("defines.php");
 
 function do_exec($cmd) {
@@ -26,10 +25,10 @@ function do_exec($cmd) {
 
 function sudo_exec($cmd) {
 	// If we are already running as root, skip using sudo
-	if (posix_geteuid() == 0) {
-		do_exec($cmd);
+	if (posix_geteuid() > 0) {
+		do_exec("doas ". $cmd);
 	} else {
-		do_exec("sudo ". $cmd);
+		do_exec($cmd);
 	}
 }
 

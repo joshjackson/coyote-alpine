@@ -1,6 +1,6 @@
 <?
 // File: 	webadmin.php
-// Purpose: 	Web Administrator Firmware Addon configuration routines
+// Purpose: Web Administrator Firmware Addon configuration routines
 // Product:	Coyote Linux
 // Date:	10/14/2005
 // Author:	Joshua Jackson <jjackson@vortech.net>

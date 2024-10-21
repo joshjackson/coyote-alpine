@@ -1,9 +1,9 @@
 <?
 //-----------------------------------------------------------------------------
-// File: 			fwaddon.php
+// File: 		fwaddon.php
 // Purpose: 	Firmware Addon class skeleton
 // Product:		Vortech Embedded Linux
-// Date:			10/14/2005
+// Date:		10/14/2005
 // Author:		Joshua Jackson <jjackson@vortech.net>
 //
 // Copyright (c)2005 Vortech Consulting, LLC
