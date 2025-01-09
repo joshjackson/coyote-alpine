@@ -10,6 +10,7 @@ Filesystem Linkages needed:
 /etc/ethers -> /opt/coyote/config/ethers
 /etc/ppp/ -> /opt/coyote/config/ppp/
 /etc/snmp/ -> /opt/coyote/config/snmp/
+/etc/strongswan/ -> /opt/coyote/config/strongswan/
 
 Other fixes:
 
@@ -30,6 +31,10 @@ Review /opt/coyote/config/dhcpc/dhcpc.updown interface file build process
 /opt/coyote/config/dhcpc/dhcpc.updown:90, 142 -> Fix for new ipsec system needed
 /opt/coyote/sysconf/includes/addons/webadmin-conf.php -> Fixes for new http daemon (?)
 
+[done] Import IPSEC support from Wolverine commercial firewall
+[done] Remove registration requirements and limit checks use in commmercial versions of Wolverine
+
+Need to convert IPSEC configuration system from racoon based system to StrongSwan
 
 Make sure required APK packages are specified as dependencies for Coyote APK:
 doas

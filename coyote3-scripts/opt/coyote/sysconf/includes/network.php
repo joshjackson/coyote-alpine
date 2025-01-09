@@ -7,7 +7,7 @@ function run_ipcalc($params) {
 		"PREFIX" => "",
 		"NETMASK" => "",
 		"NETWORK" => "",
-		"retcode" =>0
+		"retcode" => 0
 	);
 
 	do_exec("ipcalc $params", $outstr, $errcode);
