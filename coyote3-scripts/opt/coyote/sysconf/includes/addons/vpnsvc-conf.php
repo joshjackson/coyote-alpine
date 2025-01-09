@@ -279,7 +279,6 @@ class VPNSVCAddon extends FirmwareAddon {
 //
 //
 	function ipsec_flush_keys() {
-
 		// Flush any existing key information
 		sudo_exec("/usr/local/sbin/setkey -FP");
 		sudo_exec("/usr/local/sbin/setkey -F");

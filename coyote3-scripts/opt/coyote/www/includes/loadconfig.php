@@ -1,6 +1,6 @@
 <?
 
-	$SitePath = '/opt/webadmin/htdocs/';
+	$SitePath = '/opt/coyote/webadmin/';
 	
 	require_once("functions.php");
 	require_once("configfile.php");
@@ -9,7 +9,7 @@
 
 	$working_filename = "/tmp/working-config";
 	
-	$config_filename = "/etc/config/sysconfig";
+	$config_filename = "/opt/coyote/config/sysconfig";
 
 	$configfile = new FirewallConfig;
 
@@ -69,7 +69,7 @@ function SaveSystemConfig() {
 
 function GetFirmwareVersion() {
 
-	$fwfile = file("/etc/config/image_version");
+	$fwfile = file("/opt/coyote/config/image_version");
 	$loaderfile = file("/tmp/loader.ver");
 	$fwinfo = array();
 	$fwinfo["version"] = PRODUCT_VERSION;
