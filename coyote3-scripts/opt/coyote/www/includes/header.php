@@ -17,6 +17,10 @@
 
 	$SiteMenu = array();
 
+	if (empty($MenuType)) {
+		$MenuType = "NONE";
+	}
+
 	// Home Page
 	array_push($SiteMenu, NewMenuItem('NONE', $htHome, 'index.php', 'stats.jpg'));
 	// Product Activation
@@ -81,6 +85,9 @@
 	// Reboot menu item
 	array_push($SiteMenu, NewMenuItem("REBOOT", "Reboot Firewall", 'reboot.php', 'reboot.jpg'));
 	// Debug Menu
+	if (!isset($_SERVER["REMOTE_USER"])) {
+		$_SERVER["REMOTE_USER"] = "debug";
+	}
 	if ($_SERVER["REMOTE_USER"] == "debug") {
 		$DebugMenu = NewMenuItem("DEBUG", "Debug Menu", "debug.php", 'stats.jpg', true);
 			AddSubMenuItem($DebugMenu, "Object Dump", "debug.php?dump=object");
@@ -92,8 +99,8 @@
 		array_push($SiteMenu, $DebugMenu);
 	}
 
-	if (!$PageIcon) {
-		if (!$MenuType) {
+	if (empty($PageIcon)) {
+		if (empty($MenuType) || ($MenuType == "NONE")) {
 			$PageIcon = "stats.jpg";
 		} else {
 			$PageIcon = GetPageIcon($SiteMenu, $MenuType);

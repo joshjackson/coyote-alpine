@@ -14,7 +14,7 @@
 
 			<?
 	// Build the buttons if needed
-	if(count($buttoninfo)) {
+	if(!empty($buttoninfo) && count($buttoninfo) > 0) {
 		for ($t=0; $t < count($buttoninfo); $t++) {
 			$plabel = $buttoninfo[$t]["label"];
 			$pdest = $buttoninfo[$t]["dest"];

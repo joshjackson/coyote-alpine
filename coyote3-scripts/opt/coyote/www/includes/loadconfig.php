@@ -70,7 +70,11 @@ function SaveSystemConfig() {
 function GetFirmwareVersion() {
 
 	$fwfile = file("/opt/coyote/config/image_version");
-	$loaderfile = file("/tmp/loader.ver");
+	if (file_exists("/tmp/loader.ver")) {
+		$loaderfile = file("/tmp/loader.ver");
+	} else {
+		$loaderfile = file("/opt/coyote/config/loader.ver");
+	}
 	$fwinfo = array();
 	$fwinfo["version"] = PRODUCT_VERSION;
 	$fwinfo["build"] = trim($fwfile[0]);

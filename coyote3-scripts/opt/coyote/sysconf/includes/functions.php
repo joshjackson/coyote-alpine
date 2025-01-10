@@ -6,7 +6,7 @@
 // Date: 01/12/2004
 	putenv("PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin");
 
-	require_once("defines.php")
+	require_once("defines.php");
 	// Debug bitmask to determine if debug_print(s) are displayed and wether or not
 	// to actually execute commands on the system
 	$DEBUG_MODE = DEBUG_NONE;

@@ -20,7 +20,7 @@
     define("DEBUG_PRINT", 0x01);
     define("DEBUG_NOEXEC", 0x02);
 
-    debug("COYOTE_CONFIG_DIR", COYOTE_CONFIG_DIR."");
-    debug("COYOTE_TEMPLATE_DIR", "/opt/coyote/sysconf/templates/")
+    define("COYOTE_CONFIG_DIR", "/opt/coyote/config/");
+    define("COYOTE_TEMPLATE_DIR", "/opt/coyote/config/templates/")
 
 ?>

@@ -889,8 +889,8 @@ function ConfigureUsers($Config) {
 	# file_put_contents("/etc/shadow", $pwtemplate, FILE_APPEND);
 	# chmod("/etc/shadow", 0600);
 
-	sudo_exec("cp /tmp/shadow.tmp /etc/shadow")
-	sudo_exec("cat /etc/coyote/sysconf >> /etc/shadow")
+	sudo_exec("cp /tmp/shadow.tmp /etc/shadow");
+	sudo_exec("cat /etc/coyote/sysconf >> /etc/shadow");
 	sudo_exec("chmod 600 /etc/shadow");
 
 	unlink("/tmp/shadow.tmp");

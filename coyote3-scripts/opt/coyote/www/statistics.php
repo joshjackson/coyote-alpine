@@ -224,51 +224,44 @@ function SystemLog() {
 }
 
 	$StatType=$_GET["stats"];
+	$MenuType = "STATS";
 	switch ($StatType) {
 		case "interface":
 			$MenuTitle = "Interface Statistics";
-			$MenuType = "STATS";
 			$HtmlContent = InterfaceStatistics();
 			break;
 		case "procs":
 			$MenuTitle = "Running Processes";
-			$MenuType = "STATS";
 			$PageIcon = "processes.jpg";
 			$HtmlContent = ProcessStatistics();
 			break;
 		case "routes":
 			$MenuTitle = "Network Routes";
-			$MenuType = "STATS";
 			$PageIcon = "routes.jpg";
 			$HtmlContent = RouteStatistics();
 			break;
 		case "traffic":
 			$MenuTitle = "Network Traffic";
-			$MenuType = "STATS";
 			$PageIcon = "conntrack.jpg";
 			$HtmlContent = TrafficStatistics();
 			break;
 		case "syslog":
 			$MenuTitle = "System Log";
-			$MenuType = "STATS";
 			$PageIcon = "text.jpg";
 			$HtmlContent = SystemLog();
 			break;
 		case "leases":
 			$MenuTitle = "DHCP Leases";
-			$MenuType = "STATS";
 			$PageIcon = "text.jpg";
 			$HtmlContent = DhcpLeases();
 			break;
 		case "conntrack":
 			$MenuTitle = "Connection Tracking";
-			$MenuType = "STATS";
 			$PageIcon = "conntrack.jpg";
 //			$HtmlContent = SystemLog();
 			break;
 		default:
 			$MenuTitle = "Firewall Statistics";
-			$MenuType = "STATS";
 			$PageIcon = "memory.jpg";
 			$HtmlContent = CPUMemStatistics();
 			break;

@@ -93,7 +93,7 @@ function StopDNSMasqService () {
 
 	$pid = GetServicePID("/var/run/dnsmasq.pid");
 	//posix_kill($pid, 15);
-	sudo_exec("kill ".$pid)
+	sudo_exec("kill ".$pid);
 }
 
 function StopSNMPService() {

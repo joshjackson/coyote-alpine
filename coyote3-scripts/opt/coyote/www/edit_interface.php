@@ -15,17 +15,25 @@
 		return $fd_disabled;
 	}
 
-	$action = $_REQUEST['action'];
-	$fd_idx = $_REQUEST['intfidx'];
-	$fd_victim = $_REQUEST['to_kill'];
-	$fd_addvlan = $_REQUEST['to_add'];
+	function getIfSet($var, $default = null) {
+		if(isset($var)) return $var;
+		return $default;
+	}
+
+	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
+	$fd_idx = (isset($_REQUEST['intfidx'])) ? $_REQUEST['intfidx'] : null;
+	$fd_victim = (isset($_REQUEST['to_kill'])) ? $_REQUEST['to_kill'] : null;
+	$fd_addvlan = (isset($_REQUEST['to_add'])) ? $_REQUEST['to_add'] : null;
 
 	$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
 	$buttoninfo[1] = array("label" => "reset form", "dest" => $_SERVER['PHP_SELF']."?intfidx=".$fd_idx);
 
 	//no need to load the form if the index we're passed doesn't exist
 	if(is_null($fd_idx) || (!array_key_exists($fd_idx, $configfile->interfaces))) {
-		header("Location:index.php");
+
+		print_r($configfile->interfaces);
+		print_r($fd_idx);
+		//header("Location:index.php");
 		die;
 	}
 
@@ -34,11 +42,15 @@
 		$fd_intf = $configfile->interfaces[$fd_idx];
 
 		//get addr array
-		$fd_ipaddrs = $fd_intf['addresses'];
+		if (is_array($fd_intf['addresses'])) {
+			$fd_ipaddrs = $fd_intf['addresses'];
+		} else {
+			$fd_ipaddrs = array();
+		}
 
 		//FIXME: die if we find none?
 
-		$fd_addrcount = count($fd_ipaddrs);
+		$fd_addrcount = (!empty($fd_ipaddrs)) ? count($fd_ipaddrs) : 0;
 		$fd_disabled = $fd_intf['down'];
 		$fd_mtu = $fd_intf['mtu'];
 		$fd_name = $fd_intf['name'];
@@ -46,18 +58,25 @@
 		//set the menu data
 		$MenuTitle="Edit Interface ".$fd_name;
 
-		$fd_vlans = $fd_intf['vlans'];
+		if (array_key_exists('vlans', $fd_intf)) {
+			$fd_vlans = $fd_intf['vlans'];
+		} else {
+			$fd_vlans = array();
+		}
 
-		if($fd_intf['vlan']) {
+		//$fd_vlans = getIfSet($fd_intf['vlans']);
+
+		if(isset($fd_intf['vlan'])) {
 			$fd_virtual = true;
 			$fd_mode = 'static';
 		} else {
 			$fd_virtual = false;
 		}
 
-		if(is_array($fd_intf['addresses'])) {
+		$fd_ipaddrs = array();
+
+		if(!empty($fd_intf['addresses'])) {
 			//deal with each address
-			$fd_ipaddrs = array();
 			foreach($fd_intf['addresses'] as $addr) {
 				if(!is_array($addr)) continue;
 				$fd_ipaddrs[count($fd_ipaddrs)] = $addr['ip'];
@@ -84,35 +103,55 @@
 		}
 
 		//detect bridging
-		if(!is_null($fd_intf['bridge']) && $fd_intf['bridge'])
+		if(!is_null($fd_intf['bridge']) && $fd_intf['bridge']) {
 			$fd_mode = 'bridge';
+		}
 
-		$fd_mac = $fd_intf['mac'];
-		$fd_addrcount = count($fd_ipaddrs);
-		$fd_vlancount = count($fd_vlans);
+		if (array_key_exists('mac', $fd_intf)) {
+			$fd_mac = $fd_intf['mac'];
+		} else {
+			$fd_mac = '';
+		}
+
+		//$fd_mac = $fd_intf['mac'];
+
+		$fd_addrcount = (is_array($fd_ipaddrs)) ? count($fd_ipaddrs) : 0;
+		$fd_vlancount = (is_array($fd_vlans)) ? count($fd_vlans) : 0;
 
 		//FIXME: DHCP Hostname is NOT stored! ::jc
 
-		$fd_pppoeusername = $configfile->pppoe['username'];
-		$fd_pppoepassword = $configfile->pppoe['password'];
+		if (array_key_exists('username', $configfile->pppoe)) {
+			$fd_pppoeusername = $configfile->pppoe['username'];
+		} else {
+			$fd_pppoeusername = '';
+		}
+
+		if (array_key_exists('password', $configfile->pppoe)) {
+			$fd_pppoepassword = $configfile->pppoe['password'];
+		} else {
+			$fd_pppoepassword = '';
+		}
+
+		//$fd_pppoeusername = getIfSet($configfile->pppoe['username']);
+		//$fd_pppoepassword = getIfSet($configfile->pppoe['password']);
 
 	} else if ($action == 'apply') {
-		$fd_mode = $_REQUEST['ConfigType'];
-		$fd_mac = $_REQUEST['fd_mac'];
-		$fd_mtu = $_REQUEST['fd_mtu'];
+		$fd_mode = getIfSet($_REQUEST['ConfigType']);
+		$fd_mac = getIfSet($_REQUEST['fd_mac']);
+		$fd_mtu = getIfSet($_REQUEST['fd_mtu']);
 
-		if($_REQUEST['intf_enabled'] == 'on')
+		if(isset($_REQUEST['intf_enabled']) && $_REQUEST['intf_enabled'] == 'on')
 			$fd_disabled = false;
 		else
 			$fd_disabled = true;
 
-		$fd_dhcphostname = $_REQUEST['dhcp_hostname'];
-		$fd_pppoeusername = $_REQUEST['pppoe_username'];
-		$fd_pppoepassword = $_REQUEST['pppoe_password'];
-		$fd_ipaddr = $_REQUEST['fd_ipaddr'];
+		$fd_dhcphostname = getIfSet($_REQUEST['dhcp_hostname']);
+		$fd_pppoeusername = getIfSet($_REQUEST['pppoe_username']);
+		$fd_pppoepassword = getIfSet($_REQUEST['pppoe_password']);
+		$fd_ipaddr = getIfSet($_REQUEST['fd_ipaddr']);
 
-		$addrcount = $_REQUEST['addrcount'];
-		$vlancount = $_REQUEST['vlancount'];
+		$addrcount = getIfSet($_REQUEST['addrcount']);
+		$vlancount = getIfSet($_REQUEST['vlancount']);
 		$vlctest = $vlancount - 1;
 		$addrctest = $addrcount - 1;
 
@@ -122,7 +161,7 @@
 		if (!$_REQUEST['addr'.$addrctest])
 			$addrcount --;
 
-		$fd_virtual = $_REQUEST['is_virtual'];
+		$fd_virtual = getIfSet($_REQUEST['is_virtual']);
 
 		//If the new type requires dynamic IP addr assignment (pppoe, dhcp) then
 		//ensure that there are NO other interfaces with dynamic assignment

@@ -75,7 +75,6 @@ class FirewallConfig {
 			"subnet" => "",
 			"domain" => "",
 			"reservations" => array()
-
 		);
 
 		$this->icmp = array (
@@ -199,7 +198,7 @@ class FirewallConfig {
 			"protocol" => $confstmt[3],
 			"source" => $confstmt[4],
 			"dest" => $confstmt[5],
-			"ports" => $confstmt[6]
+			"ports" => (isset($confstmt[6])) ? $confstmt[6] : ""
 		);
 
 		$this->acls["$confstmt[1]"][count($this->acls["$confstmt[1]"])] = $acl_entry;
@@ -413,20 +412,22 @@ class FirewallConfig {
 		if ($confstmt[1] == "autodetect") {
 			$this->hardware_detection = 1;
 			// We need to build a list of interface entries
-			$niclist = GetNicModuleNames();
+
+			//$niclist = GetNicModuleNames();
+			$niclist = GetNetworkInterfaces();
 			for ($t=0; $t < count($niclist); $t++) {
 				$ifentry = array(
-					"module" => $niclist[$t],
+					"module" => "none",
 					"bridge" => false,
 					"mtu" => 1500,
-					"name" => "eth$t",
-					"device" => "eth$t",
+					"name" => $niclist[$t]["name"],
+					"device" => $niclist[$t]["name"],
 					"addresses" => array(),
 					"down" => false,
 					"export" => true
 				);
 
-				$this->interfaces[$t] = $ifentry;
+				$this->interfaces[] = $ifentry;
 			}
 			return true;
 		} else {
@@ -441,16 +442,18 @@ class FirewallConfig {
 
 	function load_icmp($confstmt) {
 		switch ($confstmt[1]) {
-
 			case "deny":
 				break;
 			;;
 			case "permit":
 				$icmp_entry = array(
-					"interface" => $confstmt[4],
 					"source" => $confstmt[2],
-					"type" => $confstmt[3]
+					"type" => $confstmt[3],
+					"interface" => $confstmt[4]
 				);
+				if (!isset($this->icmp["rules"])) {
+					$this->icmp["rules"] = array();
+				}
 				$this->icmp["rules"][count($this->icmp["rules"])] = $icmp_entry;
 				break;
 			;;
@@ -578,7 +581,7 @@ class FirewallConfig {
 							return false;
 						}
 						$this->interfaces[$ifidx]["addresses"] = $confstmt[3];
-						if ($confstmt[4] == "down") {
+						if (!empty($confstmt[4]) && $confstmt[4] == "down") {
 							$this->interfaces[$ifidx]["down"] = true;
 						}
 						break;
@@ -694,7 +697,7 @@ class FirewallConfig {
 					"interface" => $confstmt[1],
 					"bypass" => 0,
 					"source" => $confstmt[2],
-					"dest" => $confstmt[3]
+					"dest" => isset($confstmt[3]) ? $confstmt[3] : ""
 				);
 				break;
 				;;
@@ -738,7 +741,7 @@ class FirewallConfig {
 		$user_entry = array(
 			"username" => $confstmt[1],
 			"password" => $confstmt[2],
-			"encrypted" => ($confstmt[3] == "encrypted") ? true : false
+			"encrypted" => (isset($confstmt[3]) && ($confstmt[3] == "encrypted")) ? true : false
 		);
 		$this->users[count($this->users)] = $user_entry;
 	}
@@ -868,12 +871,15 @@ class FirewallConfig {
 	}
 
 	function load_ssh($confstmt) {
-		if ( "$confstmt[1] $confstmt[2]" == "server enable") {
+		if (isset($confstmt[1], $confstmt[2]) && "$confstmt[1] $confstmt[2]" == "server enable") {
 			$this->ssh["enable"] = true;
-			if ($confstmt[3]) {
+			if (isset($confstmt[3])) {
 				$this->ssh["port"] = $confstmt[3];
 			}
 		} else {
+			if (!isset($this->ssh["hosts"])) {
+				$this->ssh["hosts"] = array();
+			}
 			$this->ssh["hosts"][count($this->ssh["hosts"])] = $confstmt[1];
 		}
 	}
@@ -917,7 +923,7 @@ class FirewallConfig {
 		}
 		while (!feof($conffile)) {
 			$confline = trim(fgets($conffile, 1024));
-			if ((!$confline) || ($confline{0} == "#")) {
+			if ((!$confline) || ($confline[0] == "#")) {
 				continue;
 			} else {
 				//print($confline."\n");
