@@ -70,6 +70,7 @@
 			if($route['dev'] == 'default') $route['dev'] = '';
 
 			//if control arrives here, the route passes, so assign to the local collection
+			if (!is_array($routes)) $routes = array();
 			$routes[count($routes)] = $route;
 		} //for
 

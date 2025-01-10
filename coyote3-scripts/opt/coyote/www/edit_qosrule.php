@@ -40,6 +40,9 @@
 			if(query_invalid()) {
 				add_warning("<hr>".query_invalid()." parameters could not be validated.  No changes were made to the configfile.");
 			} else {
+				if (!is_array($configfile->qos["filters"])) {
+					$configfile->qos["filters"] = array();
+				}
 				// Insert the rule into the config
 				if ($ruleidx == "add") {
 					array_push($configfile->qos["filters"], $qos_rule);
@@ -81,7 +84,7 @@
 				$qos_interface = $configfile->qos['filters'][$ruleidx]['interface'];
 				$qos_protocol = $configfile->qos['filters'][$ruleidx]['proto'];
 				$pstr = $configfile->qos['filters'][$ruleidx]['ports'];
-				list($qos_startport, $qos_endport) = split(":", $pstr, 2);
+				list($qos_startport, $qos_endport) = explode(":", $pstr, 2);
 				$qos_prio = get_qos_output_prio($configfile->qos['filters'][$ruleidx]['prio']);
 			}
 		}

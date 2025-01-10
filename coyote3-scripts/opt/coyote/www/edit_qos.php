@@ -128,7 +128,9 @@
 
 	<?
 		$idx=0;
-
+		if (!isset($configfile->qos['filters'])) {
+			$configfile->qos['filters'] = array();
+		}
 		$maxrule = count($configfile->qos['filters']) - 1;
 
 		foreach($configfile->qos['filters'] as $ruleidx => $qrule) {

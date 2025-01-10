@@ -84,6 +84,8 @@
 
 			//update counts, add one so that we will always draw an extra row
 			//and account properly after posting
+			if(!is_array($fd_http_hostlist)) $fd_http_hostlist = array();
+			if(!is_array($fd_ssh_hostlist)) $fd_ssh_hostlist = array();
 			$fd_http_hostcount = count($fd_http_hostlist);
 			$fd_ssh_hostcount = count($fd_ssh_hostlist);
 

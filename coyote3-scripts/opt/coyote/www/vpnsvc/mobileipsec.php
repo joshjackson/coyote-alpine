@@ -164,7 +164,7 @@
 			$fd_p1cipher = $tundef["ike"]['cipher'];
 			$fd_p1hash = $tundef["ike"]['hash'];
 		
-			$p2list = split(",", $tundef["esp"]['cipher']);
+			$p2list = explode(",", $tundef["esp"]['cipher']);
 			foreach($p2list as $c) {
 				switch($c) {
 					case "des":
@@ -190,7 +190,7 @@
 				}
 			}
 
-			$p2list = split(",", $tundef["esp"]['hash']);
+			$p2list = explode(",", $tundef["esp"]['hash']);
 			foreach($p2list as $c) {
 				switch($c) {
 					case "hmac_md5":

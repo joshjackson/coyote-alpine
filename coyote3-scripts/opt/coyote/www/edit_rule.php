@@ -90,7 +90,7 @@
 			$acl_source = $configfile->acls["$aclidx"]["$ruleidx"]["source"];
 			$acl_dest = $configfile->acls["$aclidx"]["$ruleidx"]["dest"];
 			if (($acl_protocol == "tcp") || ($acl_protocol == "udp")) {
-				list($acl_start, $acl_end) = @split(":", $configfile->acls["$aclidx"]["$ruleidx"]["ports"]);
+				list($acl_start, $acl_end) = @explode(":", $configfile->acls["$aclidx"]["$ruleidx"]["ports"]);
 			}
 		}
 	}

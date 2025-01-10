@@ -107,7 +107,7 @@
 			}
 			$permit = ($fwrule["permit"]) ? "<font color=\"green\">".$gtPermit."</font>" : "<font color=\"red\">".$gtDeny."</font>";
 
-			@list($startport, $endport) = split(":", $fwrule["ports"]);
+			@list($startport, $endport) = explode(":", $fwrule["ports"]);
 
 	?>
 					<tr>

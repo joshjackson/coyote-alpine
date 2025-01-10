@@ -52,7 +52,7 @@ function GetICMPList($Default="echo-request") {
 		"ttl-zero-during-transit,ttl-zero-during-reassembly,parameter-problem,ip-header-bad,required-option-missing,timestamp-request,".
 		"timestamp-reply,address-mask-request,address-mask-reply";
 
-	$icmparray=split(",",$ICMP_LIST);
+	$icmparray=explode(",",$ICMP_LIST);
 	sort($icmparray);
 
 	$retstr="";
@@ -73,7 +73,7 @@ function GetProtocolList($Default="tcp") {
 
 	$PROTO_LIST="tcp,udp,icmp,esp,ah,gre,ipip,sctp,l2tp,vrrp,bgp,ospf,eigrp,ipv6,ipv6-route,all";
 
-	$protoarray=split(",",$PROTO_LIST);
+	$protoarray=explode(",",$PROTO_LIST);
 
 	$retstr="";
 	foreach($protoarray as $proto) {
@@ -116,7 +116,7 @@ function GetDHCPLeases() {
 	if (file_exists('/var/lib/dnsmasq.leases')) {
 		$lf = file("/var/lib/dnsmasq.leases");
 		foreach($lf as $line) {
-			$lease = split(' ', $line);
+			$lease = explode(' ', $line);
 			$lease_ent = array(
 				"IP" => $lease[2],
 				"MAC" => $lease[1],

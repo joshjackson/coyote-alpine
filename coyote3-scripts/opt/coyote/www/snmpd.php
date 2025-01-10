@@ -30,12 +30,13 @@
     }
 
 	//did we freshly load this page or are we loading on result of a post
-	if(strlen($_POST['postcheck']))
-		$fd_posted = true;
-	else
-		$fd_posted = false;
+	$fd_posted = $_Server['REQUEST_METHOD'] == 'POST';
 
     //fill values from _POST or configfile
+	if (!is_array($configfile->snmp['hosts'])) {
+		$configfile->snmp['hosts'] = array();
+	}
+
 	if($fd_posted) {
 
 		//form values
@@ -139,7 +140,6 @@
 </script>
 
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
-	<input type="hidden" id="postcheck" name="postcheck" value="form was posted">
 	<input type="hidden" id="hostcount" name="hostcount" value="<?=$fd_hostcount?>">
 	<table cellpadding="0" cellspacing="0" width="100%">
 		<tr>

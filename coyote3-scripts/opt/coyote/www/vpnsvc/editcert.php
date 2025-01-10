@@ -23,7 +23,7 @@
 			chdir($curdir);
 			header("location: ipsecconf.php");
 		}
-		list($fd_hostname) = split("_", $certfile, 2);
+		list($fd_hostname) = explode("_", $certfile, 2);
 		$fd_certdata = file_get_contents($certfile);
 		$MenuTitle = "Edit x.509 Certificate";
 	} else {

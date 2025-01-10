@@ -117,6 +117,9 @@ function is_enabled() {
 		$fd_domain = $configfile->dhcpd['domain'];
 
     //get a count of reservations
+	if (!is_array($configfile->dhcpd['reservations'])) {
+		$configfile->dhcpd['reservations'] = array();
+	}
     $fd_reservations = count($configfile->dhcpd['reservations']);
 
 	//if user is attempting to disable the service, do not force validation?
