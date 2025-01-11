@@ -38,6 +38,7 @@ class FirewallConfig {
 	var $users = array();
 	var $proxyarp = array();
 	var $icmp = array();
+	var $qos = array();
 	var $tuning_options = array();
 	var $logging = array();
 	var	$public_interface;

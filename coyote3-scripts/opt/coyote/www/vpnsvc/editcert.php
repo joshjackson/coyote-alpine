@@ -1,6 +1,6 @@
 <?
-	require_once("../includes/loadconfig.php");
-
+	require_once("../includes/functions.php");
+	
 	// Extract the vpnsvc addon configuration object
 	$vpnconf =& $configfile->get_addon('VPNSVCAddon', $vpnconf);
 	if ($vpnconf === false) {
@@ -31,7 +31,7 @@
 
 			$fd_hostname = strtolower($_POST["hostname"]);
 			if ($fd_hostname == $configfile->hostname) {
-			  add_critcal("The specified hostname cannot be the same as this firewall's hostname.");
+			  add_critical("The specified hostname cannot be the same as this firewall's hostname.");
 			} elseif (!is_hostname($fd_hostname)) {
 			  add_critical("The specified hostname is invalid.");
 			} else {

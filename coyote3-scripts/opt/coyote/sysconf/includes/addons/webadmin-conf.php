@@ -9,7 +9,7 @@
 //
 // 10/9/2024 - Modifications for Coyote Linux 3.1
 
-	require_once("fwaddon.php");
+	require_once("../functions.php");
 
 	class WebAdminService extends FirmwareAddon {
 

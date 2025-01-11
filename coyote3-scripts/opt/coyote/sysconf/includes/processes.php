@@ -7,8 +7,9 @@
 //
 // 10/9/2024 - Add sudo command to exec functions.
 require_once("defines.php");
+require_once("functions.php");
 
-function do_exec($cmd) {
+function do_exec($cmd, &$outstr = null, &$errcode = null) {
 
 	global $DEBUG_MODE;
 
@@ -23,12 +24,12 @@ function do_exec($cmd) {
 	return $errcode;
 }
 
-function sudo_exec($cmd) {
+function sudo_exec($cmd, &$outstr = null, &$errcode = null) {
 	// If we are already running as root, skip using sudo
 	if (posix_geteuid() > 0) {
-		do_exec("doas ". $cmd);
+		do_exec("doas ". $cmd, $outstr, $errcode);
 	} else {
-		do_exec($cmd);
+		do_exec($cmd, $outstr, $errcode);
 	}
 }
 

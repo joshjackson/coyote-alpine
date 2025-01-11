@@ -9,7 +9,7 @@
 
 	$working_filename = "/tmp/working-config";
 	
-	$config_filename = "/opt/coyote/config/sysconfig";
+	$config_filename = COYOTE_CONFIG_DIR."/sysconfig";
 
 	$configfile = new FirewallConfig;
 
@@ -69,11 +69,11 @@ function SaveSystemConfig() {
 
 function GetFirmwareVersion() {
 
-	$fwfile = file("/opt/coyote/config/image_version");
+	$fwfile = file(COYOTE_CONFIG_DIR."/image_version");
 	if (file_exists("/tmp/loader.ver")) {
 		$loaderfile = file("/tmp/loader.ver");
 	} else {
-		$loaderfile = file("/opt/coyote/config/loader.ver");
+		$loaderfile = file(COYOTE_CONFIG_DIR."/loader.ver");
 	}
 	$fwinfo = array();
 	$fwinfo["version"] = PRODUCT_VERSION;

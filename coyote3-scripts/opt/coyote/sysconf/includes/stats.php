@@ -114,9 +114,9 @@ function GetCPUUtilization ($do_update=true) {
 
 	if ($fh = @fopen("/opt/coyote/statsdb/cpu.last", "r")) {
 		if (KernelIs26()) {
-			$lcpuinfo = split(" ", fgets($fh, 1024), 8);
+			$lcpuinfo = explode(" ", fgets($fh, 1024), 8);
 		} else {
-			$lcpuinfo = split(" ", fgets($fh, 1024), 5);
+			$lcpuinfo = explode(" ", fgets($fh, 1024), 5);
 			$lcpuinfo[5] = 0;	// 2.4 kernels don't have these fields, just zero them out
 			$lcpuinfo[6] = 0;
 			$lcpuinfo[7] = 0;
@@ -127,9 +127,9 @@ function GetCPUUtilization ($do_update=true) {
 			
 			// 2.6 kernels have an additional set of fields in /proc/stat
 			if (KernelIs26()) {
-				$cpuinfo = split(" ", $cpuline, 8);
+				$cpuinfo = explode(" ", $cpuline, 8);
 			} else {
-				$cpuinfo = split(" ", $cpuline, 5);
+				$cpuinfo = explode(" ", $cpuline, 5);
 				$cpuinfo[5] = 0;	// 2.4 kernels don't have these fields, just zero them out
 				$cpuinfo[6] = 0;
 				$cpuinfo[7] = 0;
@@ -187,7 +187,7 @@ function UpdateStats($Config) {
 	// Update the Interface statistics
 	$ifstats = GetInterfaceStats();
 
-	debug_print($ifstate, true);
+	debug_print($ifstats, true);
 
 	foreach($Config->interfaces as $ifentry) {
 		if ($ifentry["down"]) {

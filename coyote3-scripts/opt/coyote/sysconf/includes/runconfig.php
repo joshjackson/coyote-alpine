@@ -8,7 +8,6 @@
 // 10/10/2024 Changes for Coyote Linux 3.1, based on Alpine Linux
 
 require_once("functions.php");
-require_once("services.php");
 
 function ShutdownBridge($Config) {
 	sudo_exec("ip link set br0 down 1> /dev/null 2>/dev/null");
@@ -20,10 +19,12 @@ function ShutdownInterfaces($Config) {
 	// Shut down vlans
 	if (file_exists("/var/run/vlans")) {
 		$vlans=file_get_contents("/var/run/vlans");
-		foreach($vlans as $vlanid) {
-			$vlanid = trim($vlanid);
-			sudo_exec("ip link set dev $vlanid down 1> /dev/null 2> /dev/null");
-			sudo_exec("vconfig rem $vlanid 1> /dev/null 2> /dev/null");
+		if (is_array($vlans)) {
+			foreach($vlans as $vlanid) {
+				$vlanid = trim($vlanid);
+				sudo_exec("ip link set dev $vlanid down 1> /dev/null 2> /dev/null");
+				sudo_exec("vconfig rem $vlanid 1> /dev/null 2> /dev/null");
+			}
 		}
 		unlink("/var/run/vlans");
 	}
@@ -235,12 +236,17 @@ function ApplyUserAcl($Config, $aclname, $do_flush = false) {
 }
 
 function ApplySNMPAcls($Config, $do_flush = false) {
+	
 	# Apply SNMP access ACLs
 	if ($do_flush) {
 		sudo_exec("iptables -F snmp-hosts");
 	}
-	for($t=0; $t < count($Config->snmp["hosts"]); $t++)
-		sudo_exec("iptables -A snmp-hosts -s ".$Config->snmp["hosts"][$t]." -j accept-packet-local");
+	
+	if (is_array($Config->snmp["hosts"])) {
+		foreach ($Config->snmp["hosts"] as $snmphost) {
+			sudo_exec("iptables -A snmp-hosts -s $snmphost -j accept-packet-local");
+		}
+	}
 }
 
 function ApplyRemoteAdminAcls($Config, $do_flush=false) {
@@ -251,16 +257,20 @@ function ApplyRemoteAdminAcls($Config, $do_flush=false) {
 
 	if ($Config->options["vortech-support"]) {
 		$vsupport_acl = file_get_contents();
-		for ($t=0; $t < count($vsupport_acl); $t++) {
-			sudo_exec("iptables -A ssh-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
-			sudo_exec("iptables -A http-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
+		if (is_array($vsupport_acl)) {
+			for ($t=0; $t < count($vsupport_acl); $t++) {
+				sudo_exec("iptables -A ssh-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
+				sudo_exec("iptables -A http-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
+			}
 		}
 	}
 
 	if ($Config->ssh["enable"]) {
 		# Apply SSH access ACLs
-		for($t=0; $t < count($Config->ssh["hosts"]); $t++)
+		if (is_array($Config->ssh["hosts"])) {
+			for($t=0; $t < count($Config->ssh["hosts"]); $t++)
 			sudo_exec("iptables -A ssh-hosts -s ".$Config->ssh["hosts"][$t]." -j accept-packet-local");
+		}
 	}
 
 
@@ -582,7 +592,7 @@ function ConfigureInterfaces($Config) {
 				case "pppoe":
 					// Make sure the pppoe options have been set
 					if ((!$Config->pppoe["username"]) || (!$Config->pppoe["password"])) {
-						write_error("PPPoE options have not been set, disabling interface $confstmt[1]");
+						write_error("PPPoE options have not been set, disabling interface $if");
 						sudo_exec("ip link set ".$if["device"]." down");
 						continue;
 					}
@@ -681,8 +691,14 @@ function ConfigureNAT($Config) {
 			# Adds NAT bypass to allow for exceptions to any added NAT rules
 			# NOTE: These rules always get "inserted" rather than added to make sure that they go into
 			# affect before any added NAT rules.
-			sudo_exec("iptables -t nat -I POSTROUTING -s $confstmt[2] -d $confstmt[3] -j accept-packet");
-			sudo_exec("iptables -t nat -I PREROUTING -s $confstmt[2] -d $confstmt[3] -j accept-packet");
+			$source = ($Config->nat[$t]["source"]) ? " -s ".$Config->nat[$t]["source"] : "";
+			$dest = ($Config->nat[$t]["dest"]) ? " -d ".$Config->nat[$t]["dest"] : "";
+			if (empty($source) || empty($dest)) {
+				// Don't add a rule if the source or destination is empty
+				continue;
+			}
+			sudo_exec("iptables -t nat -I POSTROUTING $source $dest -j accept-packet");
+			sudo_exec("iptables -t nat -I PREROUTING $source $dest -j accept-packet");
 		} else {
 			$ifname=$Config->resolve_ifname($Config->nat[$t]["interface"]);
 			if (!$ifname)
@@ -858,8 +874,10 @@ function ConfigureUsers($Config) {
 		} else {
 			$passwd=$Config->users[$t]["password"];
 		}
+		
+		$username = $Config->users[$t]["username"];
 
-		switch($Config->users[$t]["username"]) {
+		switch($username) {
 			case "debug":
 				write_config("/tmp/shadow.tmp", "debug:$passwd:11233:0:99999:7:::");
 				write_config("/tmp/htpasswd", "debug:$passwd");
@@ -877,7 +895,7 @@ function ConfigureUsers($Config) {
 				break;
 				;;
 			default:
-				print("Password access level $confstmt[1] is unknown.\n");
+				print("Password access level $username is unknown.\n");
 				break;
 				;;
 		}

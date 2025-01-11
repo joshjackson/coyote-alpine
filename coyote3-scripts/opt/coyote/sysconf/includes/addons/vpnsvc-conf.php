@@ -15,11 +15,11 @@
 
 // Make sure we are running from the appropriate product
 
-require_once("fwaddon.php");
+require_once("../functions.php");
 
-define ('IPSEC_CONF', "/opt/coyote/config/strongswan/swanctl.conf");
-define ('SPD_CONF', "/opt/coyote/config/strongswan/spd.conf");
-define ('IPSEC_SECRETS', "/opt/coyote/config/strongswan/psk.txt");
+define ('IPSEC_CONF', COYOTE_CONFIG_DIR."strongswan/swanctl.conf");
+define ('SPD_CONF', COYOTE_CONFIG_DIR."strongswan/spd.conf");
+define ('IPSEC_SECRETS', COYOTE_CONFIG_DIR."strongswan/psk.txt");
 
 
 class VPNSVCAddon extends FirmwareAddon {
@@ -479,7 +479,9 @@ class VPNSVCAddon extends FirmwareAddon {
 			write_config(IPSEC_CONF, "	}");
 
 			if ($tunnel['ike']['lifetime'])
-				$racoonconf .= "	lifetime time {$tunnel['ike']['lifetime']} secs;";
+				write_config(IPSEC_CONF, "	lifetime time {$tunnel['ike']['lifetime']} secs;");
+
+				//$racoonconf .= "	lifetime time {$tunnel['ike']['lifetime']} secs;";
 
 			write_config(IPSEC_CONF, "}");
 

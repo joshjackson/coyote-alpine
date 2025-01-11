@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?
-	require_once("functions.php");
-	require_once("configfile.php");
+	require_once("includes/functions.php");
+//	require_once("configfile.php");
 	
 	print("Initial system configuration generator v4.00\n\n");
 	print("This script will assist you in the process of generating the initial\n");
@@ -42,7 +42,7 @@
 	}
 	
 	// build a list of installed network cards
-	$nics = GetNicModuleNames();
+	$nics = GetNetworkInterfaces();
 	$configfile = array();
 	
 	if (count($nics) < 2) {

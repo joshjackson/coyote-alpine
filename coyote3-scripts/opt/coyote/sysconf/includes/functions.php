@@ -22,6 +22,6 @@
 	require_once("consoleio.php");
 	require_once("qos.php");
 	require_once("fwaddon.php");
-
-
+	require_once("services.php");
+	
 ?>

@@ -8,6 +8,8 @@
 //			10/10/2024	Updates for Coyote Linux 3.1 based on Alpine Linux and
 //						for executing as non-root user
 
+require_once("functions.php");
+
 function write_config($filename, $data) {
 
 	global $DEBUG_MODE;
@@ -26,6 +28,8 @@ function write_proc_value($procentry, $value) {
 	
 	global $DEBUG_MODE;
 
+	$procfile = fopen("/proc/".$procentry, "w");
+
 	debug_print("write_proc_value: Writing value: $value to $procfile");
 	// If we are not running as root, chances are we will not be
 	// able to write to a proc entry, sudo it
@@ -34,7 +38,6 @@ function write_proc_value($procentry, $value) {
 	} else {
 		if (!($DEBUG_MODE && DEBUG_NOEXEC)) {
 			// We are already root, no need to invoke sudo
-			$procfile = fopen("/proc/".$procentry, "w");
 			if ($procfile) {
 				fwrite($procfile, $value);
 				fclose($procfile);

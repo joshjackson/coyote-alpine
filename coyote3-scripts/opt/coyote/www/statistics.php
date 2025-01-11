@@ -22,7 +22,7 @@ function DhcpLeases() {
 <?	
 		$idx = 1;
 		foreach($leases as $lease) {
-			$bgcolor = ($idx % 2) ? "$FFFFFF" : "$F5F5F5";
+			$bgcolor = ($idx % 2) ? "\$FFFFFF" : "\$F5F5F5";
 			print("<tr><td bgcolor=$bgcolor>".$lease["IP"]."</td>\n");
 			print("<td bgcolor=$bgcolor>".$lease["Host"]."</td>\n");
 			print("<td bgcolor=$bgcolor>".$lease["MAC"]."</td>\n");

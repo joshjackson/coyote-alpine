@@ -57,8 +57,10 @@
     <td nowrap class="labelcell"><label>Issuer: </label></td>
     <td>
 <?
-			foreach($certdata["issuer"] as $ik => $iv) {
-				print($ik."=".$iv." ");
+			if (is_array($certdata["issuer"])) {
+				foreach($certdata["issuer"] as $ik => $iv) {
+					print($ik."=".$iv." ");
+				}
 			}
 ?>	
 		</td>
