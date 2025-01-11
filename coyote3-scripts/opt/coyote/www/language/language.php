@@ -1,6 +1,5 @@
 <?
 	// Localization support file for VEL
-	
-	include($SitePath."theme/".$SiteTheme."/language/english.php");
+	include("/opt/coyote/webadmin/theme/".$SiteTheme."/language/english.php");
 	
 ?>

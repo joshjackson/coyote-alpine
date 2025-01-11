@@ -1,23 +1,16 @@
 <?
 	require_once("includes/loadconfig.php");
 
-	$action=$_POST["action"];
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	if ($action == "post") {
-		/*
-		print("<pre>");
-		print_r($_REQUEST);
-		print("</pre>");
-	  */
+		$fd_rlogging = filter_input(INPUT_POST, 'rlogging', FILTER_SANITIZE_STRING) ?? "";
+		$fd_rhost = filter_input(INPUT_POST, 'rhost', FILTER_SANITIZE_STRING) ?? "";
+		$fd_laccept = filter_input(INPUT_POST, 'laccept', FILTER_SANITIZE_STRING) ?? "";
+		$fd_ldeny = filter_input(INPUT_POST, 'ldeny', FILTER_SANITIZE_STRING) ?? "";
+		$fd_faccept = filter_input(INPUT_POST, 'faccept', FILTER_SANITIZE_STRING) ?? "";
+		$fd_fdeny = filter_input(INPUT_POST, 'fdeny', FILTER_SANITIZE_STRING) ?? "";
 
-		$fd_rlogging = $_POST["rlogging"];
-		$fd_rhost = $_POST["rhost"];
-		$fd_laccept = $_POST["laccept"];
-		$fd_ldeny = $_POST["ldeny"];
-		$fd_faccept = $_POST["faccept"];
-		$fd_fdeny = $_POST["fdeny"];
-
-		if ($fd_rlogging) {
+		if (isset($fd_rlogging)) {
 			//validate
 			if(!is_ipaddr($fd_rhost)) {
 			  add_critical("Invalid IP addr: ".$fd_rhost);
@@ -43,12 +36,12 @@
 		}
 
 	} else {
-		$fd_rlogging = ($configfile->logging["host"]) ? "checked" : "";
-		$fd_rhost = $configfile->logging["host"];
-		$fd_laccept = ($configfile->logging["local-accept"]) ? "checked" : "";
-		$fd_ldeny = ($configfile->logging["local-deny"]) ? "checked" : "";
-		$fd_faccept = ($configfile->logging["forward-accept"]) ? "checked" : "";
-		$fd_fdeny = ($configfile->logging["forward-deny"]) ? "checked" : "";
+		$fd_rlogging = (!empty($configfile->logging["host"])) ? "checked" : "";
+		$fd_rhost = (!empty($configfile->logging["host"])) ? $configfile->logging["host"] : "";
+		$fd_laccept = (!empty($configfile->logging["local-accept"])) ? "checked" : "";
+		$fd_ldeny = (!empty($configfile->logging["local-deny"])) ? "checked" : "";
+		$fd_faccept = (!empty($configfile->logging["forward-accept"])) ? "checked" : "";
+		$fd_fdeny = (!empty($configfile->logging["forward-deny"])) ? "checked" : "";
 	}
 
 	$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
@@ -61,7 +54,6 @@
 ?>
 
 <form action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<input type="hidden" name="action" value="post">
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td class="labelcellmid" nowrap><input type="checkbox" name="rlogging" value="checked" <?=$fd_rlogging?>></td>

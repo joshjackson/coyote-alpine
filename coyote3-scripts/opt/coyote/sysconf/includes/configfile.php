@@ -49,7 +49,8 @@ class FirewallConfig {
 	var $outfile;
 
 	// Class constructor - Set some defaults
-	function FirewallConfig() {
+	//function FirewallConfig() {
+	function __construct() {
 
 		$this->hardware_detection = false;
 		$this->timezone = "";
@@ -168,6 +169,7 @@ class FirewallConfig {
 
 		// Load and init any addon configuration extensions
 		$ObjFiles = glob('/opt/coyote/sysconf/addons/*-conf.php');
+
 		if (is_array($ObjFiles)) {
 			foreach($ObjFiles as $Obj) {
 				unset($NewAddon);

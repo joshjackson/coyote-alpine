@@ -175,7 +175,7 @@ function TrafficStatistics() {
 
 		$ifdev = $ifentry["device"];
 		$ifname = $ifentry["name"];
-		$ifgraph= "/var/www/stat-graphs/".$ifdev.".png";
+		$ifgraph= "/opt/coyote/webadmin/stat-graphs/".$ifdev.".png";
 		if (!file_exists($ifgraph)) {
 			print("<label>No statistics graph is available for $ifname</label><br>");
 		} else {

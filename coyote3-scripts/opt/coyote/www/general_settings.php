@@ -16,42 +16,14 @@
 	$buttoninfo[1] = array("label" => "reset form", "dest" => "general_settings.php");
 
     //determine whether or not we were posted to
-	if($_POST['orig'])
-		$fd_posted = true;
-	else
-		$fd_posted = false;
+	$fd_posted = ($_SERVER['REQUEST_METHOD'] == 'POST');
 
-	//fill out vars for form (or for configfile)
-	if($_POST['Hostname'])
-		$fd_hostname = $_POST['Hostname'];
-	else
-		$fd_hostname = $configfile->hostname;
-
-	if($_POST['DomainName'])
-		$fd_domainname = $_POST['DomainName'];
-	else
-		$fd_domainname = $configfile->domainname;
-
-	if($_POST['DNS1'])
-		$fd_dns1 = $_POST['DNS1'];
-	else
-		$fd_dns1 = $configfile->nameservers[0];
-
-	if($_POST['DNS2'])
-		$fd_dns2 = $_POST['DNS2'];
-	else
-		$fd_dns2 = $configfile->nameservers[1];
-
-	if($_POST['D1'])
-		$fd_offset = $_POST['D1'];
-	else
-		$fd_offset = $configfile->timezone;
-
-	if($_POST['TimeServer'])
-		$fd_timeserver = $_POST['TimeServer'];
-	else
-		$fd_timeserver = $configfile->timeserver;
-
+	$fd_hostname = filter_input(INPUT_POST, 'Hostname', FILTER_SANITIZE_STRING) ?? $configfile->hostname;
+	$fd_domainname = filter_input(INPUT_POST, 'DomainName', FILTER_SANITIZE_STRING) ?? $configfile->domainname;
+	$fd_dns1 = filter_input(INPUT_POST, 'DNS1', FILTER_SANITIZE_STRING) ?? $configfile->nameservers[0];
+	$fd_dns2 = filter_input(INPUT_POST, 'DNS2', FILTER_SANITIZE_STRING) ?? $configfile->nameservers[1];
+	$fd_offset = filter_input(INPUT_POST, 'D1', FILTER_SANITIZE_STRING) ?? $configfile->timezone;
+	$fd_timeserver = filter_input(INPUT_POST, 'TimeServer', FILTER_SANITIZE_STRING) ?? $configfile->timeserver;
 
 	//validate each param, start with a clean slate
 
@@ -151,7 +123,7 @@
 				echo "<tr><td class=ctrlcell colspan=2>".query_warnings()."</td></tr>";
 			}
 		?>
-		<tr><td><input type="hidden" id="orig" name="orig" value="orig"></td></tr>
+		<tr><td>&nbsp;</td></tr>
 	</table>
 </form>
 <?

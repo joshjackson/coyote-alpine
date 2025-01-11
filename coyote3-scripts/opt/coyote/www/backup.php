@@ -1,9 +1,13 @@
 <?
-	$action = $_REQUEST["action"];
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
+	} else {
+		$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
+	}
 	
 	if ($action == "backup") {
 		$curdir = getcwd();
-		chdir("/mnt/config");
+		chdir("/opt/coyote/config");
 		exec("/bin/tar -cf /tmp/fwconfig.tar .");
 		header("Content-type: application/x-tar");
 		header('Content-Disposition: attachment; filename="fwconfig.tar"');
@@ -28,7 +32,7 @@
 	$PageIcon="service.jpg";
 	include("includes/header.php");
 	
-	if ($msg) {
+	if (!empty($msg)) {
 		print("<center><font size=2>$msg</font></center><br><br>");
 	}	
 ?>

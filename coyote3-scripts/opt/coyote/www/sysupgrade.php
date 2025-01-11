@@ -1,7 +1,7 @@
 <?
 	require_once("includes/loadconfig.php");
 	//did we freshly load this page or are we loading on result of a post
-	if(strlen($_FILES['userfile']['name'])) {
+	if(!empty($_FILES['userfile']) && !empty($_FILES['userfile']['name'])) {
 		$uploaddir = '/mnt/tmp/';
 		$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);		
 		

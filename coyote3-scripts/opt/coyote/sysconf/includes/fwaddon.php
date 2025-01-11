@@ -12,7 +12,8 @@
 
 		var	$config;
 
-		function FirmwareAddon() {
+		//function FirmwareAddon() {
+		function __construct() {
 			$this->config = array();
 		}
 
@@ -30,7 +31,7 @@
 			return true;
 		}
 
-		function StartService() {
+		function StartService($Config, $apply_acls=true) {
 			return true;
 		}
 
@@ -38,7 +39,7 @@
 			return true;
 		}
 
-		function ApplyAcls() {
+		function ApplyAcls($Config, $do_flush=false) {
 		}
 
 		// Indicates wether or not this addon is a web based service

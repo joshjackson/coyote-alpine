@@ -26,7 +26,9 @@
 			}
 		}
 
-		function WebAdminService() {
+		//function WebAdminService() {
+		function __construct() {
+			parent::__construct();
 			// Initialize the Web Admin addon
 			$this->http = array(
 				"enable" => false,

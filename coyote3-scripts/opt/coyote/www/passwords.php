@@ -20,10 +20,11 @@ function GetUserIndex($Username, $UArray) {
 }
 
 	//did we freshly load this page or are we loading on result of a post
-	if(strlen($_POST['postcheck']))
-		$fd_posted = true;
-	else
-		$fd_posted = false;
+	$fd_posted = ($_SERVER['REQUEST_METHOD'] == 'POST');
+
+	if (!is_array($configfile->users)) {
+		$configfile->users = array();
+	}
 
 	if($fd_posted) {
 		//user list - start with the users in the config file
@@ -126,7 +127,6 @@ function GetUserIndex($Username, $UArray) {
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>" width="100%">
 
 		<!-- hidden items used after post -->
-	<input type="hidden" id="postcheck" name="postcheck" value="form was posted">
 	<input type="hidden" id="usercount" name="usercount" value="<?=$fd_usercount?>">
 
 	<!-- table contains host list for user logins -->

@@ -32,7 +32,9 @@ class VPNSVCAddon extends FirmwareAddon {
 //-----------------------------------------------------------------------------
 //
 //
-	function VPNSVCAddon() {
+	//function VPNSVCAddon() {
+	function __construct() {
+		parent::__construct();
 		// Initialize the VPN addon
 		$this->radius = array(
 			"servers" => array(),
@@ -781,7 +783,7 @@ class VPNSVCAddon extends FirmwareAddon {
 //-----------------------------------------------------------------------------
 //
 //
-	function StartService($Config) {
+	function StartService($Config, $apply_acls=true) {
 		// Start the PPTP Service
 		$this->pptp_start_service();
 		// Start the IPSEC Service
