@@ -21,6 +21,7 @@
     define("DEBUG_NOEXEC", 0x02);
 
     define("COYOTE_CONFIG_DIR", "/opt/coyote/config/");
+	define("COYOTE_WEBADMIN_DIR", "/opt/coyote/webadmin/");
     define("COYOTE_TEMPLATE_DIR", "/opt/coyote/sysconf/templates/")
 
 ?>

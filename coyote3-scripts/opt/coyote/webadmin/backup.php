@@ -7,7 +7,7 @@
 	
 	if ($action == "backup") {
 		$curdir = getcwd();
-		chdir("/opt/coyote/config");
+		chdir(COYOTE_CONFIG_DIR);
 		exec("/bin/tar -cf /tmp/fwconfig.tar .");
 		header("Content-type: application/x-tar");
 		header('Content-Disposition: attachment; filename="fwconfig.tar"');
