@@ -16,13 +16,16 @@
 		var	$http;
 
 		function load_http($confstmt) {
-			if ( "$confstmt[1] $confstmt[2]" == "server enable") {
+			if (isset($confstmt[1], $confstmt[2]) && "$confstmt[1] $confstmt[2]" == "server enable") {
 				$this->http["enable"] = true;
-				if ($confstmt[3]) {
+				if (isset($confstmt[3])) {
 					$this->http["port"] = $confstmt[3];
 				}
 			} else {
-				$this->http["hosts"][count($this->http["hosts"])] = $confstmt[1];
+				// if (!is_array($this->http["hosts"])) {
+				// 	$this->http["hosts"] = array();
+				// }
+				$this->http["hosts"][] = $confstmt[1];
 			}
 		}
 
