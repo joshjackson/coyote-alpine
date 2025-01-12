@@ -22,6 +22,7 @@
 
     define("COYOTE_CONFIG_DIR", "/opt/coyote/config/");
 	define("COYOTE_WEBADMIN_DIR", "/opt/coyote/webadmin/");
-    define("COYOTE_TEMPLATE_DIR", "/opt/coyote/sysconf/templates/")
+	define("COYOTE_SYSCONF_DIR", "/opt/coyote/sysconf/");
+    define("COYOTE_TEMPLATE_DIR", COYOTE_SYSCONF_DIR."templates/")
 
 ?>

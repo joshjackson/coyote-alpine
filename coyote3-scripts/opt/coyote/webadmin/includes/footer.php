@@ -29,7 +29,7 @@
           </tr>
         </table>
       </center>
-      <img src="/theme/<?=$SiteTheme?>/wolf-copyright.gif" align="bottom"> </TD>
+      </TD>
     <TD background="/theme/<?=$SiteTheme?>/wolf-back-actual_09.gif" WIDTH=167 HEIGHT=136 ></TD>
   </TR>
 </TABLE>

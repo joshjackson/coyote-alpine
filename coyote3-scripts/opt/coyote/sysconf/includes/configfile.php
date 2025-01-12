@@ -169,7 +169,7 @@ class FirewallConfig {
 		$this->addons = array();
 
 		// Load and init any addon configuration extensions
-		$ObjFiles = glob('/opt/coyote/sysconf/addons/*-conf.php');
+		$ObjFiles = glob(COYOTE_SYSCONF_DIR.'includes/addons/*-conf.php');
 
 		if (is_array($ObjFiles)) {
 			foreach($ObjFiles as $Obj) {
@@ -397,7 +397,7 @@ class FirewallConfig {
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	// Returns the physical device name for an alias

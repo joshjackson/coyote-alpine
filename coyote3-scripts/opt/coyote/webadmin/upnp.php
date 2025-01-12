@@ -1,12 +1,11 @@
 <?
 	require_once("includes/loadconfig.php");
 
-	$action = $_POST["action"];
 
-	if ($action == "post") {
-		$upnp = $_POST["UPNP"];
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$upnp = filter_input(INPUT_POST, "UPNP", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		if ($upnp == "ON") {
-			$configfile->options["upnp"] = $_POST["interface"];
+			$configfile->options["upnp"] = filter_input(INPUT_POST, "interface", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		} else {
 			$configfile->options["upnp"] = "";
 		}
@@ -27,7 +26,6 @@
 ?>
 
 <form action="upnp.php" method="post">
-<input type="hidden" name="action" value="post">
 <table border="0" width="100%" id="table1">
 	<tr>
 		<td>

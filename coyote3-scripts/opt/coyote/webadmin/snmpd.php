@@ -30,7 +30,7 @@
     }
 
 	//did we freshly load this page or are we loading on result of a post
-	$fd_posted = $_Server['REQUEST_METHOD'] == 'POST';
+	$fd_posted = ($_SERVER['REQUEST_METHOD'] == 'POST');
 
     //fill values from _POST or configfile
 	if (!is_array($configfile->snmp['hosts'])) {

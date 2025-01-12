@@ -1,5 +1,5 @@
 <?
-	include("includes/loadconfig.php");
+	require_once("includes/loadconfig.php");
 	/*
 
 	[0] => Array (

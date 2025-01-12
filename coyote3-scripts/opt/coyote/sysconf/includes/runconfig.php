@@ -256,7 +256,7 @@ function ApplyRemoteAdminAcls($Config, $do_flush=false) {
 	}
 
 	if ($Config->options["vortech-support"]) {
-		$vsupport_acl = file_get_contents();
+		$vsupport_acl = file_get_contents(COYOTE_SYSCONF_DIR."vortech-support.acl");
 		if (is_array($vsupport_acl)) {
 			for ($t=0; $t < count($vsupport_acl); $t++) {
 				sudo_exec("iptables -A ssh-hosts -s ".$vsupport_acl[$t]." -j accept-packet-local");
@@ -594,7 +594,7 @@ function ConfigureInterfaces($Config) {
 					if ((!$Config->pppoe["username"]) || (!$Config->pppoe["password"])) {
 						write_error("PPPoE options have not been set, disabling interface $if");
 						sudo_exec("ip link set ".$if["device"]." down");
-						continue;
+						break;
 					}
 
 					copy_template("pppoe.options", COYOTE_CONFIG_DIR."ppp/pppoe.options");

@@ -1,5 +1,7 @@
 <?
-	require_once('/opt/coyote/webadmin/includes/webfunctions.php');
+	require_once("functions.php");
+	require_once("webfunctions.php");
+	//require_once('/opt/coyote/webadmin/includes/webfunctions.php');
 	$SiteTheme = GetSiteTheme();
 ?>
 	
@@ -13,7 +15,7 @@
 </HEAD>
 
 <?
-	require_once("/opt/coyote/webadmin/language/language.php");
+	require_once(COYOTE_WEBADMIN_DIR."language/language.php");
 
 	$SiteMenu = array();
 
@@ -76,7 +78,7 @@
 	}
 
 	// Include any addon scripts to build the menu items
-	$AddonScripts = glob('/opt/coyote/sysconf/addons/*-www.php');
+	$AddonScripts = glob(COYOTE_SYSCONF_DIR.'/addons/*-www.php');
 	if (is_array($AddonScripts)) {
 		foreach($AddonScripts as $Script) {
 			include($Script);

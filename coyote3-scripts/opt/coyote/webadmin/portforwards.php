@@ -1,5 +1,5 @@
 <?
-	include("includes/loadconfig.php");
+	require_once("includes/loadconfig.php");
 
 	/*
 	[portforwards] => Array
@@ -18,13 +18,11 @@
 	*/
 
 
-
+	$MenuTitle='Port Forwards';
 	$MenuType="NETWORK";
 
 	$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
 	$buttoninfo[1] = array("label" => "reset form", "dest" => $_SERVER['PHP_SELF']);
-
-	$fd_action = $_REQUEST['action'];
 
 	//assemble valid IP addresses from across all interfaces
 	$fd_pfsources = array();
@@ -47,13 +45,13 @@
 		}
 	}
 
-	if(!$fd_action) {
+	if (!$_SERVER['REQUEST_METHOD'] == 'POST') {
+		$fd_posted = true;
 		$fd_pfwds = $configfile->portforwards;
 		$fd_afwds = $configfile->autoforwards;
 		$fd_pcount = count($fd_pfwds);
 		$fd_acount = count($fd_afwds);
-
-	} else if($fd_action == 'apply') {
+	} else {
 		$fd_acount = $_REQUEST['fd_acount'];
 		$fd_pcount = $_REQUEST['fd_pcount'];
 

@@ -2,13 +2,13 @@
 	require_once("includes/loadconfig.php");
 	require_once("runconfig.php");
 
-	$AccessListName = $_GET["aclidx"];
-	$ruleidx = $_GET["ruleidx"];
+	$AccessListName = filter_input(INPUT_GET, "aclidx", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+	$ruleidx = filter_input(INPUT_GET, "ruleidx", FILTER_VALIDATE_INT);
+	//$ruleidx = $_GET["ruleidx"];
 
-	if($_GET['action'])
-		$action = $_GET['action'];
+	$action = filter_input(INPUT_GET, "action", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-	if (!$AccessListName && !$reordering) {
+	if (!$AccessListName || !array_key_exists($AccessListName, $configfile->acls)) {
 		header("Location: firewall_rules.php");
 		die;
 	}

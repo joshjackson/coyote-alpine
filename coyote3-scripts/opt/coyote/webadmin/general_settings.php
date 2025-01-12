@@ -18,12 +18,12 @@
     //determine whether or not we were posted to
 	$fd_posted = ($_SERVER['REQUEST_METHOD'] == 'POST');
 
-	$fd_hostname = filter_input(INPUT_POST, 'Hostname', FILTER_SANITIZE_STRING) ?? $configfile->hostname;
-	$fd_domainname = filter_input(INPUT_POST, 'DomainName', FILTER_SANITIZE_STRING) ?? $configfile->domainname;
-	$fd_dns1 = filter_input(INPUT_POST, 'DNS1', FILTER_SANITIZE_STRING) ?? $configfile->nameservers[0];
-	$fd_dns2 = filter_input(INPUT_POST, 'DNS2', FILTER_SANITIZE_STRING) ?? $configfile->nameservers[1];
-	$fd_offset = filter_input(INPUT_POST, 'D1', FILTER_SANITIZE_STRING) ?? $configfile->timezone;
-	$fd_timeserver = filter_input(INPUT_POST, 'TimeServer', FILTER_SANITIZE_STRING) ?? $configfile->timeserver;
+	$fd_hostname = filter_input(INPUT_POST, 'Hostname', FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) ?? $configfile->hostname;
+	$fd_domainname = filter_input(INPUT_POST, 'DomainName', FILTER_VALIDATE_DOMAIN) ?? $configfile->domainname;
+	$fd_dns1 = filter_input(INPUT_POST, 'DNS1', FILTER_VALIDATE_IP) ?? (isset($configfile->nameservers[0]) ? $configfile->nameservers[0] : '');
+	$fd_dns2 = filter_input(INPUT_POST, 'DNS2', FILTER_VALIDATE_IP) ?? (isset($configfile->nameservers[1]) ? $configfile->nameservers[1] : '');
+	$fd_offset = filter_input(INPUT_POST, 'D1', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? $configfile->timezone;
+	$fd_timeserver = filter_input(INPUT_POST, 'TimeServer', FILTER_VALIDATE_DOMAIN) ?? $configfile->timeserver;
 
 	//validate each param, start with a clean slate
 

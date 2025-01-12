@@ -24,12 +24,14 @@
 
 
 	//did we freshly load this page or are we loading on result of a post
-	if(strlen($_POST['postcheck']))
+	if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$fd_posted = true;
 	else
 		$fd_posted = false;
 
-	$fd_enabled = $_POST['dhcpenabled'];
+	//$fd_enabled = $_POST['dhcpenabled'];
+	$fd_enabled = filter_input(INPUT_POST, 'dhcpenabled', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+	//$fd_enabled = filter_input(INPUT_POST, 'dhcpenabled', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? $configfile->dhcpd['enable'];
 
 function is_enabled() {
 
@@ -44,77 +46,70 @@ function is_enabled() {
 	//note: interface being populated in configfile->dhcpd
 	//      acts to indicate if dhcp is enabled
 
+	$interface = filter_input(INPUT_POST, 'interface', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? $configfile->dhcpd['interface'];
 
-	//posted, checkbox was disabled, interface was filled: clear interface and disable
-	if($fd_posted && !is_enabled() && $_POST['interface']) {
-		$fd_interface = 'none';
-	}
-
-	//posted, checkbox was enabled, interface was filled: validate and attempt to enable
-	if($fd_posted && is_enabled() && $_POST['interface']) {
-		$fd_interface = $_POST['interface'];
-	}
-
-	//not posted: fill all from configfile
-	if($fd_posted == false) {
-		$fd_interface = $configfile->dhcpd['interface'];
-
+	if (!$fd_posted){
+		//not posted: fill all from configfile
+		$fd_interface = (!empty($configfile->dhcpd['interface']) ? $configfile->dhcpd['interface'] : 'none');
 		//interface choice should force checkbox enabled
-		if($fd_interface)
-			$fd_enabled = "on";
-		else
-			$fd_enabled = "off";
+		$fd_enabled = ($fd_interface != "none") ? "on" : "off";
+	} else {
+		//posted, checkbox was disabled, interface was filled: clear interface and disable
+		if(!is_enabled() && !empty($interface)) {
+			$fd_interface = 'none';
+		} else {
+			$fd_interface = $interface;
+		}
 	}
 
-	if($_POST['start'])
-		$fd_start = $_POST['start'];
-	else
-		$fd_start = $configfile->dhcpd['start'];
+print("<!-- fd_enabled: $fd_enabled -->\n");
+print("<!-- fd_interface: $fd_interface -->\n");
 
-	if($_POST['end'])
-		$fd_end = $_POST['end'];
-	else
-		$fd_end = $configfile->dhcpd['end'];
+	//get the rest of the fields
+	//this function will return the value of the key if it is set, or the default value if it is not
+	//if the default value is an array, it will return the value at the index specified by $idx
+	//if $idx is -1, it will return the entire array
+	//if $idx is -1 and the default value is not an array, it will return the default value
+	//if the key is not set and the default value is an array, it will return an empty array
+	//if the key is not set and the default value is not an array, it will return the default value
+	//if the key is set and the value is an empty string, it will return the default value
+	//if the key is set and the value is not an empty string, it will return the value
+	//if the key is not set and the default value is an empty string, it will return an empty string
+	//if the key is not set and the default value is not an empty string, it will return the default value
+	//if the key is set and the value is an array, it will return the value
+	//if the key is not set and the default value is an array, it will return an empty array
+	//if the key is not set and the default value is not an array, it will return the default value
+	//if the key is set and the value is an empty string, it will return the default value
+	//if the key is set and the value is not an empty string, it will return the value
+	//if the key is not set and the default value is an empty string, it will return an empty string
+	//if the key is not set and the default value is not an empty string, it will return the default value
+	//if the key is set and the value is an array, it will return the value
+	//if the key is not set and the default value is an array, it will return an empty array
+	//if the key is not set and the default value is not an array, it will return the default value
+	//if the key is set and the value is an empty string, it will return the default value
+	//
 
-	if($_POST['DNS1'])
-		$fd_dns1 = $_POST['DNS1'];
-	else
-		$fd_dns1 = $configfile->dhcpd['dns'][0];
+function getIfSet($key, $default, $idx = -1) {
 
-	if($_POST['DNS2'])
-		$fd_dns2 = $_POST['DNS2'];
-	else
-		$fd_dns2 = $configfile->dhcpd['dns'][1];
+	if ($idx >= 0 && is_array($default)) {
+		$def1 = (isset($default[$idx]) ? $default[$idx] : '');
+	} else {
+		$def1 = (isset($default) ? $default : '');
+	}
+	return isset($_POST[$key]) ? $_POST[$key] : $def1;
+}
 
-	if($_POST['WINS1'])
-		$fd_wins1 = $_POST['WINS1'];
-	else
-		$fd_wins1 = $configfile->dhcpd['wins'][0];
-
-	if($_POST['WINS2'])
-		$fd_wins2 = $_POST['WINS2'];
-	else
-		$fd_wins2 = $configfile->dhcpd['wins'][1];
-
-	if($_POST['lease'])
-		$fd_lease = $_POST['lease'];
-	else
-		$fd_lease = $configfile->dhcpd['lease'];
-
-	if($_POST['router'])
-		$fd_router = $_POST['router'];
-	else
-		$fd_router = $configfile->dhcpd['router'];
-
-	if($_POST['subnet'])
-		$fd_subnet = $_POST['subnet'];
-	else
-		$fd_subnet = $configfile->dhcpd['subnet'];
-
-	if($_POST['domain'])
-		$fd_domain = $_POST['domain'];
-	else
-		$fd_domain = $configfile->dhcpd['domain'];
+	//fill the rest of the fields
+	$fd_start = getIfSet('start', $configfile->dhcpd['start']);
+	$fd_end = getIfSet('end', $configfile->dhcpd['end']);
+	$fd_dns1 = getIfSet('DNS1', $configfile->dhcpd['dns'], 0);
+	$fd_dns2 = getIfSet('DNS2', $configfile->dhcpd['dns'], 1);
+	$fd_wins1 = getIfSet('WINS1', $configfile->dhcpd['wins'], 0);
+	$fd_wins2 = getIfSet('WINS2', $configfile->dhcpd['wins'], 1);
+	$fd_lease = getIfSet('lease', $configfile->dhcpd['lease']);
+	$fd_router = getIfSet('router', $configfile->dhcpd['router']);
+	$fd_subnet = getIfSet('subnet', $configfile->dhcpd['subnet']);
+	$fd_domain = getIfSet('domain', $configfile->dhcpd['domain']);
 
     //get a count of reservations
 	if (!is_array($configfile->dhcpd['reservations'])) {
@@ -241,7 +236,7 @@ function is_enabled() {
 	<table cellpadding="0" cellspacing="0" width="100%">
 			<tr>
 				<td class="labelcellmid" nowrap>
-				<input type="checkbox" name="dhcpenabled" <? if(is_enabled() || $_POST['dhcpenabled']) echo "checked" ?>></td>
+				<input type="checkbox" name="dhcpenabled" <? if(is_enabled()) echo "checked" ?>></td>
 				<td class="labelcellmid" nowrap width="100%">
 				<label><font size="2">Enable the DHCP Service</font></label></td>
 			</tr>
@@ -252,7 +247,7 @@ function is_enabled() {
 			<td class="labelcell" nowrap><label>Interface:</label></td>
 			<td class="ctrlcell" colspan="2">
 			<select id="interface" name="interface">
-			<option value="none" <? if($_POST['interface'] == 'none') print "selected";?>>none</option>
+			<option value="none" <? if($fd_interface == 'none') print "selected";?>>none</option>
 			<?
 			//loop through interfaces
 			foreach($configfile->interfaces as $ifentry) {

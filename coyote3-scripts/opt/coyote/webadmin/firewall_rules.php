@@ -4,13 +4,10 @@
 	$MenuTitle="Firewall Rules";
 	$MenuType="RULES";
 
-	if($_GET['action'])
-  		$action = $_GET['action'];
-  	else
-		$action = '';
+	$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
 
 	if($action == 'del') {
-		$aclidx = $_GET['aclidx'];
+		$aclidx = filter_input(INPUT_GET, 'aclidx', FILTER_SANITIZE_SPECIAL_CHARS) ?? "";
 
 		if(!strlen($aclidx)) {
 			//redirect here
@@ -33,8 +30,10 @@
 
 	if($action == 'reorder') {
 
-		$dir = $_GET['dir'];
-		$target = $_GET['target'];
+		// $dir = $_GET['dir'];
+		// $target = $_GET['target'];
+		$dir = filter_input(INPUT_GET, 'dir', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+		$target = filter_input(INPUT_GET, 'target', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
 
 		$tmp = array();
 

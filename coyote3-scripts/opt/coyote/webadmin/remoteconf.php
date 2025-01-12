@@ -29,10 +29,7 @@
 		}
 
 		//did we freshly load this page or are we loading on result of a post
-		if(strlen($_POST['postcheck']))
-			$fd_posted = true;
-		else
-			$fd_posted = false;
+		$fd_posted = ($_SERVER['REQUEST_METHOD'] == 'POST');
 
 		//fill values from _POST or configfile
 		if($fd_posted) {
@@ -182,7 +179,6 @@
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
 
 		<!-- hidden items used after post -->
-	<input type="hidden" id="postcheck" name="postcheck" value="form was posted">
 	<input type="hidden" id="httphostcount" name="httphostcount" value="<?=$fd_http_hostcount?>">
 	<input type="hidden" id="sshhostcount" name="sshhostcount" value="<?=$fd_ssh_hostcount?>">
 

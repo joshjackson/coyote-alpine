@@ -1,18 +1,18 @@
 <?
 	include("includes/loadconfig.php");
 
-	$action=$_POST["action"];
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		
+		$fd_enabled = filter_input(INPUT_POST, 'enabled', FILTER_VALIDATE_BOOLEAN) ?? false;
+		
+		if ($fd_enabled) {
 
-	if ($action == "post") {
-
-		if ($fd_enabled = $_POST["enabled"]) {
-
-			$fd_servicetype = $_POST["servicetype"];
-			$fd_interface = $_POST["interface"];
-			$fd_username = $_POST["username"];
-			$fd_password = $_POST["password"];
-			$fd_hostname = $_POST["hostname"];
-			$fd_maxinterval = $_POST["maxinterval"];
+			$fd_servicetype = filter_input(INPUT_POST, 'servicetype', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+			$fd_interface = filter_input(INPUT_POST, 'interface', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+			$fd_username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+			$fd_password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+			$fd_hostname = filter_input(INPUT_POST, 'hostname', FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) ?? "";
+			$fd_maxinterval = filter_input(INPUT_POST, 'maxinterval', FILTER_VALIDATE_INT) ?? "";
 
 			if(!strlen($fd_hostname) || !is_domain($fd_hostname)) {
 				add_critical("Invalid hostname: '".$fd_hostname."'");
@@ -40,6 +40,12 @@
 
 		} else {
 			$configfile->dyndns["enable"] = false;
+			$fd_servicetype = "";
+			$fd_interface = "";
+			$fd_username = "";
+			$fd_password = "";
+			$fd_hostname = "";
+			$fd_maxinterval = 2073600;
 		}
 
 		if(!query_invalid()) {
@@ -54,16 +60,13 @@
 		}
 
 	} else {
-		$fd_enabled = $configfile->dyndns["enable"];
-		$fd_servicetype = $configfile->dyndns["service"];
-		$fd_interface = $configfile->dyndns["interface"];
-		$fd_username = $configfile->dyndns["username"];
-		$fd_password = $configfile->dyndns["password"];
-		$fd_hostname = $configfile->dyndns["hostname"];
-		$fd_maxinterval = $configfile->dyndns["max-interval"];
-		if (!$fd_maxinterval) {
-			$fd_maxinterval = 2073600;
-		}
+		$fd_enabled = $configfile->dyndns["enable"] ?? false;
+		$fd_servicetype = $configfile->dyndns["service"] ?? "";
+		$fd_interface = $configfile->dyndns["interface"] ?? "";
+		$fd_username = $configfile->dyndns["username"] ?? "";
+		$fd_password = $configfile->dyndns["password"] ?? "";
+		$fd_hostname = $configfile->dyndns["hostname"] ?? "";
+		$fd_maxinterval = $configfile->dyndns["max-interval"] ?? 2073600;
 	}
 
 	$fd_checked = ($fd_enabled) ? "checked" : "";
@@ -80,7 +83,6 @@
 ?>
 
 <form action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<input type="hidden" name="action" value="post">
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td class="labelcellmid" nowrap><input type="checkbox" name="enabled" value="yes" <?=$fd_checked?>></td>

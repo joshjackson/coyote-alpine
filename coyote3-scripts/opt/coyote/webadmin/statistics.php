@@ -223,7 +223,8 @@ function SystemLog() {
 	return $retstr;
 }
 
-	$StatType=$_GET["stats"];
+	$StatType= filter_input(INPUT_GET, "stats", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "firewall";
+	
 	$MenuType = "STATS";
 	switch ($StatType) {
 		case "interface":

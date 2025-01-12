@@ -1,56 +1,76 @@
 <?
 	require_once("includes/loadconfig.php");
 
-	$action = $_POST["action"];
-	if ($action) {
+	//$action = $_POST["action"];
+	$fd_ispost = false;
+	$aclidx = "";
+	$acl_target = "";
+	$acl_protocol = "tcp";
+	$acl_source = "";
+	$acl_dest = "";
+	$acl_start = "";
+	$acl_end = "";
+	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$fd_ispost = true;
 		$newacl = ($_POST["newacl"] == "Y") ? true : false;
 		if (!$newacl) {
-			$aclidx = $_POST["aclidx"];
+			$aclidx = filter_input(INPUT_POST, "aclidx", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+//			$aclidx = $_POST["aclidx"];
 		}
 	} else {
-		$newacl = ($_GET["newacl"] == "Y") ? true : false;
+		$newacl = (filter_input(INPUT_GET, "newacl", FILTER_SANITIZE_FULL_SPECIAL_CHARS) == "Y");
 		if (!$newacl) {
-			$aclidx = $_GET["aclidx"];
+			$aclidx = filter_input(INPUT_GET, "aclidx", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		}
 	}
 
-	$ruleidx = $_GET['ruleidx'];
+	$ruleidx = filter_input(INPUT_GET, "ruleidx", FILTER_VALIDATE_INT);
 
 	if (!$newacl && !(array_key_exists($aclidx, $configfile->acls))) {
 		header("Location: /index.php");
 		die;
 	} else {
-
 		$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
-		$buttoninfo[1] = array("label" => "cancel", "dest" => "access_list.php?aclidx=$aclidx");
+		$retidx = ($aclidx) ? "" : "?aclidx=$aclidx";
+		$buttoninfo[1] = array("label" => "cancel", "dest" => "access_list.php$retidx");
 
-		if ($action == "apply") {
+		if ($fd_ispost) {
 
 			if($newacl && !strlen($aclidx)) {
-				$aclidx = $_POST['AccessList'];
+				$aclidx = filter_input(INPUT_POST, 'AccessList', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 				$ruleidx = 0;
 			} else {
-				$aclidx = $_POST['aclidx'];
-				$ruleidx = $_POST['ruleidx'];
+				$aclidx = filter_input(INPUT_POST, 'aclidx', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$ruleidx = filter_input(INPUT_POST, 'ruleidx', FILTER_VALIDATE_INT);
 			}
 
 			//FIXME: Do validation
-			$acl_target = $_POST["RuleTarget"];
-			$acl_protocol = $_POST["Protocol"];
-			$acl_source = $_POST["SourceAddr"];
+			$acl_target = filter_input(INPUT_POST, 'RuleTarget', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$acl_protocol = filter_input(INPUT_POST, 'Protocol', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$acl_source = filter_input(INPUT_POST, 'SourceAddr', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			// $acl_target = $_POST["RuleTarget"];
+			// $acl_protocol = $_POST["Protocol"];
+			// $acl_source = $_POST["SourceAddr"];
+			
 			if(!is_ipaddrblockopt($acl_source) && !($acl_source == "any")) {
 			  add_critical("Invalid Source Address: ".$acl_source);
 			}
-			$acl_dest = $_POST["DestAddr"];
+			
+			$acl_dest = filter_input(INPUT_POST, 'DestAddr', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			//$acl_dest = $_POST["DestAddr"];
 			if(!is_ipaddrblockopt($acl_dest) && !($acl_dest == "any")) {
 			  add_critical("Invalid Destination Address: ".$acl_dest);
 			}
 
 			if (($acl_protocol == "udp") || ($acl_protocol == "tcp")) {
-				$acl_start = $_POST["StartPort"];
-				$acl_end = $_POST["EndPort"];
+				$ack_start = filter_input(INPUT_POST, 'StartPort', FILTER_VALIDATE_INT);
+				$ack_end = filter_input(INPUT_POST, 'EndPort', FILTER_VALIDATE_INT);
+
+				// $acl_start = $_POST["StartPort"];
+				// $acl_end = $_POST["EndPort"];
 				
-				if (strlen($acl_start)) {
+				if (!empty($acl_start)) {
 					if ((intval($acl_start) < 1) || (intval($acl_start) > 65535)) {
 						add_critical("Start port must be an integer value between 1 and 65535");
 
@@ -95,18 +115,19 @@
 				if($newacl)
 					header("Location:firewall_rules.php");
 				else
-					header("Location:access_list.php?aclidx=".$aclidx);
+					header("Location:access_list.php$retidx");
 				die;
 			}
 		} else {
-			$acl_target = ($configfile->acls["$aclidx"]["$ruleidx"]["permit"]) ? "PERMIT" : "DENY";
-			$acl_protocol = $configfile->acls["$aclidx"]["$ruleidx"]["protocol"];
-			$acl_source = $configfile->acls["$aclidx"]["$ruleidx"]["source"];
-			$acl_dest = $configfile->acls["$aclidx"]["$ruleidx"]["dest"];
-
-			if (($acl_protocol == "tcp") || ($acl_protocol == "udp")) {
-				list($acl_start, $acl_end) = @explode(":", $configfile->acls["$aclidx"]["$ruleidx"]["ports"]);
-			}
+			if (!empty($aclidx)) {
+				$acl_target = ($configfile->acls["$aclidx"]["$ruleidx"]["permit"]) ? "PERMIT" : "DENY";
+				$acl_protocol = $configfile->acls["$aclidx"]["$ruleidx"]["protocol"];
+				$acl_source = $configfile->acls["$aclidx"]["$ruleidx"]["source"];
+				$acl_dest = $configfile->acls["$aclidx"]["$ruleidx"]["dest"];
+				if (($acl_protocol == "tcp") || ($acl_protocol == "udp")) {
+					list($acl_start, $acl_end) = @explode(":", $configfile->acls["$aclidx"]["$ruleidx"]["ports"]);
+				}
+			} 
 		}
 	}
 
@@ -121,15 +142,18 @@
 
 
 <form method="post" action="add_rule.php">
-<input type="hidden" name="action" value="apply" />
 <input type="hidden" name="ruleidx" value="<?=$ruleidx?>" />
 <input type="hidden" name="newacl" value="<?=$newacl?>" />
-<input type="hidden" name="aclidx" value="<?=$AccessList?>" />
 <?
+	if ($aclidx) {
+		print('<input type="hidden" name="AccessList" value="'.$aclidx.' />');
+	}
 	if ($newacl) {
 		print('<input type="hidden" name="newacl" value="Y">');
 	} else {
-		print('<input type="hidden" name="aclidx" value="'.$aclidx.'">');
+		if ($aclidx) {
+			print('<input type="hidden" name="aclidx" value="'.$aclidx.' />');
+		}
 	}
 ?>
 <table border="0" width="100%" id="table1">

@@ -15,7 +15,7 @@
 
 // Make sure we are running from the appropriate product
 
-require_once("../functions.php");
+require_once("functions.php");
 
 define ('IPSEC_CONF', COYOTE_CONFIG_DIR."strongswan/swanctl.conf");
 define ('SPD_CONF', COYOTE_CONFIG_DIR."strongswan/spd.conf");
