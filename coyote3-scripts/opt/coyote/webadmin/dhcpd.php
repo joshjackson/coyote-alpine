@@ -65,30 +65,6 @@ function is_enabled() {
 print("<!-- fd_enabled: $fd_enabled -->\n");
 print("<!-- fd_interface: $fd_interface -->\n");
 
-	//get the rest of the fields
-	//this function will return the value of the key if it is set, or the default value if it is not
-	//if the default value is an array, it will return the value at the index specified by $idx
-	//if $idx is -1, it will return the entire array
-	//if $idx is -1 and the default value is not an array, it will return the default value
-	//if the key is not set and the default value is an array, it will return an empty array
-	//if the key is not set and the default value is not an array, it will return the default value
-	//if the key is set and the value is an empty string, it will return the default value
-	//if the key is set and the value is not an empty string, it will return the value
-	//if the key is not set and the default value is an empty string, it will return an empty string
-	//if the key is not set and the default value is not an empty string, it will return the default value
-	//if the key is set and the value is an array, it will return the value
-	//if the key is not set and the default value is an array, it will return an empty array
-	//if the key is not set and the default value is not an array, it will return the default value
-	//if the key is set and the value is an empty string, it will return the default value
-	//if the key is set and the value is not an empty string, it will return the value
-	//if the key is not set and the default value is an empty string, it will return an empty string
-	//if the key is not set and the default value is not an empty string, it will return the default value
-	//if the key is set and the value is an array, it will return the value
-	//if the key is not set and the default value is an array, it will return an empty array
-	//if the key is not set and the default value is not an array, it will return the default value
-	//if the key is set and the value is an empty string, it will return the default value
-	//
-
 function getIfSet($key, $default, $idx = -1) {
 
 	if ($idx >= 0 && is_array($default)) {
@@ -374,7 +350,7 @@ function getIfSet($key, $default, $idx = -1) {
 		?>
 		<tr>
 			<td>
-				<input type="hidden" id="postcheck" name="postcheck" value="form was posted">
+				&nbsp;
 			</td>
 		</tr>
 	</table>

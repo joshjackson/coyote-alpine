@@ -19,7 +19,7 @@ function DebugContents($dump) {
 			break;
 		;;
 		case "iptables":
-			passthru('/sbin/iptables -L -n');
+			passthru('/usr/sbin/iptables -L -n');
 			break;
 		;;
 		case "reset":

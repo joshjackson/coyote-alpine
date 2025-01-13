@@ -78,7 +78,7 @@
 	}
 
 	// Include any addon scripts to build the menu items
-	$AddonScripts = glob(COYOTE_SYSCONF_DIR.'/addons/*-www.php');
+	$AddonScripts = glob(COYOTE_SYSCONF_DIR.'/includes/addons/*-www.php');
 	if (is_array($AddonScripts)) {
 		foreach($AddonScripts as $Script) {
 			include($Script);

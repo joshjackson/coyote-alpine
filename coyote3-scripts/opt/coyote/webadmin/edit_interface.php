@@ -20,7 +20,9 @@
 		return $default;
 	}
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
+	$fd_posted = ($_SERVER['REQUEST_METHOD'] == 'POST');
+
+
 	$fd_idx = (isset($_REQUEST['intfidx'])) ? $_REQUEST['intfidx'] : null;
 	$fd_victim = (isset($_REQUEST['to_kill'])) ? $_REQUEST['to_kill'] : null;
 	$fd_addvlan = (isset($_REQUEST['to_add'])) ? $_REQUEST['to_add'] : null;
@@ -37,7 +39,7 @@
 		die;
 	}
 
-	if(!$action) {
+	if(!$fd_posted) {
 		//gather information to populate
 		$fd_intf = $configfile->interfaces[$fd_idx];
 
@@ -56,7 +58,7 @@
 		$fd_name = $fd_intf['name'];
 
 		//set the menu data
-		$MenuTitle="Edit Interface ".$fd_name;
+		$MenuTitle="Edit Interface: ".$fd_name;
 
 		if (array_key_exists('vlans', $fd_intf)) {
 			$fd_vlans = $fd_intf['vlans'];
@@ -66,7 +68,7 @@
 
 		//$fd_vlans = getIfSet($fd_intf['vlans']);
 
-		if(isset($fd_intf['vlan'])) {
+		if(isset($fd_intf['vlan']) && ($fd_intf['vlan'] >= 1)) {
 			$fd_virtual = true;
 			$fd_mode = 'static';
 		} else {
@@ -75,7 +77,7 @@
 
 		$fd_ipaddrs = array();
 
-		if(!empty($fd_intf['addresses'])) {
+		if(!empty($fd_intf['addresses']) && is_array($fd_intf['addresses'])) {
 			//deal with each address
 			foreach($fd_intf['addresses'] as $addr) {
 				if(!is_array($addr)) continue;
@@ -119,6 +121,11 @@
 		$fd_vlancount = (is_array($fd_vlans)) ? count($fd_vlans) : 0;
 
 		//FIXME: DHCP Hostname is NOT stored! ::jc
+		if (array_key_exists('dhcp_hostname', $configfile->interfaces)) {
+			$fd_dhcphostname = $configfile->interfaces['dhcp_hostname'];
+		} else {
+			$fd_dhcphostname = '';
+		}
 
 		if (array_key_exists('username', $configfile->pppoe)) {
 			$fd_pppoeusername = $configfile->pppoe['username'];
@@ -135,23 +142,23 @@
 		//$fd_pppoeusername = getIfSet($configfile->pppoe['username']);
 		//$fd_pppoepassword = getIfSet($configfile->pppoe['password']);
 
-	} else if ($action == 'apply') {
-		$fd_mode = getIfSet($_REQUEST['ConfigType']);
-		$fd_mac = getIfSet($_REQUEST['fd_mac']);
-		$fd_mtu = getIfSet($_REQUEST['fd_mtu']);
+	} else {
+		$fd_mode = getIfSet($_POST['ConfigType']);
+		$fd_mac = getIfSet($_POST['fd_mac']);
+		$fd_mtu = getIfSet($_POST['fd_mtu']);
 
-		if(isset($_REQUEST['intf_enabled']) && $_REQUEST['intf_enabled'] == 'on')
+		if(isset($_POST['intf_enabled']) && $_POST['intf_enabled'] == 'on')
 			$fd_disabled = false;
 		else
 			$fd_disabled = true;
 
-		$fd_dhcphostname = getIfSet($_REQUEST['dhcp_hostname']);
-		$fd_pppoeusername = getIfSet($_REQUEST['pppoe_username']);
-		$fd_pppoepassword = getIfSet($_REQUEST['pppoe_password']);
-		$fd_ipaddr = getIfSet($_REQUEST['fd_ipaddr']);
+		$fd_dhcphostname = getIfSet($_POST['dhcp_hostname']);
+		$fd_pppoeusername = getIfSet($_POST['pppoe_username']);
+		$fd_pppoepassword = getIfSet($_POST['pppoe_password']);
+		$fd_ipaddr = getIfSet($_POST['fd_ipaddr']);
 
-		$addrcount = getIfSet($_REQUEST['addrcount']);
-		$vlancount = getIfSet($_REQUEST['vlancount']);
+		$addrcount = getIfSet($_POST['addrcount']);
+		$vlancount = getIfSet($_POST['vlancount']);
 		$vlctest = $vlancount - 1;
 		$addrctest = $addrcount - 1;
 
@@ -161,7 +168,7 @@
 		if (!$_REQUEST['addr'.$addrctest])
 			$addrcount --;
 
-		$fd_virtual = getIfSet($_REQUEST['is_virtual']);
+		$fd_virtual = getIfSet($_POST['is_virtual']);
 
 		//If the new type requires dynamic IP addr assignment (pppoe, dhcp) then
 		//ensure that there are NO other interfaces with dynamic assignment
@@ -242,7 +249,11 @@
 			}
 		}
 
-		$fd_addrcount = count($fd_ipaddrs);
+		if (is_array($fd_ipaddrs)) {
+			$fd_addrcount = count($fd_ipaddrs);
+		} else {
+			$fd_addrcount = 0;
+		}
 
 		//vlans
 		if($vlancount && !$fd_victim && $fd_addvlan) {
@@ -563,7 +574,7 @@
 <form id="content" method="post" action="<?=$_SERVER['PHP_SELF'];?>?intfidx=<?=$fd_idx?>">
   <input type="hidden" name="action" value="apply" />
   <input type="hidden" name="mode" value="<?= $fd_mode ?>" />
-  <input type="hidden" name="addrcount" value="<?=count($fd_ipaddrs)?>" />
+  <input type="hidden" name="addrcount" value="<?=(is_array($fd_ipaddrs)) ? count($fd_ipaddrs) : 0?>" />
   <input type="hidden" name="vlancount" value="<?=$fd_vlancount?>" />
   <input type="hidden" name="is_virtual" value="<?=$fd_virtual?>" />
   <input type="hidden" name="to_kill" value="" />
@@ -752,6 +763,8 @@
     <? } ?>
   </table>
   <? print(query_warnings()); ?>
+  <? 	print_r($fd_mode);
+  		print_r($fd_intf); ?>
 </form>
 <script language="javascript">
 		init('<?=$fd_mode?>');

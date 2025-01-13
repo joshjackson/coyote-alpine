@@ -12,78 +12,96 @@
 	$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
 	$buttoninfo[1] = array("label" => "reset form", "dest" => $_SERVER['PHP_SELF']);
 
-	$fd_action = $_REQUEST['action'];
-
-	if(!$fd_action) {
+	if($_SERVER['REQUEST_METHOD'] != 'POST') {
 		$fd_nats = $configfile->nat;
 		$fd_natcount = count($fd_nats);
-	} else if($fd_action == 'delete') {
-		$fd_natcount = $_REQUEST['natcount'];
-		$fd_nats = array();
+	} else {
 
-		for($i = 0; $i < $fd_natcount; $i++) {
-			$fd_nat = array(
-				'interface' => $_REQUEST['interface'.$i],
-				'bypass' => $_REQUEST['bypass'.$i],
-				'source' => $_REQUEST['source'.$i],
-				'dest' => $_REQUEST['dest'.$i]
-			);
-			if($fd_nat['bypass']) $fd_nat['interface'] = '';
-			if(!strlen($fd_nat['source']) && !strlen($fd_nat['dest'])) continue;
-			$fd_nats[count($fd_nats)] = $fd_nat;
-		}
 
-		if(!query_invalid()) {
-			$configfile->nat = $fd_nats;
-		  if(WriteWorkingConfig())
-				add_warning("Write to working configfile was successful.");
-			else
-				add_warning("Error writing to working configfile!");
-			Header("Location:nat.php");
-			die;
-		}
+		
+		$fd_action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		if($fd_action == 'delete') {
 
-	} else if($fd_action == 'apply') {
-		//posted
-		$fd_natcount = $_REQUEST['natcount'];
-		$fd_nats = array();
+			$fd_natcount = filter_input(INPUT_POST, 'natcount', FILTER_VALIDATE_INT);
+			$fd_nats = array();
 
-		for($i = 0; $i < $fd_natcount; $i++) {
-			$fd_nat = array(
-				'interface' => $_REQUEST['interface'.$i],
-				'bypass' => $_REQUEST['bypass'.$i],
-				'source' => $_REQUEST['source'.$i],
-				'dest' => $_REQUEST['dest'.$i]
-			);
+			for($i = 0; $i < $fd_natcount; $i++) {
 
-			//convert on -> 1
-			if($fd_nat['bypass'] == 'on') $fd_nat['bypass'] = 1;
+				$fd_interface = filter_input(INPUT_POST, 'interface'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$fd_bypass = filter_input(INPUT_POST, 'bypass'.$i, FILTER_VALIDATE_BOOL);
+				$fd_source = filter_input(INPUT_POST, 'source'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$fd_dest = filter_input(INPUT_POST, 'dest'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				
+				$fd_nat = array(
+					'interface' => $fd_interface,
+					'bypass' => $fd_bypass,
+					'source' => $fd_source,
+					'dest' => $fd_dest
+				);
 
-			//skip over the blank line at the end, permitting edits of earlier items
-			if(!strlen($fd_nat['source']) && !strlen($fd_nat['dest'])) continue;
-
-			if($fd_nat['bypass']) {
-				$fd_nat['interface'] = '';
-				if(!is_ipaddrblockopt($fd_nat['source'])) {
-				  add_critical("Invalid IP addr: ".$fd_nat['source']." cannot be a source.");
-					continue;
-				}
-				if(!is_ipaddrblockopt($fd_nat['dest'])) {
-				  add_critical("Invalid IP addr: ".$fd_nat['dest']." cannot be a destination.");
-					continue;
-				}
-			} else {
-				//dest optional
-				if(!is_ipaddrblockopt($fd_nat['source'])) {
-				  add_critical("Invalid IP addr: ".$fd_nat['source']." cannot be a source.");
-					continue;
-				}
-				if(strlen($fd_nat['dest']) && !is_ipaddrblockopt($fd_nat['dest'])) {
-				  add_critical("Invalid IP addr: ".$fd_nat['dest']." cannot be a destination.");
-					continue;
-				}
+				if($fd_nat['bypass']) $fd_nat['interface'] = '';
+				if(!strlen($fd_nat['source']) && !strlen($fd_nat['dest'])) continue;
+				$fd_nats[count($fd_nats)] = $fd_nat;
 			}
-			$fd_nats[count($fd_nats)] = $fd_nat;
+
+			if(!query_invalid()) {
+				$configfile->nat = $fd_nats;
+			if(WriteWorkingConfig())
+					add_warning("Write to working configfile was successful.");
+				else
+					add_warning("Error writing to working configfile!");
+				Header("Location:nat.php");
+				die;
+			}
+
+		} else if($fd_action == 'apply') {
+			//posted
+			$fd_natcount = $_REQUEST['natcount'];
+			$fd_nats = array();
+
+			for($i = 0; $i < $fd_natcount; $i++) {
+				
+				$fd_interface = filter_input(INPUT_POST, 'interface'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$fd_bypass = filter_input(INPUT_POST, 'bypass'.$i, FILTER_VALIDATE_BOOL);
+				$fd_source = filter_input(INPUT_POST, 'source'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$fd_dest = filter_input(INPUT_POST, 'dest'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				
+				$fd_nat = array(
+					'interface' => $fd_interface,
+					'bypass' => $fd_bypass,
+					'source' => $fd_source,
+					'dest' => $fd_dest
+				);
+
+				//convert on -> 1
+				if($fd_nat['bypass'] == 'on') $fd_nat['bypass'] = 1;
+
+				//skip over the blank line at the end, permitting edits of earlier items
+				if(!strlen($fd_nat['source']) && !strlen($fd_nat['dest'])) continue;
+
+				if($fd_nat['bypass']) {
+					$fd_nat['interface'] = '';
+					if(!is_ipaddrblockopt($fd_nat['source'])) {
+					add_critical("Invalid IP addr: ".$fd_nat['source']." cannot be a source.");
+						continue;
+					}
+					if(!is_ipaddrblockopt($fd_nat['dest'])) {
+					add_critical("Invalid IP addr: ".$fd_nat['dest']." cannot be a destination.");
+						continue;
+					}
+				} else {
+					//dest optional
+					if(!is_ipaddrblockopt($fd_nat['source'])) {
+					add_critical("Invalid IP addr: ".$fd_nat['source']." cannot be a source.");
+						continue;
+					}
+					if(strlen($fd_nat['dest']) && !is_ipaddrblockopt($fd_nat['dest'])) {
+					add_critical("Invalid IP addr: ".$fd_nat['dest']." cannot be a destination.");
+						continue;
+					}
+				}
+				$fd_nats[count($fd_nats)] = $fd_nat;
+			}
 		}
 
 		if(!query_invalid()) {
@@ -92,9 +110,9 @@
 			if(WriteWorkingConfig())
 				add_warning("Write to working configfile was successful.");
 			else
-			  add_warning("Error writing to working configfile!");
-			Header("Location:nat.php");
-			die;
+			  	add_warning("Error writing to working configfile!");
+			//Header("Location:nat.php");
+			//die;
 		}
 
 	}
@@ -211,56 +229,49 @@
           <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('<?=$i?>')"><img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
           <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
     </tr>
-        <tr>
+    <tr>
         <?
-        $i++;
-      }
-    //always make one empty row
-    if($i % 2)
-      $cellcolor = "#F5F5F5";
-    else
-      $cellcolor = "#FFFFFF";
+				$i++;
+			}
+			//always make one empty row
+			if($i % 2)
+				$cellcolor = "#F5F5F5";
+			else
+				$cellcolor = "#FFFFFF";
+		?>
+		<td bgcolor="<?=$cellcolor?>">
+					<select id="interface<?=$i?>" name="interface<?=$i?>" width="100%">
+					<option value="none">none</option>
+					<?
+					//loop through interfaces
+					foreach($configfile->interfaces as $ifentry) {
+						//no downed intf allowed, duh
+						if($ifentry['down']) continue;
 
-    ?>
-          <td bgcolor="<?=$cellcolor?>">
-						<select id="interface<?=$i?>" name="interface<?=$i?>" width="100%">
-						<option value="none">none</option>
-						<?
-						//loop through interfaces
-						foreach($configfile->interfaces as $ifentry) {
-							//no downed intf allowed, duh
-							if($ifentry['down']) continue;
+						//if this is the chosen interface, make sure it is marked as selected
+						$selected = "";
 
-							//if this is the chosen interface, make sure it is marked as selected
-							$selected = "";
+						echo '<option value="'.$ifentry["name"].'" '.$selected.'>'.$ifentry["name"].'</option>';
+					}
+					?>
+					</select>
+		</td>
 
-							echo '<option value="'.$ifentry["name"].'" '.$selected.'>'.$ifentry["name"].'</option>';
-						}
-						?>
-						</select>
-          </td>
+		<td align="center" bgcolor="<?=$cellcolor?>">
+			<input onchange="modify(<?=$i?>)" type="checkbox" id="bypass<?=$i?>" name="bypass<?=$i?>" />
+		</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
-						<input onchange="modify(<?=$i?>)" type="checkbox" id="bypass<?=$i?>" name="bypass<?=$i?>" />
-					</td>
+		<td align="center" bgcolor="<?=$cellcolor?>">
+			<input type="text" id="source<?=$i?>" name="source<?=$i?>" value="" />
+		</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
-						<input type="text" id="source<?=$i?>" name="source<?=$i?>" value="" />
-					</td>
+		<td align="center" bgcolor="<?=$cellcolor?>">
+			<input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="" />
+		</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
-						<input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="" />
-					</td>
-
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
-	</tr>
-        <?
-    if(strlen($fd_warnings)) {
-	    print("<tr><td class=ctrlcell colspan=2>$fd_warnings</td></tr>");
-    }
-	?>
+		<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+		<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+		<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
 	</tr>
 </table>
 

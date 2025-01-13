@@ -45,13 +45,14 @@
 		}
 	}
 
-	if (!$_SERVER['REQUEST_METHOD'] == 'POST') {
-		$fd_posted = true;
+	if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+		$fd_posted = false;
 		$fd_pfwds = $configfile->portforwards;
 		$fd_afwds = $configfile->autoforwards;
 		$fd_pcount = count($fd_pfwds);
 		$fd_acount = count($fd_afwds);
 	} else {
+		$fd_posted = true;
 		$fd_acount = $_REQUEST['fd_acount'];
 		$fd_pcount = $_REQUEST['fd_pcount'];
 

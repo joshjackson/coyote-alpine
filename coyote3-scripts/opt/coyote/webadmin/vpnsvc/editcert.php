@@ -1,5 +1,6 @@
 <?
-	require_once("../includes/functions.php");
+	require_once("functions.php");
+	require_once("../includes/loadconfig.php");
 	
 	// Extract the vpnsvc addon configuration object
 	$vpnconf =& $configfile->get_addon('VPNSVCAddon', $vpnconf);

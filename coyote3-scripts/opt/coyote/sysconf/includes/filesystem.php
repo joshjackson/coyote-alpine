@@ -66,7 +66,7 @@ function copy_template($template, $location, $need_root = false) {
 }
 
 
-// The mount_flash_* functions were using in Coyote Linux <= 3.0 to mount the 
+// The mount_flash_* functions were uses in Coyote Linux <= 3.0 to mount the 
 // system configuration storage for rw/ro. Coyote Linux 3.1 does not have this
 // function as it is no longer based on Vortech Embedded Linux.
 

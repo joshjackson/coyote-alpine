@@ -74,7 +74,7 @@ function ProcessStatistics() {
 
 	ob_start();
 	print("<pre>");
-	exec("ps axf --columns=80", $outstr, $errcode);
+	exec("ps axf", $outstr, $errcode);
 	print("Running Process Information\n");
 	print("--------------------------------------------------\n");
 	foreach($outstr as $outline) {
@@ -270,8 +270,6 @@ function SystemLog() {
 
 	include("includes/header.php");
 ?>
-
-
 
 <table border="0" width="100%" id="table1">
 	<tr>

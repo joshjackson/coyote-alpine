@@ -3,7 +3,7 @@
 
 	// Extract the vpnsvc addon configuration object
 	$vpnconf =& $configfile->get_addon('VPNSVCAddon', $vpnconf);
-	if ($vpnconf === false) {
+	if ($vpnconf === null) {
 		// WTF?
 		header("location:/index.php");
 		exit;
@@ -31,7 +31,7 @@
 				if ($IN_DEVELOPMENT) {
 					$cdir = "/home/webdev/sites/wolverine/files/";
 				} else {
-					$cdir = "/etc/ipsec.d/";
+					$cdir = COYOTE_CONFIG_DIR."ipsec.d/";
 				}
 				mount_flash_rw();
 				unlink($cdir.$fd_victim);
@@ -171,7 +171,7 @@
 	if ($IN_DEVELOPMENT) {
 		chdir("/home/webdev/sites/wolverine/files");
 	} else {
-		chdir("/etc/ipsec.d");
+		chdir(COYOTE_CONFIG_DIR."/ipsec.d");
 	}
 	$idx = 0;
 	$hostcert = $configfile->hostname."_cert.pem";

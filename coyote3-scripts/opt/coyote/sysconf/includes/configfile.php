@@ -150,7 +150,7 @@ class FirewallConfig {
 			"enable" => false,
 			"upstream" => 10000, // Default to 10Mbps
 			"downstream" => 10000, // Default to 10Mbps
-			"default-class" => QOS_PRIO_LOW,
+			"default-prio" => QOS_PRIO_LOW,
 			"filters" => array()
 		);
 

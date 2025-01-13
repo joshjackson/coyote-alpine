@@ -1,20 +1,35 @@
 <?
 	include("includes/loadconfig.php");
 	
-	$action = $_REQUEST["action"];
-	$ruleidx = $_REQUEST["ruleidx"];
-	if ($ruleidx == "") {
-		$ruleidx = "add";
+	// $action = $_REQUEST["action"];
+	// $ruleidx = $_REQUEST["ruleidx"];
+
+	// $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+	// $ruleidx = filter_input(INPUT_POST, 'ruleidx', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "add";
+	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$ruleidx = filter_input(INPUT_POST, 'ruleidx', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+	} else {
+		$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$ruleidx = filter_input(INPUT_GET, 'ruleidx', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	}
+
 
 		if ($action == "apply") {
 			$ruleidx = $_POST["ruleidx"];
 			//fill from post
-			$qos_interface = $_POST['qos_interface'];
-			$qos_protocol = $_POST['lstProtocol'];
-			$qos_startport = $_POST['edtStartPort'];
-			$qos_endport = $_POST['edtEndPort'];
-			$qos_prio = $_POST['lstPrio'];
+			$qos_interface = filter_input(INPUT_POST, 'qos_interface', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "eth0";
+			$qos_protocol = filter_input(INPUT_POST, 'lstProtocol', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$qos_startport = filter_input(INPUT_POST, 'edtStartPort', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$qos_endport = filter_input(INPUT_POST, 'edtEndPort', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$qos_prio = filter_input(INPUT_POST, 'lstPrio', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+			// $qos_interface = $_POST['qos_interface'];
+			// $qos_protocol = $_POST['lstProtocol'];
+			// $qos_startport = $_POST['edtStartPort'];
+			// $qos_endport = $_POST['edtEndPort'];
+			// $qos_prio = $_POST['lstPrio'];
 			
 			// Create a new rule
 			$qos_rule = array(
@@ -79,12 +94,21 @@
 		} else {
 			if ($ruleidx == "add") {
 				$qos_prio = get_qos_output_prio($configfile->qos['default-prio']);
+				$qos_interface = "eth0";
+				$qos_protocol = "tcp";
+				$qos_startport = "";
+				$qos_endport = "";
 			} else {
 				//fill from rule definition
 				$qos_interface = $configfile->qos['filters'][$ruleidx]['interface'];
 				$qos_protocol = $configfile->qos['filters'][$ruleidx]['proto'];
 				$pstr = $configfile->qos['filters'][$ruleidx]['ports'];
-				list($qos_startport, $qos_endport) = explode(":", $pstr, 2);
+				if (str_contains($pstr, ":")) {
+					list($qos_startport, $qos_endport) = explode(":", $pstr, 2);
+				} else {
+					$qos_startport = $pstr;
+					$qos_endport = "";
+				}
 				$qos_prio = get_qos_output_prio($configfile->qos['filters'][$ruleidx]['prio']);
 			}
 		}
@@ -93,7 +117,7 @@
 	if ($ruleidx == "add") {
 		$MenuTitle="Add QoS Filter Rule";
 	} else {
-		$MenuTitle = "Edit QoS Filter Rule";
+		$MenuTitle = "Edit QoS Filter Rule: Rule(".($ruleidx+1).")";
 	}
 	$MenuType="NETWORK";
 	$PageIcon="service.jpg";

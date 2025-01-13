@@ -16,22 +16,16 @@
 	$buttoninfo[0] = array("label" => "write changes", "dest" => "javascript:do_submit()");
 	$buttoninfo[1] = array("label" => "reset form", "dest" => $_SERVER['PHP_SELF']);
 
-	$action = $_REQUEST['action'];
-
-	if(!$action) {
-		//gather
-		$fd_ipaddr = $configfile->bridge['address'];
-		$fd_enabled = $configfile->bridge['spanning-tree'];
-	} else {
+	if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		//posted
-
-		$fd_ipaddr = $_REQUEST['fd_ipaddr'];
-		$fd_enabled = $_REQUEST['fd_enabled'];
-
+		$fd_ipaddr = filter_input(INPUT_POST, 'fd_ipaddr', FILTER_SANITIZE_SPECIAL_CHARS) ?? "";
+		//$fd_ipaddr = $_REQUEST['fd_ipaddr'];
+		$fd_enabled = filter_input(INPUT_POST, 'fd_enabled', FILTER_VALIDATE_BOOL) ?? false;
+		//$fd_enabled = $_REQUEST['fd_enabled'];
 		//validate
 
 		if(!is_ipaddrblockopt($fd_ipaddr)) {
-		  add_critical("Invalid IP addr: ".$fd_ipaddr);
+			add_critical("Invalid IP addr: ".$fd_ipaddr);
 		}
 
 		if(!query_invalid()) {
@@ -46,6 +40,10 @@
 		} else {
 			add_warning("<hr>".query_invalid()." parameters could not be validated.");
 		}
+	} else {
+		//gather
+		$fd_ipaddr = $configfile->bridge['address'];
+		$fd_enabled = $configfile->bridge['spanning-tree'];
 	}
 
 	function is_enabled() {
@@ -53,6 +51,7 @@
 		return $fd_enabled;
 	}
 
+	$BridgeEnable = false;
 	foreach($configfile->interfaces as $ifentry) {
 		if ($ifentry["bridge"]) {
 			$BridgeEnable = true;
@@ -66,8 +65,6 @@
 ?>
 
 <form id="content" method="post" action="bridging.php">
-
-<input type="hidden" name="action" value="apply" />
 
 <table border="0" width="100%" id="table2">
 	<tr>
@@ -101,12 +98,7 @@
 <?
 	} else {
 ?>
-
-
-
 </p>
-
-
 
 <table border="0" width="100%" id="table1">
 	<tr>

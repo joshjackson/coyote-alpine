@@ -17,13 +17,7 @@
 	$PageIcon = "routes.jpg";
 	$MenuType='NETWORK';
 
-	$fd_action = $_REQUEST['action'];
-
-	if(!$fd_action) {
-		//populate
-		$fd_routes = $configfile->routes;
-		$fd_routecount = count($fd_routes);
-	} else if($fd_action == 'apply') {
+	if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		//populate locals
 		$fd_routes = array();
 		$fd_routecount = $_REQUEST['routecount'];
@@ -32,11 +26,17 @@
 
 		for($i = 0; $i < $fd_routecount; $i++) {
 			//assign to local
+
+			$fd_dest = filter_input(INPUT_POST, 'dest'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$fd_gw = filter_input(INPUT_POST, 'gw'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$fd_dev = filter_input(INPUT_POST, 'dev'.$i, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$fd_metric = filter_input(INPUT_POST, 'metric'.$i, FILTER_VALIDATE_INT);
+			
 			$route = array(
-				'dest' => $_REQUEST['dest'.$i],
-				'gw' => $_REQUEST['gw'.$i],
-				'dev' => $_REQUEST['dev'.$i],
-				'metric' => $_REQUEST['metric'.$i]
+				'dest' => $fd_dest,
+				'gw' => $fd_gw,
+				'dev' => $fd_dev,
+				'metric' => $fd_metric
 			);
 
 			//then validate
@@ -55,7 +55,6 @@
 			//ip addr of gw
 			if(!strlen($route['gw']) || !is_ipaddr($route['gw'])) {
 			  add_critical("Invalid IP addr: ".$route['gw']);
-
 				//continue, do not use this route
 				continue;
 			}
@@ -70,15 +69,15 @@
 			if($route['dev'] == 'default') $route['dev'] = '';
 
 			//if control arrives here, the route passes, so assign to the local collection
-			if (!is_array($routes)) $routes = array();
-			$routes[count($routes)] = $route;
+			//if (!is_array($routes)) $routes = array();
+			$fd_routes[] = $route;
 		} //for
 
 		if(query_invalid()) {
 			add_warning("<hr>Encountered ".query_invalid()." errors.  Your config was not changed.<br>");
 		} else {
 			//assign
-			$configfile->routes = $routes;
+			$configfile->routes = $fd_routes;
 
 			//write
 			if(WriteWorkingConfig())
@@ -90,6 +89,11 @@
 			die;
 
 		}
+	} else {
+		//populate
+		$fd_routes = $configfile->routes;
+		if (!is_array($fd_routes)) $fd_routes = array();
+		$fd_routecount = count($fd_routes);
 	}
 
 	$fd_routecount++;
@@ -114,7 +118,6 @@
 
 <form id="content" method="post" action="<?=$_SERVER['PHP_SELF'];?>">
 
-<input type="hidden" name="action" value="apply" />
 <input type="hidden" name="routecount" value="<?=$fd_routecount?>" />
 
 <span class="descriptiontext">This is a list of the static IP routes to be configured on this firewall. The <i>
@@ -191,7 +194,7 @@ address of the next-hop router. The metric and device fields are optional.</span
 						//loop through interfaces
 						foreach($configfile->interfaces as $ifentry) {
 							//no downed intf allowed, duh
-							if($ifentry['down']) continue;
+							if(isset($ifentry['down'])) continue;
 
 							//if this is the chosen interface, make sure it is marked as selected
 							if($ifentry['name'] == $fd_routes[$i]['dev'])

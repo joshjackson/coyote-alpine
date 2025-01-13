@@ -1,12 +1,12 @@
 <?
 	include("includes/loadconfig.php");
-	$action = $_REQUEST['action'];
 	
-	if ($action == "posted") {
-		$qos_enabled = $_POST['cbEnabled'];
-		$qos_upstream = $_POST['edtUpStream'];
-		$qos_downstream = $_POST['edtDownStream'];
-		$qos_prio = $_POST["lstPrio"];
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+		$qos_enabled = filter_input(INPUT_POST, 'cbEnabled', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$qos_upstream = filter_input(INPUT_POST, 'edtUpStream', FILTER_VALIDATE_INT);
+		$qos_downstream = filter_input(INPUT_POST, 'edtDownStream', FILTER_VALIDATE_INT);
+		$qos_prio = filter_input(INPUT_POST, 'lstPrio', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		
 		if ($qos_enabled == "checked") {
 			// Make sure the up and down stream values are integers
@@ -66,10 +66,9 @@
 </script>
 
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
-  <input type="hidden" name="action" value="posted" />
   <table width="100%" border="0">
     <tr>
-      <td class="labelcell" colspan="2"><p><strong>Note:</strong> Traffic shaping is currently an experimental feature and is being actively developed. Please report any problems or suggestions to the appropriate forum on the Vortech Consulting public web site. It is not currently possible to specify the exact amount of bandwidth allocated for a given host, network or service - only the traffic priority. In order for the traffic shaping system to work properly, you need to specify the amount of available bandwidth for your Internet connection. Currently, eth0 is assumed to be the public (Internet) and eth1 is your private / LAN interface. Future implementations will allow this to be custom configured. </p>
+      <td class="labelcell" colspan="2"><p><strong>Note:</strong> Traffic shaping is currently an experimental feature and is being actively developed. Please report any problems or suggestions to the appropriate forum on the Coyote Linux web site. It is not currently possible to specify the exact amount of bandwidth allocated for a given host, network or service - only the traffic priority. In order for the traffic shaping system to work properly, you need to specify the amount of available bandwidth for your Internet connection. Currently, eth0 is assumed to be the public (Internet) and eth1 is your private / LAN interface. Future implementations will allow this to be custom configured. </p>
       </td>
     </tr>
     <tr>
