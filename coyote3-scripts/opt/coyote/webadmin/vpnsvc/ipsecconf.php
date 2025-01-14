@@ -2,6 +2,7 @@
 	include("../includes/loadconfig.php");
 
 	// Extract the vpnsvc addon configuration object
+	$vpnconf = null;
 	$vpnconf =& $configfile->get_addon('VPNSVCAddon', $vpnconf);
 	if ($vpnconf === null) {
 		// WTF?
@@ -9,13 +10,11 @@
 		exit;
 	}
 
-	$fd_action = $_REQUEST['action'];
-	
-	if ($fd_action == 'apply') {
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		$fd_victim = $_REQUEST['remove'];
-		$fd_type = $_REQUEST['deltype'];
-		$fd_enabled = $_REQUEST['fd_enabled'];
+		$fd_victim = $_POST['remove'];
+		$fd_type = $_POST['deltype'];
+		$fd_enabled = $_POST['fd_enabled'];
 
 		switch ($fd_type) {
 			case 'tunnel':
@@ -28,11 +27,7 @@
 				;;
 			case 'cert':
 				if (!$fd_victim) break;
-				if ($IN_DEVELOPMENT) {
-					$cdir = "/home/webdev/sites/wolverine/files/";
-				} else {
-					$cdir = COYOTE_CONFIG_DIR."ipsec.d/";
-				}
+				$cdir = COYOTE_CONFIG_DIR."strongswan/";
 				mount_flash_rw();
 				unlink($cdir.$fd_victim);
 				mount_flash_ro();
@@ -57,15 +52,13 @@
 	$MenuType="VPN";
 	include("../includes/header.php");
 ?>
-<form name="content" method="post" action="<?=$_SERVER['../PHP_SELF']; ?>">
+<form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
 <script language="javascript">
 	function delete_tunnel(itm) {
 		if(confirm('Are you sure you want to delete the '+itm+' tunnel?')) {
 			var r = document.getElementById('remove');
-			var a = document.getElementById('action');
 			var t = document.getElementById('deltype');
 			r.value = itm;
-			a.value = 'apply';
 			t.value = 'tunnel';
 			document.forms[0].submit();
 		}
@@ -74,26 +67,21 @@
 	function delete_cert(c) {
 		if(confirm('Are you sure you want to delete the '+c+' certificate file?')) {
 			var r = document.getElementById('remove');
-			var a = document.getElementById('action');
 			var t = document.getElementById('deltype');
 			r.value = c;
-			a.value = 'apply';
 			t.value = 'cert';
 			document.forms[0].submit();
 		}
 	}
 
 	function toggle_enable() {
-		var a = document.getElementById('action');
 		var t = document.getElementById('deltype');
-		a.value = 'apply';
 		t.value = 'enable';
 		document.forms[0].submit();
 	}
 
 </script>
 
-<input type="hidden" id="action" name="action" value="">
 <input type="hidden" id="remove" name="remove" value="">
 <input type="hidden" id="deltype" name="deltype" value="">
 
@@ -168,11 +156,7 @@
   </tr>
 <?
 	$curdir=getcwd();
-	if ($IN_DEVELOPMENT) {
-		chdir("/home/webdev/sites/wolverine/files");
-	} else {
-		chdir(COYOTE_CONFIG_DIR."/ipsec.d");
-	}
+	chdir(COYOTE_CONFIG_DIR."ipsec.d");
 	$idx = 0;
 	$hostcert = $configfile->hostname."_cert.pem";
 	foreach(glob("*_cert.pem") as $certfile) {	

@@ -43,7 +43,7 @@
 	
 	// build a list of installed network cards
 	$nics = GetNetworkInterfaces();
-	$configfile = array();
+	$conffile = array();
 	
 	if (count($nics) < 2) {
 		print("At least 2 supported PCI network interfaces are required.\n\n");
@@ -51,17 +51,17 @@
 		pause();
 	}
 	
-	array_push($configfile, "config version 4.00");
-	array_push($configfile, "hostname firewall");
-	array_push($configfile, "domain-name localdomain");
-	array_push($configfile, "password admin fwadmin");
-	array_push($configfile, "password debug fwadmin");
-	array_push($configfile, "fixup pptp");
-	array_push($configfile, "fixup ftp");
-	array_push($configfile, "fixup irc");
-	array_push($configfile, "hardware autodetect");
-	array_push($configfile, "clock server time.vortech.net");
-	array_push($configfile, "clock timezone EST");
+	array_push($conffile, "config version 4.00");
+	array_push($conffile, "hostname firewall");
+	array_push($conffile, "domain-name localdomain");
+	array_push($conffile, "password admin fwadmin");
+	array_push($conffile, "password debug fwadmin");
+	array_push($conffile, "fixup pptp");
+	array_push($conffile, "fixup ftp");
+	array_push($conffile, "fixup irc");
+	array_push($conffile, "hardware autodetect");
+	array_push($conffile, "clock server time.vortech.net");
+	array_push($conffile, "clock timezone EST");
 	
 	$isvalid = false;
 	$useppp = false;
@@ -77,11 +77,11 @@
 		
 			case 1:
 				// DHCP Assigned addressing
-				array_push($configfile, "interface eth0 address dhcp");		
+				array_push($conffile, "interface eth0 address dhcp");		
 				$isvalid = true;
 				break;	
 			case 2:
-				array_push($configfile, "interface eth0 address pppoe");
+				array_push($conffile, "interface eth0 address pppoe");
 				print("Enter PPPoE Username: ");
 				$pppoeuser = trim(fgets(STDIN, 255));
 				print("Enter PPPoE Password: ");
@@ -91,7 +91,7 @@
 				break;
 			case 3:
 				$wanip = read_ip_subnet();
-				array_push($configfile, "interface eth0 address ".$wanip["ip"]."/".$wanip["bits"]);
+				array_push($conffile, "interface eth0 address ".$wanip["ip"]."/".$wanip["bits"]);
 				while (true) {
 					print("Enter default gateway: ");
 					$gateway = trim(fgets(STDIN, 16));
@@ -99,7 +99,7 @@
 						print("Invalid gateway address.\n");
 						continue;
 					}
-					array_push($configfile, "route add 0.0.0.0/0 $gateway");
+					array_push($conffile, "route add 0.0.0.0/0 $gateway");
 					break;
 				}
 				$isvalid = true;
@@ -110,7 +110,7 @@
 	$lanip = read_ip_subnet();
 	$lannet = gen_ip_subnet($lanip["ip"], $lanip["bits"]);
 	$lannet = $lannet."/".$lanip["bits"];
-	array_push($configfile, "interface eth1 address ".$lanip["ip"]."/".$lanip["bits"]);
+	array_push($conffile, "interface eth1 address ".$lanip["ip"]."/".$lanip["bits"]);
 
 	$isvalid = false;
 	while (!$isvalid) {
@@ -123,11 +123,11 @@
 		if (($yn == "") || ($yn == "Y") || ($yn == "y")) {
 			// Enable outbound NAT
 			if ($useppp) {
-				array_push($configfile, "nat ppp0 ".$lannet);
+				array_push($conffile, "nat ppp0 ".$lannet);
 			} else {
-				array_push($configfile, "nat eth0 ".$lannet);
+				array_push($conffile, "nat eth0 ".$lannet);
 			}
-			array_push($configfile, "access-list natout permit all ".$lannet." any");
+			array_push($conffile, "access-list natout permit all ".$lannet." any");
 			$isvalid = true;
 		} elseif (($yn == "N") || ($yn == "n")) {
 			$isvalid = true;
@@ -135,16 +135,16 @@
 	}
 	
 	// Allow pings from local network
-	array_push($configfile, "icmp permit $lannet all eth1");
+	array_push($conffile, "icmp permit $lannet all eth1");
 	
 	// Allow remote administration from LAN
-	array_push($configfile, "http server enable");
-	array_push($configfile, "http $lannet");
-	array_push($configfile, "ssh server enable");
-	array_push($configfile, "ssh $lannet");
-	array_push($configfile, "");
+	array_push($conffile, "http server enable");
+	array_push($conffile, "http $lannet");
+	array_push($conffile, "ssh server enable");
+	array_push($conffile, "ssh $lannet");
+	array_push($conffile, "");
 
-	file_put_contents("/etc/config/sysconfig", implode("\n",$configfile));
+	file_put_contents("/etc/config/sysconfig", implode("\n",$conffile));
 		
 	print("\n\nSetup interview complete. Once the system has finished booting, you\n");
 	print("can adjust your configuration from the following URL:\n\n");
