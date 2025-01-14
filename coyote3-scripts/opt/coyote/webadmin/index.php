@@ -6,10 +6,10 @@
 	$firmware = GetFirmwareVersion();
 ?>
 
-<table border="0" width="80%" id="table1">
+<table width="80%" id="table1">
 	<tr>
 		<td><p><font size="2"><b>Welcome to the web administrator for Coyote Linux v<? print(PRODUCT_VERSION); ?>.</b></font></p>
-		  <table border="0" cellspacing="3" cellpadding="1">
+		  <table cellspacing="3" cellpadding="1">
         <tr>
           <td colspan="2" class="labelcellmid"><font size="2"><b>Firewall Information</b></font></td>
         </tr>
@@ -39,7 +39,7 @@
         </tr>
         <tr>
           <td nowrap><img src="images/vortech-logo.gif" width="107" height="150"></td>
-          <td width="100%" valign="middle"><p>Coyote Linux is a product of Vortech Consulting, LLC. For more information on Coyote, support options, or to access the public help forums, please visit the Vortech Consulting website at <a target=_new href="http://www.vortech.net">http://www.vortech.net</a>.</p>
+          <td width="100%" valign="middle"><p>Coyote Linux is a product of Vortech Consulting, LLC. For more information on Coyote, support options, or to access the public help forums, please visit the Vortech Consulting website at <a target=_new href="https://www.vortech.net">https://www.vortech.net</a>.</p>
           <p><strong>NOTICE</strong>: This product is licensed for personal and educational use only. Commercial and governmental use is strictly prohibited. For commercial firewall options from Vortech Consulting, please visit the Vortech Consulting web site or email support@vortech.net.</p></td>
         </tr>
       </table>		  <p><br>

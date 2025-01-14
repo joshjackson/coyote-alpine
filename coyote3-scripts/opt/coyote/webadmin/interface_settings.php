@@ -6,15 +6,15 @@
 	include("includes/header.php");
 ?>
 
-<table border="0" width="100%">
+<table width="100%">
 	<tr>
 		<td class="labelcell"><label>Interface name</label></td>
-		<td class="labelcell" align="center"><label>Device</label></td>
-		<td class="labelcell" align="center"><label>Bridging</label></td>
-		<td class="labelcell" align="center"><label>Driver</label></td>
-		<td class="labelcell" align="center"><label>Virtual</label></td>
-		<td class="labelcell" align="center"><label>Active</label></td>
-		<td class="labelcell" align="center"><label>Edit</label></td>
+		<td class="labelcellctr"><label>Device</label></td>
+		<td class="labelcellctr"><label>Bridging</label></td>
+		<td class="labelcellctr"><label>Driver</label></td>
+		<td class="labelcellctr"><label>Virtual</label></td>
+		<td class="labelcellctr"><label>Active</label></td>
+		<td class="labelcellctr"><label>Edit</label></td>
 	</tr>
 <?
 	$idx=0;
@@ -27,17 +27,17 @@
 
 		$Active = ($ifentry["down"]) ? "N" : "Y";
 		$Bridge = ($ifentry["bridge"]) ? "Y" : "N";
-		$Virtual = ($ifentry["vlan"] || !$ifentry["export"]) ? "Y" : "N";
+		$Virtual = (!empty($ifentry["vlan"]) || !$ifentry["export"]) ? "Y" : "N";
 ?>
 
 		<tr>
-			<td bgcolor="<?=$cellcolor?>"><?=$ifentry["name"]?></td>
-			<td align="center" bgcolor="<?=$cellcolor?>"><?=$ifentry["device"]?></td>
-			<td align="center" bgcolor="<?=$cellcolor?>"><?=$Bridge?></td>
-			<td align="center" bgcolor="<?=$cellcolor?>"><?=$ifentry["module"]?></td>
-			<td align="center" bgcolor="<?=$cellcolor?>"><?=$Virtual?></td>
-			<td align="center" bgcolor="<?=$cellcolor?>"><?=$Active?></td>
-			<td align="center" bgcolor="<?=$cellcolor?>">
+			<td style="text-align: left; background-color: <?=$cellcolor?>;"><?=$ifentry["name"]?></td>
+			<td style="text-align: center; background-color: <?=$cellcolor?>;"><?=$ifentry["device"]?></td>
+			<td style="text-align: center; background-color: <?=$cellcolor?>;"><?=$Bridge?></td>
+			<td style="text-align: center; background-color: <?=$cellcolor?>;"><?=$ifentry["module"]?></td>
+			<td style="text-align: center; background-color: <?=$cellcolor?>;"><?=$Virtual?></td>
+			<td style="text-align: center; background-color: <?=$cellcolor?>;"><?=$Active?></td>
+			<td style="text-align: center; background-color: <?=$cellcolor?>;">
 <?
 		if ($ifentry["export"]) {
 			print('<a href="edit_interface.php?intfidx='.$ifidx.'"><img border="0" src="images/icon-edit.gif" width="16" height="16"></a>');

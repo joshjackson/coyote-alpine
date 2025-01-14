@@ -325,7 +325,7 @@
               <td align="left"   bgcolor="<?=$cellcolor?>"><input type="text" id="host<?=$i?>" name="host<?=$i?>" value="<?=$host?>" />
               <? if(strlen($host)) mark_valid(is_ipaddr($host)) ?>
               </td>
-              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="/images/icon-chk.gif" width="16" height="16"></a></td>
+              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img src="/images/icon-chk.gif" width="16" height="16"></a></td>
               <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('host<?=$i?>')"><img src="/images/icon-del.gif" width="16" height="16"></a></td>
               <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
       </tr><tr>
@@ -343,7 +343,7 @@
         <td align="left"   bgcolor="<?=$cellcolor?>" nowrap><input type="text" id="host<?=$i?>" name="host<?=$i?>" value="" /></td>
         <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
         <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-        <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="/images/icon-plus.gif" width="16" height="16"></a></td>
+        <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img src="/images/icon-plus.gif" width="16" height="16"></a></td>
 		</tr>
 
 	</table>

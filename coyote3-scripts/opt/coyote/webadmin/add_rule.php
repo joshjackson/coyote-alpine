@@ -156,10 +156,10 @@
 		}
 	}
 ?>
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td>
-		<table border="0" width="100%" id="table2">
+		<table width="100%" id="table2">
 			<tr>
 				<td class="labelcell" nowrap><label>Access List:</label></td>
 				<td>

@@ -182,7 +182,7 @@
 	<input type="hidden" id="httphostcount" name="httphostcount" value="<?=$fd_http_hostcount?>">
 	<input type="hidden" id="sshhostcount" name="sshhostcount" value="<?=$fd_ssh_hostcount?>">
 
-<table border="0" cellspacing="0" cellpadding="3" width="100%" id="table2">
+<table cellspacing="0" cellpadding="3" width="100%" id="table2">
 	<tr>
 		<td class="labelcellmid"><input type="checkbox" name="http_enabled" <? if(is_http_enabled()) print("checked")?>> </td>
 		<td class="labelcellmid" width="100%"><label><font size=2>Enable
@@ -190,7 +190,7 @@
 	</tr>
 </table>
 
-<table border="0" cellspacing="0" cellpadding="3" width="100%" id="table2">
+<table cellspacing="0" cellpadding="3" width="100%" id="table2">
 	<tr>
 		<td class="labelcell"><label>Web port:</label></td>
 		<td><input type="text" name="http_port" size="6" value="<?=$fd_http_port?>"><br>
@@ -201,7 +201,7 @@
 
 <input type="hidden" name="action" value="ssh">
 
-	<table border="0" cellspacing="0" cellpadding="3" width="100%" id="table3">
+	<table cellspacing="0" cellpadding="3" width="100%" id="table3">
 	<tr>
 		<td class="labelcellmid"><input type="checkbox" name="ssh_enabled" <? if(is_ssh_enabled()) print("checked")?>></td>
 		<td class="labelcellmid" width="100%"><label><font size=2>Enable
@@ -209,7 +209,7 @@
 	</tr>
 	</table>
 
-	<table border="0" cellspacing="0" cellpadding="3" width="100%" id="table3">
+	<table cellspacing="0" cellpadding="3" width="100%" id="table3">
 	<tr>
 			<td class="labelcell"><label>SSH port:</label></td>
 			<td><input type="text" name="ssh_port" size="6" value="<?=$fd_ssh_port?>"><br>
@@ -226,9 +226,9 @@
 		<!-- insert a table, as hosts are enabled to list hosts (always at least one) -->
 		<tr>
 					<td class="labelcell" width="100%"><label>Permit HTTP administration from the following hosts and/or networks:</label></td>
-					<td class="labelcell" align="center"><label>Update</label></td>
-					<td class="labelcell" align="center"><label>Delete</label></td>
-					<td class="labelcell" align="center"><label>Add</label></td>
+					<td class="labelcellctr"><label>Update</label></td>
+					<td class="labelcellctr"><label>Delete</label></td>
+					<td class="labelcellctr"><label>Add</label></td>
 				</tr>
 				<tr>
 
@@ -245,12 +245,12 @@
 
 							//output with script breaks first, then convert to print() calls
 							?>
-							<td align="left"   bgcolor="<?=$cellcolor?>"><input type="text" id="httphost<?=$i?>" name="httphost<?=$i?>" value="<?=$chhost?>" />
+							<td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="httphost<?=$i?>" name="httphost<?=$i?>" value="<?=$chhost?>" />
 							<? if(strlen($chhost)) mark_valid(is_ipaddrblockopt($chhost)) ?>
 							</td>
-							<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-							<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('httphost<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
-							<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_item('httphost<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
 							</tr><tr>
 							<?
 							$i++;
@@ -263,10 +263,10 @@
 						else
 							$cellcolor = "#FFFFFF";
 				?>
-				<td align="left"   bgcolor="<?=$cellcolor?>" nowrap><input type="text" id="httphost<?=$i?>" name="httphost<?=$i?>" value="" /></td>
-				<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-				<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-				<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
+				<td style="text-align: left; background-color: <?=$cellcolor?>;" nowrap><input type="text" id="httphost<?=$i?>" name="httphost<?=$i?>" value="" /></td>
+				<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+				<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+				<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a></td>
 		</tr>
 	</table>
 
@@ -277,9 +277,9 @@
 		<!-- insert a table, as hosts are enabled to list hosts (always at least one) -->
 		<tr>
 					<td class="labelcell" width="100%"><label>Permit SSH administration from the following hosts and/or networks:</label></td>
-					<td class="labelcell" align="center"><label>Update</label></td>
-					<td class="labelcell" align="center"><label>Delete</label></td>
-					<td class="labelcell" align="center"><label>Add</label></td>
+					<td class="labelcellctr"><label>Update</label></td>
+					<td class="labelcellctr"><label>Delete</label></td>
+					<td class="labelcellctr"><label>Add</label></td>
 				</tr>
 				<tr>
 
@@ -296,12 +296,12 @@
 
 							//output with script breaks first, then convert to print() calls
 							?>
-							<td align="left"   bgcolor="<?=$cellcolor?>"><input type="text" id="sshhost<?=$i?>" name="sshhost<?=$i?>" value="<?=$cshost?>" />
+							<td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="sshhost<?=$i?>" name="sshhost<?=$i?>" value="<?=$cshost?>" />
 							<? if(strlen($cshost)) mark_valid(is_ipaddrblockopt($cshost)) ?>
 							</td>
-							<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-							<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('sshhost<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
-							<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_item('sshhost<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
 							</tr><tr>
 							<?
 							$i++;
@@ -314,10 +314,10 @@
 						else
 							$cellcolor = "#FFFFFF";
 				?>
-				<td align="left"   bgcolor="<?=$cellcolor?>" nowrap><input type="text" id="sshhost<?=$i?>" name="sshhost<?=$i?>" value="" /></td>
-				<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-				<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-				<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
+				<td style="text-align: left; background-color: <?=$cellcolor?>;" nowrap><input type="text" id="sshhost<?=$i?>" name="sshhost<?=$i?>" value="" /></td>
+				<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+				<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+				<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a></td>
 		</tr>
 	</table>
 

@@ -175,12 +175,12 @@
 <table width="100%" padding=0 spacing=0>
 	<tr>
 		<td class="labelcell"><label>Interface</label></td>
-		<td class="labelcell" align="center"><label>Bypass?</label></td>
-		<td class="labelcell" align="center"><label>Source</label></td>
-		<td class="labelcell" align="center"><label>Destination</label></td>
-		<td class="labelcell" align="center"><label>Update</label></td>
-		<td class="labelcell" align="center"><label>Delete</label></td>
-		<td class="labelcell" align="center"><label>Add</label></td>
+		<td class="labelcellctr"><label>Bypass?</label></td>
+		<td class="labelcellctr"><label>Source</label></td>
+		<td class="labelcellctr"><label>Destination</label></td>
+		<td class="labelcellctr"><label>Update</label></td>
+		<td class="labelcellctr"><label>Delete</label></td>
+		<td class="labelcellctr"><label>Add</label></td>
 	</tr>
 	<tr>
 	<?
@@ -192,7 +192,7 @@
         else
           $cellcolor = "#FFFFFF";
         ?>
-          <td bgcolor="<?=$cellcolor?>">
+          <td style="background-color: <?=$cellcolor?>">
 						<select id="interface<?=$i?>" name="interface<?=$i?>" width="100%">
 							<option value="none" <?if($nat['bypass']) print("selected");?> >none</option>
 						<?
@@ -213,21 +213,21 @@
 						</select>
           </td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;"">
 						<input onchange="modify(<?=$i?>)" type="checkbox" id="bypass<?=$i?>" name="bypass<?=$i?>" <? if($nat['bypass']) print("checked");?> />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;"">
 						<input type="text" id="source<?=$i?>" name="source<?=$i?>" value="<?=$nat['source']?>" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;"">
 						<input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="<?=$nat['dest']?>" />
 					</td>
 
-          <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-          <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('<?=$i?>')"><img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
-          <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;""><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;""><a href="javascript:delete_item('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;"">&nbsp;</td>
     </tr>
     <tr>
         <?
@@ -239,7 +239,7 @@
 			else
 				$cellcolor = "#FFFFFF";
 		?>
-		<td bgcolor="<?=$cellcolor?>">
+		<td style="background-color: <?=$cellcolor?>">
 					<select id="interface<?=$i?>" name="interface<?=$i?>" width="100%">
 					<option value="none">none</option>
 					<?
@@ -257,21 +257,21 @@
 					</select>
 		</td>
 
-		<td align="center" bgcolor="<?=$cellcolor?>">
+		<td style="text-align: center; background-color: <?=$cellcolor?>;"">
 			<input onchange="modify(<?=$i?>)" type="checkbox" id="bypass<?=$i?>" name="bypass<?=$i?>" />
 		</td>
 
-		<td align="center" bgcolor="<?=$cellcolor?>">
+		<td style="text-align: center; background-color: <?=$cellcolor?>;"">
 			<input type="text" id="source<?=$i?>" name="source<?=$i?>" value="" />
 		</td>
 
-		<td align="center" bgcolor="<?=$cellcolor?>">
+		<td style="text-align: center; background-color: <?=$cellcolor?>;"">
 			<input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="" />
 		</td>
 
-		<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-		<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-		<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;"">&nbsp;</td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;"">&nbsp;</td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;""><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a></td>
 	</tr>
 </table>
 

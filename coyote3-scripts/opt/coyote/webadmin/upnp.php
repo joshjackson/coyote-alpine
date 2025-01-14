@@ -26,7 +26,7 @@
 ?>
 
 <form action="upnp.php" method="post">
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td>
 <?
@@ -48,7 +48,7 @@
 		additional firewall rules.</p>
 <p><b>Warning:</b> Never enable UPnP on an Interface which is connected to an
 untrusted network or the Intenet.</p>
-		<table border="0" width="100%" id="table2" cellspacing="0" cellpadding="3">
+		<table width="100%" id="table2" cellspacing="0" cellpadding="3">
 			<tr>
 				<td class="labelcellmid">
 				<input type="checkbox" name="UPNP" value="ON" <?=$checked?>></td>

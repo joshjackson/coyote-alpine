@@ -17,10 +17,10 @@ function drawbar_colour ($colour, $percent) {
 	// This is a hack to avoid bad browser behaviour from using <img width=0>
 	if ($percent == 0  ) { $percent = 1; }
 	if ($percent == 100) { $percent = 99; }
-	echo "<img src=images/bars/bar-left-$l_colour.gif border=0 height=12 width=5>";
-	echo "<img src=images/bars/bar-tile-$l_colour.gif border=0 height=12 width=", ($percent*2), ">";
-	echo "<img src=images/bars/bar-tile-$r_colour.gif border=0 height=12 width=", (200 - $percent*2), ">";
-	echo "<img src=images/bars/bar-right-$r_colour.gif border=0 height=12 width=5>\n";
+	echo "<img src=images/bars/bar-left-$l_colour.gif height=12 width=5>";
+	echo "<img src=images/bars/bar-tile-$l_colour.gif height=12 width=", ($percent*2), ">";
+	echo "<img src=images/bars/bar-tile-$r_colour.gif height=12 width=", (200 - $percent*2), ">";
+	echo "<img src=images/bars/bar-right-$r_colour.gif height=12 width=5>\n";
 }
 
 function GetTimezoneList($Default="UTC") {

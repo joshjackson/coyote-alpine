@@ -61,7 +61,7 @@
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
 	<input type="hidden" name="action" value="apply">
 	<input type="hidden" name="ruleidx" value="<?=$ruleidx?>">
-	<table border="0" width="100%" id="table1">
+	<table width="100%" id="table1">
 		<tr>
 			<td class="labelcell" nowrap>
 				<label>Interface:</label>

@@ -3,12 +3,12 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		$fd_rlogging = filter_input(INPUT_POST, 'rlogging', FILTER_SANITIZE_STRING) ?? "";
-		$fd_rhost = filter_input(INPUT_POST, 'rhost', FILTER_SANITIZE_STRING) ?? "";
-		$fd_laccept = filter_input(INPUT_POST, 'laccept', FILTER_SANITIZE_STRING) ?? "";
-		$fd_ldeny = filter_input(INPUT_POST, 'ldeny', FILTER_SANITIZE_STRING) ?? "";
-		$fd_faccept = filter_input(INPUT_POST, 'faccept', FILTER_SANITIZE_STRING) ?? "";
-		$fd_fdeny = filter_input(INPUT_POST, 'fdeny', FILTER_SANITIZE_STRING) ?? "";
+		$fd_rlogging = filter_input(INPUT_POST, 'rlogging', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+		$fd_rhost = filter_input(INPUT_POST, 'rhost', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+		$fd_laccept = filter_input(INPUT_POST, 'laccept', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+		$fd_ldeny = filter_input(INPUT_POST, 'ldeny', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+		$fd_faccept = filter_input(INPUT_POST, 'faccept', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+		$fd_fdeny = filter_input(INPUT_POST, 'fdeny', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
 
 		if (isset($fd_rlogging)) {
 			//validate
@@ -54,13 +54,13 @@
 ?>
 
 <form action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td class="labelcellmid" nowrap><input type="checkbox" name="rlogging" value="checked" <?=$fd_rlogging?>></td>
     <td class="labelcellmid" nowrap width="100%"><label><font size="2">Enable remote system logging </font></label></td>
   </tr>
 </table>
-<table width="100%"  border="0">
+<table width="100%">
   <tr>
     <td class="labelcell" nowrap><label>Remote host:</label></td>
     <td width="100%"><input type="text" name="rhost" value="<?=$fd_rhost?>">
@@ -73,22 +73,22 @@
 		</td>
 	<tr>
   <tr>
-    <td class="labelcell" align="right" nowrap><input type="checkbox" name="ldeny" value="checked" <?=$fd_ldeny?>></td>
+    <td class="labelcell" style="text-align: right;" nowrap><input type="checkbox" name="ldeny" value="checked" <?=$fd_ldeny?>></td>
     <td width="100%" class="ctrlcell"><b>Log locally rejected connections</b><br>
       <span class="descriptiontext">This option will log rejected connections directed at the firewall itself.</span></td>
   </tr>
   <tr>
-    <td class="labelcell" align="right" nowrap><input type="checkbox" name="laccept" value="checked" <?=$fd_laccept?>></td>
+    <td class="labelcell" style="text-align: right;" nowrap><input type="checkbox" name="laccept" value="checked" <?=$fd_laccept?>></td>
     <td width="100%" class="ctrlcell"><b>Log locally accepted connections<br>
     </b><span class="descriptiontext">This option will log connections accepted by the firewall itself.</span></td>
   </tr>
   <tr>
-    <td class="labelcell" align="right" nowrap><input type="checkbox" name="fdeny" value="checked" <?=$fd_fdeny?>></td>
+    <td class="labelcell" style="text-align: right;" nowrap><input type="checkbox" name="fdeny" value="checked" <?=$fd_fdeny?>></td>
     <td width="100%" class="ctrlcell"><b>Log rejected forwarding connections</b><br>
     <span class="descriptiontext">This option will log connections destined for hosts outside of the firewall which were rejected due to the firewall configuration. These connections may be rejected due to a <em>deny</em> based access list or by default if no other access list explicitly permitted the connection.</span></td>
   </tr>
   <tr>
-    <td class="labelcell" align="right" nowrap><input type="checkbox" name="faccept" value="checked" <?=$fd_faccept?>></td>
+    <td class="labelcell" style="text-align: right;" nowrap><input type="checkbox" name="faccept" value="checked" <?=$fd_faccept?>></td>
     <td width="100%"><b>Log accepted forwarding connections</b><br>
     <span class="descriptiontext">This option will log connections destined for hosts outside of the firewall which were accepted based on an <em>accept</em> based access list.</span></td>
   </tr>

@@ -14,16 +14,9 @@
 			return false;
 	}
 
-	//determine posted
-	if($_POST['postcheck'])
-		$fd_posted = true;
-	else
-		$fd_posted = false;
-
 	//1..2048
-
 	//determine enabled
-	if($fd_posted) {
+	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$fd_limit = $_POST['limit'];
 
 		if($fd_limit)
@@ -77,20 +70,20 @@
 
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
 	<input type="hidden" id="postcheck" name="postcheck" value="form was posted">
-	<table border="0" width="100%" id="table1">
+	<table width="100%" id="table1">
 		<tr>
 			<td>
 				<b>Firewall ICMP Response Control</b><br>
 				<span class="descriptiontext"><b>Note:</b> These settings do not control the flow of ICMP requests <i>through</i> the firewall. To restrict ICMP traffic passing through the firewall,
 				use a standard access list.</span>
 				<br>
-				<table border="0" width="100%">
+				<table width="100%">
 					<tr>
 						<td class="labelcell" ><label>Interface</label></td>
-						<td class="labelcell" align="center"><label>Source</label></td>
-						<td class="labelcell" align="center"><label>Message Type</label></td>
-						<td class="labelcell" align="center"><label>Edit</label></td>
-						<td class="labelcell" align="center"><label>Del</label></td>
+						<td class="labelcellctr"><label>Source</label></td>
+						<td class="labelcellctr"><label>Message Type</label></td>
+						<td class="labelcellctr"><label>Edit</label></td>
+						<td class="labelcellctr"><label>Del</label></td>
 					</tr>
 
 
@@ -107,15 +100,15 @@
 			}
 	?>
 					<tr>
-						<td bgcolor="<?=$cellcolor?>"><?=$fwrule["interface"]?></td>
-						<td bgcolor="<?=$cellcolor?>" align="center"><?=$fwrule["source"]?></td>
-						<td bgcolor="<?=$cellcolor?>" align="center"><?=$fwrule["type"]?></td>
-						<td align="center" bgcolor="<?=$cellcolor?>">
+						<td style="text-align: left; background-color: <?=$cellcolor?>;"><?=$fwrule["interface"]?></td>
+						<td style="text-align: center; background-color: <?=$cellcolor?>;"><?=$fwrule["source"]?></td>
+						<td style="text-align: center; background-color: <?=$cellcolor?>;"><?=$fwrule["type"]?></td>
+						<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<a href="edit_icmprule.php?ruleidx=<?=$ruleidx?>">
-						<img border="0" src="images/icon-edit.gif" width="16" height="16"></a></td>
-						<td align="center" bgcolor="<?=$cellcolor?>">
+						<img src="images/icon-edit.gif" width="16" height="16"></a></td>
+						<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<a href="javascript:delete_item(<?=$ruleidx?>)">
-						<img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
+						<img src="images/icon-del.gif" width="16" height="16"></a></td>
 					</tr>
 
 	<?
@@ -123,11 +116,11 @@
 		}
 	?>
 				</table>
-				<table border="0" width="100%" id="table2">
+				<table width="100%" id="table2">
 					<tr>
 						<td>
 							<a href="add_icmprule.php">
-							<img border="0" src="images/icon-plus.gif" width="16" height="16">
+							<img src="images/icon-plus.gif" width="16" height="16">
 							</a>
 							</td>
 							<td width="100%"><b><a href="add_icmprule.php">
@@ -143,7 +136,7 @@
 			can be restricted to help reduce the impact of denial of service (DoS)
 			attacks.</span>
 
-			<table border="0" width="100%" id="table3">
+			<table width="100%" id="table3">
 				<tr>
 					<td width="1%" class="labelcellmid">
 						<input type="checkbox" name="enabled" <? if(is_icmp_limited()) print("checked");?> >

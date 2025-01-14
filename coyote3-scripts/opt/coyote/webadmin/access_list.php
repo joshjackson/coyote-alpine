@@ -13,7 +13,7 @@
 		die;
 	}
 
-	$MenuTitle=$gtAccessList.": $AccessListName";
+	$MenuTitle=$gtAccessList."Access List: $AccessListName";
 	$MenuType="RULES";
 
 	if($action == 'reorder') {
@@ -78,21 +78,21 @@
 </script>
 
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
-	<table border="0" width="100%" id="table1">
+	<table width="100%" id="table1">
 		<tr>
 			<td>
-				<table border="0" width="100%">
+				<table width="100%">
 					<tr>
 						<td class="labelcell" ><label><?=$gtTarget?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtProtocol?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtSource?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtDestination?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtStartPort?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtEndPort?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtEdit?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtDel?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtUp?></label></td>
-						<td class="labelcell" align="center"><label><?=$gtDown?></label></td>
+						<td class="labelcellctr"><label><?=$gtProtocol?></label></td>
+						<td class="labelcellctr"><label><?=$gtSource?></label></td>
+						<td class="labelcellctr"><label><?=$gtDestination?></label></td>
+						<td class="labelcellctr"><label><?=$gtStartPort?></label></td>
+						<td class="labelcellctr"><label><?=$gtEndPort?></label></td>
+						<td class="labelcellctr"><label><?=$gtEdit?></label></td>
+						<td class="labelcellctr"><label><?=$gtDel?></label></td>
+						<td class="labelcellctr"><label><?=$gtUp?></label></td>
+						<td class="labelcellctr"><label><?=$gtDown?></label></td>
 					</tr>
 	<?
 		$idx=0;
@@ -111,38 +111,38 @@
 
 	?>
 					<tr>
-						<td bgcolor="<?=$cellcolor?>"><?=$permit?></td>
-						<td bgcolor="<?=$cellcolor?>" align="center"><?=$fwrule["protocol"]?></td>
-						<td bgcolor="<?=$cellcolor?>" align="center"><?=$fwrule["source"]?></td>
-						<td bgcolor="<?=$cellcolor?>" align="center"><?=$fwrule["dest"]?></td>
-						<td bgcolor="<?=$cellcolor?>" align="center"><?=$startport?></td>
-						<td bgcolor="<?=$cellcolor?>" align="center"><?=$endport?></td>
-						<td align="center" bgcolor="<?=$cellcolor?>">
+						<td style="background-color: <?=$cellcolor?>;"><?=$permit?></td>
+						<td style="background-color: <?=$cellcolor?>; text-align: center;"><?=$fwrule["protocol"]?></td>
+						<td style="background-color: <?=$cellcolor?>; text-align: center;"><?=$fwrule["source"]?></td>
+						<td style="background-color: <?=$cellcolor?>; text-align: center;"><?=$fwrule["dest"]?></td>
+						<td style="background-color: <?=$cellcolor?>; text-align: center;"><?=$startport?></td>
+						<td style="background-color: <?=$cellcolor?>; text-align: center;"><?=$endport?></td>
+						<td style="background-color: <?=$cellcolor?>; text-align: center;">
 							<a href="edit_rule.php?aclidx=<?=$AccessListName?>&ruleidx=<?=$idx?>">
-							<img border="0" src="images/icon-edit.gif" width="16" height="16"></a>
+							<img src="images/icon-edit.gif" width="16" height="16"></a>
 						</td>
-						<td align="center" bgcolor="<?=$cellcolor?>">
+						<td style="text-align:center; background-color: <?=$cellcolor?>;">
 							<a href="javascript:delete_item('<?=$idx?>')">
-							<img border="0" src="images/icon-del.gif" width="16" height="16"></a>
+							<img src="images/icon-del.gif" width="16" height="16"></a>
 						</td>
-						<td align="center" bgcolor="<?=$cellcolor?>">
+						<td style="background-color: <?=$cellcolor?>; text-align: center;">
 			<?
 				if ($idx) {
 					$target = intval($idx)-1;
 					print('<a href="'.$_SERVER['PHP_SELF'].'?action=reorder&aclidx='.$AccessListName.'&src='.$idx.'&target='.$target.'">');
-					print('<img border="0" src="images/icon-mvup.gif" width="16" height="16">');
+					print('<img src="images/icon-mvup.gif" width="16" height="16">');
 					print('</a>');
 				} else {
 					print('&nbsp;');
 				}
 			?>
 						</td>
-						<td align="center" bgcolor="<?=$cellcolor?>">
+						<td style="background-color: <?=$cellcolor?>; text-align: center;">
 			<?
 				if ($idx < $maxrule) {
 					$target = intval($idx)+1;
 					print('<a href="'.$_SERVER['PHP_SELF'].'?action=reorder&aclidx='.$AccessListName.'&src='.$idx.'&target='.$target.'">');
-					print('<img border="0" src="images/icon-mvdn.gif" width="16" height="16">');
+					print('<img src="images/icon-mvdn.gif" width="16" height="16">');
 				} else {
 					print('&nbsp;');
 				}
@@ -155,11 +155,11 @@
 		}
 	?>
 				</table>
-				<table border="0" width="100%" id="table2">
+				<table width="100%" id="table2">
 					<tr>
 						<td>
 							<a href="add_rule.php">
-							<img border="0" src="images/icon-plus.gif" width="16" height="16"></a>
+							<img src="images/icon-plus.gif" width="16" height="16"></a>
 						</td>
 						<td width="100%">
 							<b><a href="add_rule.php?aclidx=<?=$AccessListName?>&ruleidx=<?=$idx?>"><?=$atAddRuleToList?></a></b>

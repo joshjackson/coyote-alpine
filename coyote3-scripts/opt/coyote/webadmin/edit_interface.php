@@ -579,7 +579,7 @@
   <input type="hidden" name="is_virtual" value="<?=$fd_virtual?>" />
   <input type="hidden" name="to_kill" value="" />
   <input type="hidden" name="to_add" value="" />
-  <table border="0" width="100%" id="table2">
+  <table width="100%" id="table2">
     <tr>
       <td class="labelcell" nowrap><label>Interface configuration method:</label></td>
       <td width="100%"><? if($fd_virtual) { ?>
@@ -672,9 +672,9 @@
       <td width="100%"><table width="100%">
           <tr>
             <td class="labelcell" width="100%"><label>IP Addr</label></td>
-            <td class="labelcell" align="center"><label>Update</label></td>
-            <td class="labelcell" align="center"><label>Delete</label></td>
-            <td class="labelcell" align="center"><label>Add</label></td>
+            <td class="labelcellctr"><label>Update</label></td>
+            <td class="labelcellctr"><label>Delete</label></td>
+            <td class="labelcellctr"><label>Add</label></td>
           </tr>
           <tr>
             <?
@@ -688,12 +688,12 @@
 
 	          //output with script breaks first, then convert to print() calls
 	          ?>
-            <td align="left"   bgcolor="<?=$cellcolor?>"><input type="text" id="addr<?=$i?>" name="addr<?=$i?>" value="<?=$addr?>" />
+            <td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="addr<?=$i?>" name="addr<?=$i?>" value="<?=$addr?>" />
               <? if(strlen($addr)) mark_valid(is_ipaddrblockopt($addr)) ?>
             </td>
-            <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-            <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('addr<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
-            <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_item('addr<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
           </tr>
           <tr>
             <?
@@ -706,11 +706,11 @@
           else
             $cellcolor = "#FFFFFF";
 	        ?>
-            <td align="left"   bgcolor="<?=$cellcolor?>" nowrap><input type="text" id="addr<?=$i?>" name="addr<?=$i?>" value="" />
+            <td style="text-align: left; background-color: <?=$cellcolor?>;" nowrap><input type="text" id="addr<?=$i?>" name="addr<?=$i?>" value="" />
             </td>
-            <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-            <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-            <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a> </td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a> </td>
           </tr>
         </table></td>
     </tr>
@@ -720,9 +720,9 @@
       <td width="100%"><table width="100%">
           <tr>
             <td class="labelcell" width="100%"><label>VLAN ident</label></td>
-            <td class="labelcell" align="center"><label>Update</label></td>
-            <td class="labelcell" align="center"><label>Delete</label></td>
-            <td class="labelcell" align="center"><label>Add</label></td>
+            <td class="labelcellctr"><label>Update</label></td>
+            <td class="labelcellctr"><label>Delete</label></td>
+            <td class="labelcellctr"><label>Add</label></td>
           </tr>
           <tr>
             <?
@@ -736,10 +736,10 @@
 						$cellcolor = "#FFFFFF";
 
 					?>
-            <td align="left"   bgcolor="<?=$cellcolor?>"><input type="text" id="vlan<?=$i?>" name="vlan<?=$i?>" value="<?=$key?>" /></td>
-            <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-            <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_vlan('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
-            <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+            <td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="vlan<?=$i?>" name="vlan<?=$i?>" value="<?=$key?>" /></td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_vlan('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
           </tr>
           <tr>
             <?
@@ -752,11 +752,11 @@
 			else
 				$cellcolor = "#FFFFFF";
 			?>
-            <td align="left"   bgcolor="<?=$cellcolor?>" nowrap><input type="text" id="vlan<?=$i?>" name="vlan<?=$i?>" value="" />
+            <td style="text-align: left; background-color: <?=$cellcolor?>;" nowrap><input type="text" id="vlan<?=$i?>" name="vlan<?=$i?>" value="" />
             </td>
-            <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-            <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-            <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:add_vlan();"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a> </td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+            <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:add_vlan();"><img src="images/icon-plus.gif" width="16" height="16"></a> </td>
           </tr>
         </table></td>
     </tr>

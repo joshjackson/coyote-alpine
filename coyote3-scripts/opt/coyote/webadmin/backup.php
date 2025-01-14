@@ -1,8 +1,8 @@
 <?
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		$action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
+		$action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	} else {
-		$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
+		$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
 	}
 	
 	if ($action == "backup") {
@@ -37,7 +37,7 @@
 	}	
 ?>
 
-<table width="100%"  border="0">
+<table width="100%">
   <tr>
     <td class="labelcellmid"><label><font size="2">System Configuration Backup</font></label> </td>
   </tr>
@@ -47,7 +47,7 @@
   </tr>
 </table>
 
-<table width="100%"  border="0">
+<table width="100%">
   <tr>
     <td class="labelcellmid"><label><font size="2">System Configuration Restore</font></label> </td>
   </tr>

@@ -222,13 +222,13 @@
 	</tr>
 	<tr>
 		<td class="labelcell"><label>Source</label></td>
-		<td align="center" class="labelcell"><label>Destination</label></td>
-		<td class="labelcell" align="center"><label>Protocol</label></td>
-		<td class="labelcell" align="center"><label>From port</label></td>
-		<td class="labelcell" align="center"><label>To port</label></td>
-		<td class="labelcell" align="center"><label>Update</label></td>
-		<td class="labelcell" align="center"><label>Delete</label></td>
-		<td class="labelcell" align="center"><label>Add</label></td>
+		<td class="labelcellctr"><label>Destination</label></td>
+		<td class="labelcellctr"><label>Protocol</label></td>
+		<td class="labelcellctr"><label>From port</label></td>
+		<td class="labelcellctr"><label>To port</label></td>
+		<td class="labelcellctr"><label>Update</label></td>
+		<td class="labelcellctr"><label>Delete</label></td>
+		<td class="labelcellctr"><label>Add</label></td>
 	</tr>
 	<tr>
 	<?
@@ -244,7 +244,7 @@
 			  $cellcolor = "#FFFFFF";
 		}
         ?>
-          <td bgcolor="<?=$cellcolor?>">
+          <td style="text-align: left; background-color: <?=$cellcolor?>;">
 						<select id="source<?=$i?>" name="source<?=$i?>">
 							<?
 								foreach($fd_pfsources as $ip) {
@@ -258,27 +258,27 @@
 						</select>
           </td>
 
-          <td align="center" bgcolor="<?=$cellcolor?>">
+          <td style="text-align: center; background-color: <?=$cellcolor?>;">
             <input type="text" id="fdest<?=$i?>" name="fdest<?=$i?>" value="<?=$pf['dest']?>" />
 </td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<select id="fprotocol<?=$i?>" name="fprotocol<?=$i?>">
 						<? print(GetProtocolList($pf['protocol'])); ?>
 						</select>
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="from<?=$i?>" name="from<?=$i?>" value="<?=$pf['from-port']?>" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="to<?=$i?>" name="to<?=$i?>" value="<?=$pf['to-port']?>" />
 					</td>
 
-          <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-          <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_pfwd('<?=$i?>')"><img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
-          <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_pfwd('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
     </tr>
         <tr>
         <?
@@ -291,7 +291,7 @@
       $cellcolor = "#FFFFFF";
 
     ?>
-          <td bgcolor="<?=$cellcolor?>">
+          <td style="text-align: left; background-color: <?=$cellcolor?>;">
 						<select id="source<?=$i?>" name="source<?=$i?>">
 							//print($fd_pfsources);
 							<?
@@ -303,27 +303,27 @@
 						</select>
           </td>
 
-          <td align="center" bgcolor="<?=$cellcolor?>">
+          <td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="fdest<?=$i?>" name="fdest<?=$i?>" value="" />
           </td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<select id="fprotocol<?=$i?>" name="fprotocol<?=$i?>">
 						<? print(GetProtocolList('')); ?>
 						</select>
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="from<?=$i?>" name="from<?=$i?>" value="" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="to<?=$i?>" name="to<?=$i?>" value="" />
 					</td>
 
-		<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-		<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-		<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a></td>
 	</tr>
 </table>
 <p><span class="descriptiontext">Port-forwards can be used to redirect traffic received on a specific firewall IP address to another host. Since the IP address needs to be static to create a port-forward, this option is not typically used with connections which have a DHCP or PPPoE assigned address. The auto-forwards are better suited for use when the public IP address is dynamically assigned.</span></p>
@@ -340,13 +340,13 @@
 	</tr>
 	<tr>
 		<td class="labelcell"><label>Interface</label></td>
-		<td class="labelcell" align="center"><label>Destination</label></td>
-		<td class="labelcell" align="center"><label>Protocol</label></td>
-		<td class="labelcell" align="center"><label>Start Port</label></td>
-		<td class="labelcell" align="center"><label>End Port</label></td>
-		<td class="labelcell" align="center"><label>Update</label></td>
-		<td class="labelcell" align="center"><label>Delete</label></td>
-		<td class="labelcell" align="center"><label>Add</label></td>
+		<td class="labelcellctr"><label>Destination</label></td>
+		<td class="labelcellctr"><label>Protocol</label></td>
+		<td class="labelcellctr"><label>Start Port</label></td>
+		<td class="labelcellctr"><label>End Port</label></td>
+		<td class="labelcellctr"><label>Update</label></td>
+		<td class="labelcellctr"><label>Delete</label></td>
+		<td class="labelcellctr"><label>Add</label></td>
 	</tr>
 	<tr>
 	<?
@@ -358,7 +358,7 @@
         else
           $cellcolor = "#FFFFFF";
         ?>
-          <td bgcolor="<?=$cellcolor?>">
+          <td style="text-align: left; background-color: <?=$cellcolor?>;">
 						<select id="interface<?=$i?>" name="interface<?=$i?>" width="100%">
 							<option value="none" <?if($af['source']) print("selected");?> >none</option>
 						<?
@@ -379,11 +379,11 @@
 						</select>
           </td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="adest<?=$i?>" name="adest<?=$i?>" value="<?=$af['dest']?>" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<? //select box for protocols here (ONLY TCP/UDP) ?>
 						<select id="aprotocol<?=$i?>" name="aprotocol<?=$i?>" width="100%">
 							<option value="tcp" <?if($af['protocol'] == 'tcp') print("selected");?> >TCP</option>
@@ -404,17 +404,17 @@
 
 					?>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="astartport<?=$i?>" name="astartport<?=$i?>" value="<?=$asp?>" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="aendport<?=$i?>" name="aendport<?=$i?>" value="<?=$aep?>" />
 					</td>
 
-          <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-          <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_afwd('<?=$i?>')"><img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
-          <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_afwd('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+          <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
     </tr>
         <tr>
         <?
@@ -427,7 +427,7 @@
       $cellcolor = "#FFFFFF";
 
     ?>
-          <td bgcolor="<?=$cellcolor?>">
+          <td style="text-align: left; background-color: <?=$cellcolor?>;">
 						<select id="interface<?=$i?>" name="interface<?=$i?>" width="100%">
 						<option value="none">none</option>
 						<?
@@ -445,11 +445,11 @@
 						</select>
           </td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="adest<?=$i?>" name="adest<?=$i?>" value="" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<? //select box for protocols here (ONLY TCP/UDP) ?>
 						<select id="aprotocol<?=$i?>" name="aprotocol<?=$i?>" width="100%">
 							<option value="tcp" selected >TCP</option>
@@ -457,17 +457,17 @@
 						</select>
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="astartport<?=$i?>" name="astartport<?=$i?>" value="" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<input type="text" id="aendport<?=$i?>" name="aendport<?=$i?>" value="" />
 					</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a></td>
 	</tr>
 </table>
 <p><span class="descriptiontext">Auto-forwards are well suited for firewalls with dynamic IP addresses. An auto-forward will redirect any traffic received on the specified interface that matches the protocol and port specification to the destination host. You do not need to add an additional access-list for auto-forwards to function properly. </span></p>

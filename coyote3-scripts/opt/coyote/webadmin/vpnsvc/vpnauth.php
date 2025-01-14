@@ -2,6 +2,7 @@
 	require_once("../includes/loadconfig.php");
 
 	// Extract the vpnsvc addon configuration object
+	$vpnconf = null;
 	$vpnconf =& $configfile->get_addon('VPNSVCAddon', $vpnconf);
 	if ($vpnconf === false) {
 		// WTF?
@@ -186,12 +187,12 @@ function is_local_enabled() {
 	<table width="100%">
 		<tr>
 					<td class="labelcell" width="100%"><label>Login</label></td>
-					<td class="labelcell" align="center"><label>Password</label></td>
-					<td class="labelcell" align="center"><label>Confirm</label></td>
-					<td class="labelcell" align="center"><label>IP Address</label></td>
-					<td class="labelcell" align="center"><label>Update</label></td>
-					<td class="labelcell" align="center"><label>Delete</label></td>
-					<td class="labelcell" align="center"><label>Add</label></td>
+					<td class="labelcellctr"><label>Password</label></td>
+					<td class="labelcellctr"><label>Confirm</label></td>
+					<td class="labelcellctr"><label>IP Address</label></td>
+					<td class="labelcellctr"><label>Update</label></td>
+					<td class="labelcellctr"><label>Delete</label></td>
+					<td class="labelcellctr"><label>Add</label></td>
 	  </tr>
 				<tr>
 
@@ -286,11 +287,11 @@ function is_local_enabled() {
 	<table width="100%">
 		<tr>
 					<td class="labelcell" width="100%"><label>Radius Server Address </label></td>
-					<td class="labelcell" align="center"><label>Authentication Port </label></td>
-					<td class="labelcell" align="center"><label>Accounting Port </label></td>
-					<td class="labelcell" align="center"><label>Update</label></td>
-					<td class="labelcell" align="center"><label>Delete</label></td>
-					<td class="labelcell" align="center"><label>Add</label></td>
+					<td class="labelcellctr"><label>Authentication Port </label></td>
+					<td class="labelcellctr"><label>Accounting Port </label></td>
+					<td class="labelcellctr"><label>Update</label></td>
+					<td class="labelcellctr"><label>Delete</label></td>
+					<td class="labelcellctr"><label>Add</label></td>
 	  </tr>
 				<tr>
 

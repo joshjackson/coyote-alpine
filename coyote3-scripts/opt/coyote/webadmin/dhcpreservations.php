@@ -101,12 +101,12 @@
 </script>
 
 <form name="content" method="post" action="<?=$_SERVER['PHP_SELF']; ?>">
-<table border="0" width="100%">
+<table width="100%">
 	<tr>
 		<td class="labelcell"><label>IP Addr</label></td>
-		<td class="labelcell" align="center"><label>MAC Addr</label></td>
-		<td class="labelcell" align="center"><label>Update</label></td>
-		<td class="labelcell" align="center"><label>Delete</label></td>
+		<td class="labelcellctr"><label>MAC Addr</label></td>
+		<td class="labelcellctr"><label>Update</label></td>
+		<td class="labelcellctr"><label>Delete</label></td>
 	</tr>
 	<?
 	    $i = 0;
@@ -120,10 +120,10 @@
             else
               $cellcolor = "#FFFFFF";
             ?>
-              <td bgcolor="<?=$cellcolor?>"><input type="text" id="ip<?=$i?>" name="ip<?=$i?>" value="<?=$rec['address']?>" /></td>
-              <td align="center" bgcolor="<?=$cellcolor?>"><input type="text" id="mac<?=$i?>" name="mac<?=$i?>" value="<?=$rec['mac']?>" /></td>
-              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('<?=$i?>')"><img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
+              <td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="ip<?=$i?>" name="ip<?=$i?>" value="<?=$rec['address']?>" /></td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;"><input type="text" id="mac<?=$i?>" name="mac<?=$i?>" value="<?=$rec['mac']?>" /></td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_item('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
             </tr>
             <tr>
             <?

@@ -135,7 +135,7 @@ function GetUserIndex($Username, $UArray) {
 			<td class="labelcell" width="100%"><label>Login</label></td>
 			<td class="labelcell" width="100%"><label>Password</label></td>
 			<td class="labelcell" width="100%"><label>Confirm</label></td>
-			<td class="labelcell" align="center"><label>Update</label></td>
+			<td class="labelcellctr" ><label>Update</label></td>
 		</tr>
 		<tr>
 
@@ -152,20 +152,20 @@ function GetUserIndex($Username, $UArray) {
 
 							//output with script breaks first, then convert to print() calls
 							?>
-							<td align="left" bgcolor="<?=$cellcolor?>">
+							<td style="text-align: left; background-color: <?=$cellcolor?>;">
 								<input readonly type="text" id="username<?=$i?>" name="username<?=$i?>" value="<?=$cruser['username']?>" />
 							</td>
 
-							<td align="center" bgcolor="<?=$cellcolor?>">
+							<td style="text-align: center; background-color: <?=$cellcolor?>;">
 								<input type="password" id="password<?=$i?>" name="password<?=$i?>" value="" onchange="update_enc('encrypted<?=$i?>');" />
 							</td>
-							<td align="center" bgcolor="<?=$cellcolor?>">
+							<td style="text-align: center; background-color: <?=$cellcolor?>;">
 								<input type="password" id="passwordc<?=$i?>" name="passwordc<?=$i?>" value="" onchange="update_enc('encrypted<?=$i?>');" />
 								<input type="hidden" id="encrypted<?=$i?>" name="encrypted<?=$i?>" value="<?=$cruser['encrypted']?>" />
 							</td>
 
-							<td align="center" bgcolor="<?=$cellcolor?>">
-								<a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;">
+								<a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a>
 							</td>
 		</tr><tr>
 							<?

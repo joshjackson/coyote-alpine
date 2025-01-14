@@ -90,9 +90,9 @@ information on how to properly use Proxy ARP, please refer to the product docume
 		<td class="labelcell"><label>Internal Interface</label></td>
 		<td class="labelcell"><label>External Interface</label></td>
 		<td class="labelcell"><label>Address</label></td>
-		<td class="labelcell" align="center"><label>Update</label></td>
-		<td class="labelcell" align="center"><label>Delete</label></td>
-		<td class="labelcell" align="center"><label>Add</label></td>
+		<td class="labelcellctr"><label>Update</label></td>
+		<td class="labelcellctr"><label>Delete</label></td>
+		<td class="labelcellctr"><label>Add</label></td>
 	</tr>
 	<tr>
 	<?
@@ -104,7 +104,7 @@ information on how to properly use Proxy ARP, please refer to the product docume
             else
               $cellcolor = "#FFFFFF";
             ?>
-              <td bgcolor="<?=$cellcolor?>">
+              <td style="text-align: left; background-color: <?=$cellcolor?>;">
 								<select id="int_if<?=$i?>" name="int_if<?=$i?>" width="100%">
 								<?
 								//loop through interfaces
@@ -123,7 +123,7 @@ information on how to properly use Proxy ARP, please refer to the product docume
 								?>
 								</select>
               </td>
-							<td bgcolor="<?=$cellcolor?>">
+							<td style="text-align: left; background-color: <?=$cellcolor?>;">
 								<select id="ext_if<?=$i?>" name="ext_if<?=$i?>" width="100%">
 								<?
 								//loop through interfaces
@@ -142,13 +142,13 @@ information on how to properly use Proxy ARP, please refer to the product docume
 								?>
 								</select>
 							</td>
-							<td bgcolor="<?=$cellcolor?>">
+							<td style="text-align: left; background-color: <?=$cellcolor?>;">
 								<input type="text" id="address<?=$i?>" name="address<?=$i?>" value="<?=$parp['address']?>" />
 							</td>
 
-              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('<?=$i?>')"><img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
-              <td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_item('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
             </tr>
             <tr>
             <?
@@ -161,7 +161,7 @@ information on how to properly use Proxy ARP, please refer to the product docume
           $cellcolor = "#FFFFFF";
 
         ?>
-              <td bgcolor="<?=$cellcolor?>">
+              <td style="text-align: left; background-color: <?=$cellcolor?>;">
 								<select id="int_if<?=$i?>" name="int_if<?=$i?>" width="100%">
 								<?
 								//loop through interfaces
@@ -180,7 +180,7 @@ information on how to properly use Proxy ARP, please refer to the product docume
 								?>
 								</select>
               </td>
-							<td bgcolor="<?=$cellcolor?>">
+							<td style="text-align: left; background-color: <?=$cellcolor?>;">
 								<select id="ext_if<?=$i?>" name="ext_if<?=$i?>" width="100%">
 								<?
 								//loop through interfaces
@@ -194,13 +194,13 @@ information on how to properly use Proxy ARP, please refer to the product docume
 								?>
 								</select>
 							</td>
-							<td bgcolor="<?=$cellcolor?>">
+							<td style="text-align: left; background-color: <?=$cellcolor?>;">
 								<input type="text" id="address<?=$i?>" name="address<?=$i?>" value="" />
 							</td>
 
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a></td>
 				</tr>
         <?
     if(strlen(query_warnings())) {

@@ -66,7 +66,7 @@
 
 <form id="content" method="post" action="bridging.php">
 
-<table border="0" width="100%" id="table2">
+<table width="100%" id="table2">
 	<tr>
 		<td colspan="2" class="labelcell" nowrap><b><label><font size="2">Bridge Configuration</font></label></b></td>
 	</tr>
@@ -100,7 +100,7 @@
 ?>
 </p>
 
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td>
 		<b>

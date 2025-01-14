@@ -95,7 +95,7 @@ function CPUMemStatistics() {
 	UpdateGraphics($configfile);
 
 ?>
-<table border="0" width="590px">
+<table width="590px">
 	<tr>
 		<td class="labelcell" nowrap><label>Current CPU Utilization:</label></td>
 		<td width="100%" class="ctrlcell">
@@ -271,7 +271,7 @@ function SystemLog() {
 	include("includes/header.php");
 ?>
 
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td>
 <?

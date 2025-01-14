@@ -4,8 +4,6 @@
 	//require_once('/opt/coyote/webadmin/includes/webfunctions.php');
 	$SiteTheme = GetSiteTheme();
 ?>
-	
-
 <!DOCTYPE html>
 <HTML>
 <HEAD>
@@ -112,36 +110,36 @@
 
 <BODY>
 
-<TABLE class="maintable" BORDER=0 CELLPADDING=0 CELLSPACING=0>
+<TABLE class="maintable" style="border: 0;" CELLPADDING=0 CELLSPACING=0>
   <TR> 
     <TD background="/theme/<?=$SiteTheme?>/wolf-back-actual_01.gif" WIDTH=172 HEIGHT=140></TD>
     <TD class="td-content" background="/theme/<?=$SiteTheme?>/wolf-back-actual_02.gif" HEIGHT=140>
-	<table border="0" width="100%" id="table2" cellspacing="0" cellpadding="0">
-		<tr>
-			<td height="60px" valign="top" colspan="3" nowrap><h1><?=$MenuTitle?></h1>
-			</td>
-		</tr>
-		<tr>
-			<td height="35px" colspan="3"><img class="wolvbanner" src="/theme/<?=$SiteTheme?>/wolf-banner.gif" height=27></td>
-		</tr>
-		<tr>
-			<td height="40px" valign="bottom" width="35">
-			<img border="0" src="/icons/<?=$PageIcon?>" width="32" height="32"></td>
-			<td height="40px" width="15px">&nbsp;
-			</td>
-			<td height="40px" width="100%" align="left">
-			<span class="bannertext"><?=$MenuTitle?></span></td>
-		</tr>
-	</table>    
+    <table style="border: 0;" width="100%" id="table2" cellspacing="0" cellpadding="0">
+        <tr>
+            <td height="60px" valign="top" colspan="3" nowrap><h1><?=$MenuTitle?></h1>
+            </td>
+        </tr>
+        <tr>
+            <td height="35px" colspan="3"><img class="wolvbanner" src="/theme/<?=$SiteTheme?>/wolf-banner.gif" height=27></td>
+        </tr>
+        <tr>
+            <td height="40px" valign="bottom" width="35">
+            <img style="border: 0" src="/icons/<?=$PageIcon?>" width="32" height="32"></td>
+            <td height="40px" width="15px">&nbsp;
+            </td>
+            <td height="40px" width="100%" style="text-align: left">
+            <span class="bannertext"><?=$MenuTitle?></span></td>
+        </tr>
+    </table>    
     </TD>
     <TD background="/theme/<?=$SiteTheme?>/wolf-back-actual_03.gif" HEIGHT=140 ></TD>
   </TR>
   <TR> 
     <TD background="/theme/<?=$SiteTheme?>/wolf-back-actual_04.gif" WIDTH=172 HEIGHT=174 valign="top">
-    <table valign="top">
-		<?
-			RenderMenus($SiteMenu, $MenuType);
-		?>    
+    <table valign="top" style="border: 0;">
+        <?
+            RenderMenus($SiteMenu, $MenuType);
+        ?>    
       </table>
     </TD>
-    <TD class="td-content" bgcolor="FFFFFF">
+    <TD class="td-content" style="background-color: white;">

@@ -2,6 +2,7 @@
 	include("../includes/loadconfig.php");
 
 	// Extract the vpnsvc addon configuration object
+	$vpnconf = null;
 	$vpnconf =& $configfile->get_addon('VPNSVCAddon', $vpnconf);
 	if ($vpnconf === false) {
 		// WTF?
@@ -160,11 +161,15 @@
 			$fd_p1cert = $tundef["cert"];
 
 			if ($tundef["ike"]["dh-group"]) {
-				$fd_dhgroup = $tundef["ike"]["dh-group"];
+				$fd_p1group = $tundef["ike"]["dh-group"];
+			} else {
+				$fd_p1group = array();
 			}
 
 			if ($tundef["esp"]["pfs-group"]) {
-				$fd_pfs = $tundef["esp"]["pfs-group"];
+				$fd_p2group = $tundef["esp"]["pfs-group"];
+			} else {
+				$fd_p2group = array();
 			}
 			
 			$fd_p1lifetime = $tundef["ike"]["lifetime"];
@@ -182,7 +187,7 @@
 ?>
 <form id="content" method="post" action="<?=$_SERVER['PHP_SELF']?>">
 		<input type="hidden" name="action" value="apply" />
-		<table border="0" width="100%" id="table2">
+		<table width="100%" id="table2">
 			<tr>
 				<td nowrap class="labelcellmid" colspan="2"><b><font size="2">
 				General Tunnel Settings</font></b></td>
@@ -466,21 +471,6 @@
       <br>
       <span class="descriptiontext">Key lifetime in seconds. This parameter is optional and can be left blank to use the default. </span></td>
 	  </tr>
-	<tr>
-		<td nowrap class="labelcell"><label> PFS key group:</label></td>
-		<td width="100%">
-			<select name="fd_pfs" size="1">
-	<?
-	  		foreach($pfs as $pfsg) {
-				$s = ($pfsg[1] == $fd_pfs) ? "selected" : "";
-		    	print('<option value="'.$pfsg[1].'" '.$s.'>'.$pfsg[0].'</option>');
-			}
-	?>
-			</select>			<br>
-			<span class="descriptiontext">Perfect Forward Secrecy (PFS) should only be disabled if the remote
-			endpoint does not support it or does not have it enabled.</span>
-		</td>
-	</tr>
 </table>
 
 </form>

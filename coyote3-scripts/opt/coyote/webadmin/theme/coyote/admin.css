@@ -25,6 +25,11 @@ a {
 	font-style: normal;
 	text-decoration: none;
 }
+
+table {
+	border: 0px;
+}
+
 td {
 	font-family: verdana, arial, helvetica, sans-serif;
 	font-size: 7pt;
@@ -43,10 +48,24 @@ td.labelcell {
 	font-size: 7pt;
 }
 
+td.labelcellctr {
+	background-color: #E6E6E6;
+	vertical-align: top;
+	font-size: 7pt;
+	text-align: center;
+}
+
 td.labelcellmid {
 	background-color: #E6E6E6;
 	vertical-align: middle;
 	font-size: 7pt;
+}
+
+td.labelcellmidctr {
+	background-color: #E6E6E6;
+	vertical-align: middle;
+	font-size: 7pt;
+	text-align: center;
 }
 
 
@@ -66,7 +85,7 @@ td.ctrlcell {
 	width: 163px;
 	font-family: verdana, sans-serif;
 	font-size: 8pt;
-	height: 19px;
+	height: 17px;
 	text-align: left;
 	vertical-align: middle;
 	text-indent: 3px;
@@ -79,7 +98,7 @@ td.ctrlcell {
 	width: 163px;
 	font-family: verdana, sans-serif;
 	font-size: 8pt;
-	height: 19px;
+	height: 17px;
 	text-align: left;
 	vertical-align: middle;
 	text-indent: 3px;
@@ -92,7 +111,7 @@ td.ctrlcell {
 	width: 163px;
 	font-family: verdana, sans-serif;
 	font-size: 8pt;
-	height: 19px;
+	height: 17px;
 	text-align: left;
 	vertical-align: middle;
 	text-indent: 20px;
@@ -101,7 +120,7 @@ td.ctrlcell {
 .descriptiontext {
 	font-family: verdana, sans-serif;
 	color: #666666;
-	font-size: 7pt;
+	font-size: 8pt;
 }
 
 .menulink {

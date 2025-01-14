@@ -83,13 +83,13 @@
 ?>
 
 <form action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td class="labelcellmid" nowrap><input type="checkbox" name="enabled" value="yes" <?=$fd_checked?>></td>
     <td class="labelcellmid" nowrap width="100%"><label><font size="2">Enable the Dynamic DNS client</font></label></td>
   </tr>
 </table>
-<table width="100%"  border="0">
+<table width="100%">
   <tr>
     <td class="labelcell" nowrap><label>Service type:</label></td>
     <td  class="ctrlcell"><select name="servicetype">

@@ -91,16 +91,16 @@
 
 <form name="content" action="<?=$_SERVER['PHP_SELF']; ?>">
 <input type="hidden" id="action" name="action" value="">
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td>
-			<table border="0" width="100%">
+			<table width="100%">
 				<tr>
 					<td class="labelcell" width="70%"><label>Access List</label></td>
-					<td class="labelcell" align="center"><label>Edit</label></td>
-					<td class="labelcell" align="center"><label>Del</label></td>
-					<td class="labelcell" align="center"><label>Up</label></td>
-					<td class="labelcell" align="center"><label>Down</label></td>
+					<td class="labelcellctr"><label>Edit</label></td>
+					<td class="labelcellctr"><label>Del</label></td>
+					<td class="labelcellctr"><label>Up</label></td>
+					<td class="labelcellctr"><label>Down</label></td>
 				</tr>
 
 <?
@@ -125,14 +125,14 @@
 
 ?>
 	<tr>
-		<td width="70%" bgcolor="<?=$cellcolor?>"><?=$aclname?></td>
-		<td align="center" bgcolor="<?=$cellcolor?>">
+		<td width="70%" style="text-align: left; background-color: <?=$cellcolor?>;"><?=$aclname?></td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;">
 		<a href="access_list.php?aclidx=<?=$aclname?>">
-		<img border="0" src="images/icon-edit.gif" width="16" height="16"></a></td>
-		<td align="center" bgcolor="<?=$cellcolor?>">
+		<img src="images/icon-edit.gif" width="16" height="16"></a></td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;">
 		<a href="javascript:delete_item('<?=$aclname?>')">
-		<img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
-		<td align="center" bgcolor="<?=$cellcolor?>">
+		<img src="images/icon-del.gif" width="16" height="16"></a></td>
+		<td style="text-align: center; background-color: <?=$cellcolor?>;">
 		<?
 			if ($idx) {
 				print('<a href="firewall_rules.php?action=reorder&dir=up&target='.$aclname.'"><img border="0" src="images/icon-mvup.gif" width="16" height="16"></a>');
@@ -141,7 +141,7 @@
 			}
 		?>
 		</td>
-		<td align="center" bgcolor="<?=$cellcolor?>">
+		<td style="text-align: center; background-color: <?=$cellcolor?>;">
 		<?
 			if ($idx < $fd_maxacl) {
 				print('<a href="firewall_rules.php?action=reorder&dir=down&target='.$aclname.'"><img border="0" src="images/icon-mvdn.gif" width="16" height="16"></a>');
@@ -158,10 +158,10 @@
 	}
 ?>
 </table>
-		<table border="0" width="100%" id="table2">
+		<table width="100%" id="table2">
 			<tr>
 				<td><a href="add_rule.php">
-				<img border="0" src="images/icon-plus.gif" width="16" height="16"></a>
+				<img src="images/icon-plus.gif" width="16" height="16"></a>
 				</td>
 				<td width="100%"><b><a href="add_rule.php?newacl=Y">Add a new access list</a></b></td>
 		</tr>

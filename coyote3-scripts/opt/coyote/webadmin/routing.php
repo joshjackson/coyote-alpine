@@ -125,12 +125,12 @@ destination</i> is the destination address or network and <i>gateway</i> is the
 address of the next-hop router. The metric and device fields are optional.</span><table width="100%" padding=0 spacing=0>
 	<tr>
 		<td class="labelcell"><label>Destination</label></td>
-		<td class="labelcell" align="left"><label>Gateway</label></td>
-		<td class="labelcell" align="left"><label>Metric</label></td>
-		<td class="labelcell" align="center"><label>Device</label></td>
-		<td class="labelcell" align="center"><label>Update</label></td>
-		<td class="labelcell" align="center"><label>Delete</label></td>
-		<td class="labelcell" align="center"><label>Add</label></td>
+		<td class="labelcellctr"><label>Gateway</label></td>
+		<td class="labelcellctr"><label>Metric</label></td>
+		<td class="labelcellctr"><label>Device</label></td>
+		<td class="labelcellctr"><label>Update</label></td>
+		<td class="labelcellctr"><label>Delete</label></td>
+		<td class="labelcellctr"><label>Add</label></td>
 	</tr>
 	<tr>
 	<?
@@ -145,10 +145,10 @@ address of the next-hop router. The metric and device fields are optional.</span
             else
               $cellcolor = "#FFFFFF";
             ?>
-              <td bgcolor="<?=$cellcolor?>"><input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="<?=$route['dest']?>" /></td>
-							<td bgcolor="<?=$cellcolor?>"><input type="text" id="gw<?=$i?>" name="gw<?=$i?>" value="<?=$route['gw']?>" /></td>
-							<td bgcolor="<?=$cellcolor?>"><input type="text" id="metric<?=$i?>" name="metric<?=$i?>" value="<?=$route['metric']?>" /></td>
-							<td align="center" bgcolor="<?=$cellcolor?>">
+              <td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="<?=$route['dest']?>" /></td>
+							<td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="gw<?=$i?>" name="gw<?=$i?>" value="<?=$route['gw']?>" /></td>
+							<td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="metric<?=$i?>" name="metric<?=$i?>" value="<?=$route['metric']?>" /></td>
+							<td style="text-align: center; background-color: <?=$cellcolor?>;">
 								<select id="dev<?=$i?>" name="dev<?=$i?>" width="100%">
 								<option value="" <? if(!strlen($route['dev'])) print("selected");?>>default</option>
 									<?
@@ -169,8 +169,8 @@ address of the next-hop router. The metric and device fields are optional.</span
 								</select>
 							</td>
 
-              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-chk.gif" width="16" height="16"></a></td>
-              <td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:delete_item('<?=$i?>')"><img border="0" src="images/icon-del.gif" width="16" height="16"></a></td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-chk.gif" width="16" height="16"></a></td>
+              <td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:delete_item('<?=$i?>')"><img src="images/icon-del.gif" width="16" height="16"></a></td>
     </tr>
             <tr>
             <?
@@ -184,10 +184,10 @@ address of the next-hop router. The metric and device fields are optional.</span
           $cellcolor = "#FFFFFF";
 
         ?>
-	        <td bgcolor="<?=$cellcolor?>"><input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="" /></td>
-					<td bgcolor="<?=$cellcolor?>"><input type="text" id="gw<?=$i?>" name="gw<?=$i?>" value="" /></td>
-					<td bgcolor="<?=$cellcolor?>"><input type="text" id="metric<?=$i?>" name="metric<?=$i?>" value="" /></td>
-					<td align="center" bgcolor="<?=$cellcolor?>">
+	        <td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="dest<?=$i?>" name="dest<?=$i?>" value="" /></td>
+					<td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="gw<?=$i?>" name="gw<?=$i?>" value="" /></td>
+					<td style="text-align: left; background-color: <?=$cellcolor?>;"><input type="text" id="metric<?=$i?>" name="metric<?=$i?>" value="" /></td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">
 						<select id="dev<?=$i?>" name="dev<?=$i?>" width="100%">
 						<option value="" selected >default</option>
 						<?
@@ -207,9 +207,9 @@ address of the next-hop router. The metric and device fields are optional.</span
 						?>
 						</select>
 					</td>
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>">&nbsp;</td>
-					<td align="center" bgcolor="<?=$cellcolor?>"><a href="javascript:do_submit()"><img border="0" src="images/icon-plus.gif" width="16" height="16"></a></td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;">&nbsp;</td>
+					<td style="text-align: center; background-color: <?=$cellcolor?>;"><a href="javascript:do_submit()"><img src="images/icon-plus.gif" width="16" height="16"></a></td>
 	</tr>
         <?
     if(strlen(query_warnings())) {

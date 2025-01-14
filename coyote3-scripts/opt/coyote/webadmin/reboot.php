@@ -19,7 +19,7 @@
 <form method="post" action="reboot.php">
 <input type="hidden" name="action" value="reboot">
 <div align="center">
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td valign="middle" align="center">
 		&nbsp;<p>&nbsp;</p>

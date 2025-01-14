@@ -106,10 +106,10 @@
 <input type="hidden" name="action" value="apply">
 <input type="hidden" name="aclidx" value="<?=$aclidx?>">
 <input type="hidden" name="ruleidx" value="<?=$ruleidx?>">
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td>
-		<table border="0" width="100%" id="table2">
+		<table width="100%" id="table2">
 			<tr>
 				<td colspan="2" class="labelcell"><label>Access List:</label> <?=$aclidx?><label> Rule Index:</label> <?=$ruleidx?></td>
 			</tr>

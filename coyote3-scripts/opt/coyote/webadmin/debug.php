@@ -45,7 +45,7 @@ function DebugContents($dump) {
 
 ?>
 
-<table border="0" width="100%" id="table1">
+<table width="100%" id="table1">
 	<tr>
 		<td>
 <pre>
